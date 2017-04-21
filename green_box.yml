@@ -1,0 +1,58 @@
+swagger: '2.0'
+info:
+  title: HCA DCP Green Box API
+  description: Human Cell Atlas Data Coordination Platform Secondary Analysis ("Green Box") API
+  version: "0.0.1"
+host: localhost:8080
+schemes:
+  - https
+basePath: /v1
+produces:
+  - application/json
+paths:
+  /notifications:
+    post:
+      summary: Send notifications
+      description: |
+        Notify green about bundles to process
+      consumes:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          required: false
+          schema:
+            $ref: '#/definitions/Notification'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/NotificationResponse'
+definitions:
+  Notification:
+    type: object
+    properties:
+      match:
+        $ref: '#/definitions/Match'
+  Match:
+    type: object
+    properties:
+      bundle_uuid:
+        type: string
+      bundle_version:
+        type: string
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string
+  NotificationResponse:
+    type: object
+    properties:
+      result:
+        type: string
