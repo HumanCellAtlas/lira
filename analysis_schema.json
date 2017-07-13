@@ -1,0 +1,117 @@
+{
+   "$schema" : "https://json-schema.org/draft-04/schema#",
+   "properties" : {
+      "timestamp_start_utc" : {
+         "description" : "Initial start time of the full pipeline.",
+         "type" : "date-time"
+      },
+      "computational_method" : {
+         "description" : "A URI to a versioned workflow and versioned execution environment in a GA4GH complient repository.",
+         "type" : "uri"
+      },
+      "analysis_id" : {
+         "description" : "ID give to the analysis run which refers back to the analysis instance in the green box.",
+         "type" : "number"
+      },
+      "metadata_schema" : {
+         "description" : "The version of the metadata schemas used for the json files.",
+         "type" : "string"
+      },
+      "log" : {
+         "type" : "file",
+         "description" : "A file that is a detailed log of the workflow run."
+      },
+      "timestamp_stop_utc" : {
+         "type" : "date-time",
+         "description" : "Terminal stop time of the full pipeline."
+      },
+      "sample_json" : {
+         "description" : "The file describing the samples ran.",
+         "type" : "file"
+      },
+      "timings" : {
+         "reference_version" : {
+            "type" : "string",
+            "description" : "Versioned reference used in running the pipeline."
+         },
+         "outputs" : {
+            "type" : "array",
+            "items" : {
+               "type" : {
+                  "$ref" : "#/definitions/timing"
+               }
+            },
+            "description" : "Output generatd by the pipeline run."
+         },
+         "inputs" : {
+            "type" : "array",
+            "items" : {
+               "type" : {
+                  "$ref" : "#/definitions/file"
+               }
+            },
+            "description" : "Input files used in the pipeline run."
+         },
+         "description" : "Timings for each task in the workflow.",
+         "type" : "array",
+         "items" : {
+            "type" : {
+               "$ref" : "#/definitions/timing"
+            }
+         },
+         "required" : [
+            "timestamp_start_utc",
+            "timestamp_stop_utc",
+            "computational_method",
+            "sample_json",
+            "log",
+            "analysis_id",
+            "metadata_schema",
+            "timings",
+            "inputs",
+            "outputs"
+         ]
+      }
+   },
+   "definitions" : {
+      "timing" : {
+         "type" : "object",
+         "required" : [
+            "step_name",
+            "step_start",
+            "step_stop"
+         ],
+         "properties" : {
+            "step_name" : "string",
+            "step_stop" : "uri",
+            "step_start" : "uri"
+         },
+         "additionalProperties" : false
+      },
+      "file" : {
+         "additionalProperties" : false,
+         "required" : [
+            "checksum",
+            "file_path",
+            "format"
+         ],
+         "properties" : {
+            "checksum" : "string",
+            "file_path" : "uri",
+            "format" : {
+               "type" : "string",
+               "enum" : [
+                  "text",
+                  "fastq.gz",
+                  "fasta.gz",
+                  "bam"
+               ]
+            }
+         },
+         "type" : "object"
+      }
+   },
+   "type" : "object",
+   "additionalProperties" : false
+}
+
