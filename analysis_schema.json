@@ -78,15 +78,7 @@
             "format"
          ],
          "properties" : {
-            "format" : {
-               "type" : "string",
-               "enum" : [
-                  "text",
-                  "fastq.gz",
-                  "fasta.gz",
-                  "bam"
-               ]
-            },
+            "format" : "string",
             "file_path" : "uri",
             "checksum" : "string"
          },
@@ -97,7 +89,8 @@
             "start_time" : "date-time",
             "stop_time" : "date-time",
             "name" : "string",
-            "log" : "uri",
+            "log_err" : "uri",
+            "log_out" : "uri",
             "disk_size" : "string",
             "docker_image" : "string",
             "cpus" : "int",
