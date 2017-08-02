@@ -1,4 +1,4 @@
 {
-  "mock_smartseq2.bundle_uuid": "29d10d6f-12e8-48b9-959c-54911fbdb987",
-  "mock_smartseq2.bundle_version": "2017-06-23T20:31:24.224625Z"
+  "mock_smartseq2.left_fastq": "gs://broad-dsde-mint-dev-teststorage/left_10000.fastq",
+  "mock_smartseq2.right_fastq": "gs://broad-dsde-mint-dev-teststorage/right_10000.fastq"
 }
