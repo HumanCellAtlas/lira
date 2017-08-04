@@ -5,38 +5,60 @@ import logging
 import json
 import subprocess
 import green_config
+import time
 
 def post(body):
-    if not 'auth' in connexion.request.headers:
+    # Check authentication
+    if not is_authenticated(connexion.request.headers, green_config.notification_token):
+        time.sleep(1)
         return dict()
-    elif connexion.request.headers['auth'] != green_config.notification_token:
-        return dict()
+
     logger = logging.getLogger('green-box')
     logger.info("Notification received")
     logger.info(body)
-    notification = body
-    uuid = notification["match"]["bundle_uuid"]
-    version = notification["match"]["bundle_version"]
+
+    # Get bundle uuid and version
+    uuid, version = extract_uuid_version(body)
 
     # Prepare inputs
-    inputs = {}
-    inputs['mock_smartseq2.bundle_uuid'] = uuid
-    inputs['mock_smartseq2.bundle_version'] = '"{0}"'.format(version)
-    inputs['mock_smartseq2.provenance_script'] = 'gs://broad-dsde-mint-dev-teststorage/mock_provenance.py'
+    inputs = compose_inputs(uuid, version, green_config.provenance_script)
     with open('cromwell_inputs.json', 'w') as f:
         json.dump(inputs, f)
 
-    # Run workflow
+    # Start workflow
     logger.info("Launching smartseq2 workflow in Cromwell")
-    with open('green_config.txt') as f:
-        cromwell_url = f.readline().strip()
-    result = subprocess.check_output(['gsutil', 'cp', 'gs://broad-dsde-mint-dev-teststorage/mock_smartseq2.wdl', '.'])
+    result = subprocess.check_output(['gsutil', 'cp', green_config.mock_smartseq2_wdl, '.'])
+    response = start_workflow('mock_smartseq2.wdl', 'cromwell_inputs.json')
+    logger.info(response.json())
+
+    # Respond
+    return dict(result=response.text)
+
+def is_authenticated(headers, token):
+    if not 'auth' in headers:
+        return False
+    elif headers['auth'] != token:
+        return False
+    return True
+
+def extract_uuid_version(msg):
+    uuid = msg["match"]["bundle_uuid"]
+    version = msg["match"]["bundle_version"]
+    return uuid, version
+
+def compose_inputs(uuid, version, provenance_script):
+    inputs = {}
+    inputs['mock_smartseq2.bundle_uuid'] = uuid
+    inputs['mock_smartseq2.bundle_version'] = '"{0}"'.format(version)
+    inputs['mock_smartseq2.provenance_script'] = provenance_script
+    return inputs
+
+def start_workflow(wdl, inputs):
     with open('mock_smartseq2.wdl', 'rb') as wdl, open('cromwell_inputs.json', 'rb') as inputs:
         files = {
           'wdlSource': wdl,
           'workflowInputs': inputs
         }
-        response = requests.post(cromwell_url, files=files, auth=HTTPBasicAuth(green_config.user, green_config.password))
-        logger.info(response.json())
+        response = requests.post(green_config.cromwell_url, files=files, auth=HTTPBasicAuth(green_config.cromwell_user, green_config.cromwell_password))
+        return response
 
-    return dict(result=response.text)

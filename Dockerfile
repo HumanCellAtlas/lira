@@ -11,7 +11,10 @@ RUN apt-get -y install --no-install-recommends \
 RUN mkdir /secondary-analysis
 WORKDIR /secondary-analysis
 
-COPY . .
+COPY requirements.txt .
+
+RUN pip install wheel && \
+  pip install -r requirements.txt
 
 RUN apt-get install -y lsb-release curl && \
   export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" && \
@@ -19,10 +22,11 @@ RUN apt-get install -y lsb-release curl && \
   curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
   apt-get update && apt-get install -y google-cloud-sdk
 
-RUN gcloud config set project broad-dsde-mint-dev && \
-  gcloud auth activate-service-account --key-file=/secondary-analysis/test_key.json
+COPY test_key.json .
 
-RUN pip install wheel && \
-  pip install -r requirements.txt
+RUN gcloud config set project broad-dsde-mint-dev && \
+  gcloud auth activate-service-account --key-file=/secondary-analysis/test_key.json; exit 0
+
+COPY . .
 
 CMD ["python", "green-box-api"]

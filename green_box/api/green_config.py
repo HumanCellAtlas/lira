@@ -1,0 +1,6 @@
+notification_token = 'test'
+cromwell_url = 'test'
+cromwell_user = 'test'
+cromwell_password = 'test'
+provenance_script = 'test'
+mock_smartseq2_wdl = 'test'
