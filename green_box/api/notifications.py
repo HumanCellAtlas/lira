@@ -9,7 +9,7 @@ import time
 
 def post(body):
     # Check authentication
-    if not is_authenticated(connexion.request.headers, green_config.notification_token):
+    if not is_authenticated(connexion.request.args, green_config.notification_token):
         time.sleep(1)
         return dict()
 
@@ -34,10 +34,10 @@ def post(body):
     # Respond
     return dict(result=response.text)
 
-def is_authenticated(headers, token):
-    if not 'auth' in headers:
+def is_authenticated(args, token):
+    if not 'auth' in args:
         return False
-    elif headers['auth'] != token:
+    elif args['auth'] != token:
         return False
     return True
 
