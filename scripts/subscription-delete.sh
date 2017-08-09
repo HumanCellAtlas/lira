@@ -2,5 +2,5 @@
 
 uuid=$1
 source config.sh
-curl -H "Authorization: Bearer $oauth_token" "$dss_url?uuid=$uuid&replica=aws"
+curl -X DELETE -H "Authorization: Bearer $oauth_token" "$dss_url/$uuid?replica=aws"
 
