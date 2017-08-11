@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 
 import json
-import requests
 import argparse
+from httplib2 import Http
+from oauth2client.service_account import ServiceAccountCredentials
+from apiclient.discovery import build
 
-def run(dss_url, callback_base_url, oauth_token, listener_secret):
+def prep_json(callback_base_url, listener_secret):
     js = {}
     js["callback_url"] = "{0}?auth={1}".format(callback_base_url, listener_secret)
 
@@ -13,16 +15,22 @@ def run(dss_url, callback_base_url, oauth_token, listener_secret):
         query = json.load(f)
     js["query"] = query
 
-    headers = {"Authorization": "Bearer {0}".format(oauth_token), "Content-type": "application/json"}
-    response = requests.put(dss_url, headers=headers, data=json.dumps(js))
-    print(response)
-    print(response.text)
+    return js
+
+def make_request(js, dss_url, key_file):
+    scopes = ['https://www.googleapis.com/auth/userinfo.email']
+    credentials = ServiceAccountCredentials.from_json_keyfile_name(key_file, scopes)
+    h = credentials.authorize(Http())
+    headers = {'Content-type': 'application/json'}
+    response, content = h.request(dss_url, 'PUT', body=json.dumps(js), headers=headers)
+    print(content)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("dss_url")
     parser.add_argument("callback_base_url")
-    parser.add_argument("oauth_token")
     parser.add_argument("listener_secret")
+    parser.add_argument("key_file")
     args = parser.parse_args()
-    run(args.dss_url, args.callback_base_url, args.oauth_token, args.listener_secret)
+    js = prep_json(args.callback_base_url, args.listener_secret)
+    make_request(js, args.dss_url, args.key_file)
