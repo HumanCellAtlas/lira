@@ -1,4 +1,4 @@
 dss_url=test
 green_url=test
-oauth_token=test
+key_file=test
 listener_secret=test
