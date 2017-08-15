@@ -28,6 +28,14 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/NotificationResponse'
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            type: string
 definitions:
   Notification:
     type: object
@@ -55,4 +63,9 @@ definitions:
     type: object
     properties:
       result:
-        type: string
+        type: object
+        properties:
+          status:
+            type: string
+          id:
+            type: string

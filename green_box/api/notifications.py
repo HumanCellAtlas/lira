@@ -11,7 +11,7 @@ def post(body):
     # Check authentication
     if not is_authenticated(connexion.request.args, green_config.notification_token):
         time.sleep(1)
-        return dict()
+        return None, 401
 
     logger = logging.getLogger('green-box')
     logger.info("Notification received")
@@ -29,10 +29,13 @@ def post(body):
     logger.info("Launching smartseq2 workflow in Cromwell")
     result = subprocess.check_output(['gsutil', 'cp', green_config.mock_smartseq2_wdl, '.'])
     response = start_workflow('mock_smartseq2.wdl', 'cromwell_inputs.json')
-    logger.info(response.json())
 
     # Respond
-    return dict(result=response.text)
+    if response.status_code > 201:
+        logger.error(response.text)
+        return json.dumps(dict(result=response.text)), 500
+    logger.info(response.json())
+    return dict(result=response.json())
 
 def is_authenticated(args, token):
     if not 'auth' in args:
