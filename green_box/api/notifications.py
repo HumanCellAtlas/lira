@@ -6,12 +6,13 @@ import json
 import subprocess
 import green_config
 import time
+import flask
 
 def post(body):
     # Check authentication
     if not is_authenticated(connexion.request.args, green_config.notification_token):
         time.sleep(1)
-        return None, 401
+        return response_with_server_header(dict(error='Unauthorized'), 401)
 
     logger = logging.getLogger('green-box')
     logger.info("Notification received")
@@ -28,14 +29,20 @@ def post(body):
     # Start workflow
     logger.info("Launching smartseq2 workflow in Cromwell")
     result = subprocess.check_output(['gsutil', 'cp', green_config.mock_smartseq2_wdl, '.'])
-    response = start_workflow('mock_smartseq2.wdl', 'cromwell_inputs.json')
+    cromwell_response = start_workflow('mock_smartseq2.wdl', 'cromwell_inputs.json')
 
     # Respond
-    if response.status_code > 201:
+    if cromwell_response.status_code > 201:
         logger.error(response.text)
-        return json.dumps(dict(result=response.text)), 500
-    logger.info(response.json())
-    return dict(result=response.json())
+        return response_with_server_header(dict(result=cromwell_response.text), 500)
+    logger.info(cromwell_response.json())
+    return response_with_server_header(cromwell_response.json())
+
+def response_with_server_header(body, status=200):
+    response = flask.make_response(json.dumps(body), status)
+    response.headers['Server'] = 'Secondary Analysis Service'
+    response.headers['Content-type'] = 'application/json'
+    return response
 
 def is_authenticated(args, token):
     if not 'auth' in args:

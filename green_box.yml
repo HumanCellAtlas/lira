@@ -31,7 +31,7 @@ paths:
         401:
           description: Unauthorized
           schema:
-            type: string
+            $ref: '#/definitions/Error'
         default:
           description: Error
           schema:
@@ -52,12 +52,7 @@ definitions:
   Error:
     type: object
     properties:
-      code:
-        type: integer
-        format: int32
-      message:
-        type: string
-      fields:
+      error:
         type: string
   NotificationResponse:
     type: object
