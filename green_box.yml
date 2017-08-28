@@ -6,10 +6,22 @@ info:
 host: localhost:8080
 schemes:
   - https
-basePath: /v1
 produces:
   - application/json
 paths:
+  /:
+    get:
+      summary: health check
+      operationId: 'green_box.api.health.get'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/HealthCheckResponse'
+        default:
+          description: Error
+          schema:
+            type: string
   /notifications:
     post:
       summary: Send notifications
@@ -64,3 +76,8 @@ definitions:
             type: string
           id:
             type: string
+  HealthCheckResponse:
+    type: object
+    properties:
+      status:
+        type: string
