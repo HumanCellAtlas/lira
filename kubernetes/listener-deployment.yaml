@@ -1,0 +1,16 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: listener
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: listener
+    spec:
+      containers:
+      - name: listener
+        image: gcr.io/broad-dsde-mint-dev/listener:v2
+        ports:
+        - containerPort: 8080
