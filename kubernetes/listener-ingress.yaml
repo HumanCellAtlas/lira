@@ -2,7 +2,11 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: listener
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: listener
 spec:
+  tls:
+    - secretName: tls-secret
   backend:
     serviceName: listener
     servicePort: 8080
