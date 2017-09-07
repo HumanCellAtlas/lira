@@ -1,0 +1,14 @@
+{
+  "notification_token": "test",
+  "cromwell_user": "test",
+  "cromwell_password": "test",
+  "cromwell_url": "test",
+  "provenance_script": "test",
+  "wdl_cloud_path": "test",
+  "wdl_file": "test",
+  "workflow_name": "test",
+  "wdl_deps_cloud_path": "test",
+  "wdl_deps_file": "test",
+  "default_inputs_cloud_path": "test",
+  "default_inputs_file": "test"
+}

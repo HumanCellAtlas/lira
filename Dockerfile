@@ -22,11 +22,6 @@ RUN apt-get install -y lsb-release curl && \
   curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
   apt-get update && apt-get install -y google-cloud-sdk
 
-COPY test_key.json .
-
-RUN gcloud config set project broad-dsde-mint-dev && \
-  gcloud auth activate-service-account --key-file=/secondary-analysis/test_key.json; exit 0
-
 COPY . .
 
-CMD ["python", "green-box-api"]
+CMD ["bash", "listener-start.sh"]
