@@ -6,7 +6,7 @@ metadata:
     kubernetes.io/ingress.global-static-ip-name: listener
 spec:
   tls:
-    - secretName: tls-secret
+    - secretName: hca-tls-secret
   backend:
     serviceName: listener
     servicePort: 8080
