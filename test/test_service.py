@@ -22,10 +22,10 @@ class TestService(unittest.TestCase):
         self.assertEqual(version, 'bar')
 
     def test_compose_inputs(self):
-        inputs = api.notifications.compose_inputs('foo', 12, 'baz')
-        self.assertEqual(inputs['mock_smartseq2.bundle_uuid'], 'foo')
-        self.assertEqual(inputs['mock_smartseq2.bundle_version'], '"12"')
-        self.assertEqual(inputs['mock_smartseq2.provenance_script'], 'baz')
+        inputs = api.notifications.compose_inputs('foo', 'bar', 'baz', 'asdf')
+        self.assertEqual(inputs['foo.bundle_uuid'], 'bar')
+        self.assertEqual(inputs['foo.bundle_version'], 'baz')
+        self.assertEqual(inputs['foo.provenance_script'], 'asdf')
 
     def test_is_authenticated_no_auth_header(self):
         self.assertEquals(api.notifications.is_authenticated({'foo': 'bar'}, 'baz'), False)

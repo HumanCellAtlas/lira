@@ -11,6 +11,22 @@ spec:
     spec:
       containers:
       - name: listener
-        image: gcr.io/broad-dsde-mint-dev/listener:v2
+        image: gcr.io/broad-dsde-mint-dev/listener:real-smartseq2-v10
         ports:
         - containerPort: 8080
+        volumeMounts:
+        - name: listener-config
+          mountPath: /etc/secondary-analysis
+          readOnly: true
+        env:
+        - name: listener_config
+          value: /etc/secondary-analysis/config.json
+      volumes:
+      - name: listener-config
+        secret:
+          secretName: listener-config
+          items:
+          - key: config
+            path: config.json
+          - key: bucket-reader-key
+            path: bucket-reader-key.json
