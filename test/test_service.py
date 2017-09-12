@@ -12,14 +12,16 @@ class TestService(unittest.TestCase):
 
     def test_extract_uuid_version(self):
         body = {
+            'subscription_id': 222,
             'match': {
                 'bundle_uuid': 'foo',
                 'bundle_version': 'bar'
             }
         }
-        uuid, version = api.notifications.extract_uuid_version(body)
+        uuid, version, subscription_id = api.notifications.extract_uuid_version_subscription_id(body)
         self.assertEqual(uuid, 'foo')
         self.assertEqual(version, 'bar')
+        self.assertEqual(subscription_id, 222)
 
     def test_compose_inputs(self):
         inputs = api.notifications.compose_inputs('foo', 'bar', 'baz', 'asdf')

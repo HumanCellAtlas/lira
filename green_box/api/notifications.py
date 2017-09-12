@@ -21,24 +21,40 @@ def post(body):
     logger.info("Notification received")
     logger.info(body)
 
-    # Get bundle uuid and version
-    uuid, version = extract_uuid_version(body)
+    # Get bundle uuid, version and subscription_id
+    uuid, version, subscription_id = extract_uuid_version_subscription_id(body)
+
+    # Find wdl config where the subscription_id matches the notification's subscription_id
+    id_matches = [wdl for wdl in green_config.wdls if wdl.get('subscription_id') == subscription_id]
+    if len(id_matches) == 0:
+        return response_with_server_header(dict(error='Not Found: No wdl config found with subscription id {}'.format(subscription_id)), 404)
+    elif len(id_matches) > 1:
+        return response_with_server_header(dict(error='Internal Server Error: More than one wdl config found with subscription id {}'.format(subscription_id)), 500)
 
     # Prepare inputs
-    inputs = compose_inputs(green_config.workflow_name, uuid, version, green_config.provenance_script)
+    wdl = id_matches[0]
+    workflow_name = wdl.get('workflow_name')
+    inputs = compose_inputs(workflow_name, uuid, version, green_config.provenance_script)
     with open('cromwell_inputs.json', 'w') as f:
         json.dump(inputs, f)
 
     # Start workflow
-    logger.info('Launching {0} workflow in Cromwell'.format(green_config.workflow_name))
-    result = subprocess.check_output(['gsutil', 'cp', green_config.wdl_cloud_path, '.'])
-    result = subprocess.check_output(['gsutil', 'cp', green_config.wdl_deps_cloud_path, '.'])
-    result = subprocess.check_output(['gsutil', 'cp', green_config.default_inputs_cloud_path, '.'])
-    cromwell_response = start_workflow(green_config.wdl_file, green_config.wdl_deps_file, 'cromwell_inputs.json', green_config.default_inputs_file, green_config)
+    logger.info(wdl)
+    logger.info('Launching {0} workflow in Cromwell'.format(workflow_name))
+
+    # Get files from gcs
+    subprocess.check_output(['gsutil', 'cp', wdl['wdl_cloud_path'], '.'])
+    subprocess.check_output(['gsutil', 'cp', wdl['default_inputs_cloud_path'], '.'])
+    subprocess.check_output(['gsutil', 'cp', wdl['wdl_deps_cloud_path'], '.'])
+
+    wdl_file = wdl['wdl_file']
+    wdl_deps_file = wdl['wdl_deps_file']
+    wdl_default_inputs_file = wdl['default_inputs_file']
+    cromwell_response = start_workflow(wdl_file, wdl_deps_file, 'cromwell_inputs.json', wdl_default_inputs_file, green_config)
 
     # Respond
     if cromwell_response.status_code > 201:
-        logger.error(response.text)
+        logger.error(cromwell_response.text)
         return response_with_server_header(dict(result=cromwell_response.text), 500)
     logger.info(cromwell_response.json())
     return response_with_server_header(cromwell_response.json())
@@ -56,10 +72,11 @@ def is_authenticated(args, token):
         return False
     return True
 
-def extract_uuid_version(msg):
+def extract_uuid_version_subscription_id(msg):
     uuid = msg["match"]["bundle_uuid"]
     version = msg["match"]["bundle_version"]
-    return uuid, version
+    subscription_id = msg["subscription_id"]
+    return uuid, version, subscription_id
 
 def compose_inputs(workflow_name, uuid, version, provenance_script):
     inputs = {}
@@ -76,6 +93,6 @@ def start_workflow(wdl_file, zip_file, inputs_file, inputs_file2, green_config):
           'workflowInputs_2': inputs2,
           'wdlDependencies': deps
         }
+
         response = requests.post(green_config.cromwell_url, files=files, auth=HTTPBasicAuth(green_config.cromwell_user, green_config.cromwell_password))
         return response
-
