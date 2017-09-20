@@ -2,4 +2,4 @@
 
 uuid=$1
 source config.sh
-./subscription-delete.py "$dss_url/$uuid?replica=aws" $key_file
+./subscription-delete.py "$dss_url/$uuid?replica=gcp" $key_file
