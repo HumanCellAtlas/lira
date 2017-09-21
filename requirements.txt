@@ -1,1 +1,3 @@
 connexion
+flask
+requests
