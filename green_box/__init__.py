@@ -25,14 +25,14 @@ try:
     logging.debug('Configuring listener credentials using %s' % key_location)
     TEST = False
 except IOError:
-    try:
-        client = storage.Client()
-        logging.debug('Configuring listener using default credentials')
-        TEST = False
-    except DefaultCredentialsError:
-        logging.debug(
-            'Could not configure listener using expected json key or default credentials')
-        TEST = True
+    # try:
+    #     client = storage.Client()
+    #     logging.debug('Configuring listener using default credentials')
+    #     TEST = False
+    # except DefaultCredentialsError:
+    logging.debug(
+        'Could not configure listener using expected json key or default credentials')
+    TEST = True
 
 
 def verify_gs_link(link):
