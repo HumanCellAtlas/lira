@@ -1,2 +1,0 @@
-connexion
-google-cloud

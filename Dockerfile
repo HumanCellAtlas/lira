@@ -11,10 +11,9 @@ RUN apt-get -y install --no-install-recommends \
 RUN mkdir /secondary-analysis
 WORKDIR /secondary-analysis
 
-COPY requirements.txt .
-
-RUN pip install wheel && \
-  pip install -r requirements.txt
+RUN pip install \
+  wheel \
+  connexion
 
 RUN apt-get install -y lsb-release curl && \
   export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" && \
