@@ -3,6 +3,7 @@ import json
 from copy import deepcopy
 from .. import verify_config_json
 
+
 # todo refactor into package for easier testing
 # run tests from secondary-analysis folder with command:
 # python2.7 -m green_box.test.test_startup
@@ -21,7 +22,7 @@ correct_test_config = json.loads("""
       "wdl_link": "gs://broad-dsde-mint-dev-teststorage/prepare_and_analyze_ss2_single_sample.wdl",
       "workflow_name": "PrepareAndAnalyzeSs2RsemSingleSample",
       "wdl_deps_link": "gs://broad-dsde-mint-dev-teststorage/ss2_single_sample_analysis_only.zip",
-      "default_inputs_link": "gs://broad-dsde-mint-dev-teststorage/prepare_and_analyze_ss2_single_sample_default_static.json"
+      "default_inputs_link": "gs://broad-dsde-mint-dev-teststorage/prepare_and_analyze_ss2_single_sample_default_inputs.json"
     },
     {
       "subscription_id": 333,

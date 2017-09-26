@@ -1,4 +1,4 @@
-#!/usr/bin/env/python
+#!/usr/bin/env python
 
 """
 Green box description FIXME: elaborate
@@ -13,12 +13,27 @@ import connexion
 from connexion.resolver import RestyResolver
 from google.cloud import storage
 from google.cloud.exceptions import NotFound
+from google.auth.exceptions import DefaultCredentialsError
+
+# IMPORTANT: setting global client
+try:
+    key_location = '/etc/secondary-analysis/bucket-reader-key.json'
+    client = storage.Client.from_service_account_json(
+        key_location)
+    print('Configuring listener credentials using %s' % key_location)
+except IOError:
+    client = storage.Client()
+    print('Configuring listener using default credentials')
+except DefaultCredentialsError:
+    print('Could not configure listener using expected json key or default credentials')
+    raise
 
 
-def verify_gs_link(link, client):
+def verify_gs_link(link):
     """verifies that a google storage endpoint exists and references a file.
 
-    note: assumes that you have run `gcloud auth application-default login`
+    :param str link: link to parse
+    :global google.cloud.storage.Client client: authenticated google-cloud-storage client
     """
     # split the link, checking to make sure it contains both a bucket and key
     # python3 syntax
@@ -53,10 +68,12 @@ def verify_gs_link(link, client):
             '{blob_name}'.format(bucket=bucket, blob_name=blob_name))
 
 
-def verify_config_json(parsed_json_dict):
+
+
+def verify_config_json(config_json):
     """parse the config json file and verify that it contains valid configurations
 
-    :param dict parsed_json_dict:
+    :param dict config_json:
     :return:
     """
 
@@ -68,7 +85,7 @@ def verify_config_json(parsed_json_dict):
         'wdl_deps_link',
         'default_inputs_link'
     }
-    for wdl in parsed_json_dict['wdls']:
+    for wdl in config_json['wdls']:
         wdl_keys = set(wdl.keys())
         extra_keys = wdl_keys - expected_fields
         missing_keys = expected_fields - wdl_keys
@@ -82,22 +99,22 @@ def verify_config_json(parsed_json_dict):
                              ''.format(wdl=wdl, keys=', '.join(extra_keys)))
 
     # check for duplicate wdl definitions
-    if any(a == b for a, b in combinations(parsed_json_dict, 2)):
+    if any(a == b for a, b in combinations(config_json, 2)):
         warnings.warn('duplicate wdl definitions detected in config.json')
 
     # check for duplicate subscription ids
-    subscription_ids = [wdl['subscription_id'] for wdl in parsed_json_dict['wdls']]
-    if len(parsed_json_dict['wdls']) != len(set(subscription_ids)):
+    subscription_ids = [wdl['subscription_id'] for wdl in config_json['wdls']]
+    if len(config_json['wdls']) != len(set(subscription_ids)):
         raise ValueError(
             'One or more wdl specifications contains a duplicated subscription ID but '
-            'have identical configuration. Please check configuration file contents.')
+            'have non-identical configurations. Please check configuration file '
+            'contents.')
 
     # check that link fields point to valid gs endpoints
-    client = storage.Client()  # this is slow, do this only once
-    for wdl in parsed_json_dict['wdls']:
+    for wdl in config_json['wdls']:
         for field, value in wdl.iteritems():
             if field.endswith('link'):
-                verify_gs_link(value, client)
+                verify_gs_link(value)
 
 
 def main():
