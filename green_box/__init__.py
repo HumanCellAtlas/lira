@@ -14,18 +14,22 @@ from connexion.resolver import RestyResolver
 from google.cloud import storage
 from google.cloud.exceptions import NotFound
 from google.auth.exceptions import DefaultCredentialsError
+from google.oauth2 import service_account
 
 # IMPORTANT: setting global client
 try:
     key_location = '/etc/secondary-analysis/bucket-reader-key.json'
-    client = storage.Client.from_service_account_json(
-        key_location)
-    print('Configuring listener credentials using %s' % key_location)
+    scopes = ['https://www.googleapis.com/auth/devstorage.read_only']
+    credentials = service_account.Credentials.from_service_account_file(
+        key_location, scopes=scopes)
+    client = storage.Client(credentials=credentials, project=credentials.project_id)
+    logging.debug('Configuring listener credentials using %s' % key_location)
 except IOError:
     client = storage.Client()
-    print('Configuring listener using default credentials')
+    logging.debug('Configuring listener using default credentials')
 except DefaultCredentialsError:
-    print('Could not configure listener using expected json key or default credentials')
+    logging.debug(
+        'Could not configure listener using expected json key or default credentials')
     raise
 
 
@@ -50,24 +54,15 @@ def verify_gs_link(link):
             'and key: {malformed_link}'.format(malformed_link=link))
     bucket, pseudo_dirs, pseudo_filename = fields[2], fields[3:-1], fields[-1]
 
-    # verify the bucket exists
-    try:
-        verified_bucket = client.get_bucket(bucket)
-        assert verified_bucket.exists(), 'Bucket: {bucket} does not exist!'.format(
-            bucket=bucket)
-    except NotFound:
-        raise ValueError(
-            'Bucket {bucket} specified in {link} does not exist.'.format(
-                bucket=bucket, link=link))
+    # get the bucket
+    verified_bucket = client.bucket(bucket)
 
-    # verify the file (blob) exists in the bucket
+    # verify the file (blob) is a valid gs endpoint
     blob_name = '/'.join(pseudo_dirs + [pseudo_filename])
     if not verified_bucket.blob(blob_name).exists():
         raise ValueError(
             'specified blob (alias: key, filename) does not exist in {bucket}: '
             '{blob_name}'.format(bucket=bucket, blob_name=blob_name))
-
-
 
 
 def verify_config_json(config_json):
@@ -116,24 +111,19 @@ def verify_config_json(config_json):
             if field.endswith('link'):
                 verify_gs_link(value)
 
+logging.basicConfig(level=logging.DEBUG)
 
-def main():
-    logging.basicConfig(level=logging.DEBUG)
+app = connexion.App(__name__)
+app.app.config['MAX_CONTENT_LENGTH'] = 10 * 1000
 
-    app = connexion.App(__name__)
-    app.app.config['MAX_CONTENT_LENGTH'] = 10 * 1000
+config_path = os.environ['listener_config']
+with open(config_path) as f:
+    config = json.load(f)
+    verify_config_json(config)
+    for key in config:
+        app.app.config[key] = config[key]
 
-    config_path = os.environ['listener_config']
-    with open(config_path) as f:
-        config = json.load(f)
-        verify_config_json(config)
-        for key in config:
-            app.app.config[key] = config[key]
+resolver = RestyResolver("green_box.api", collection_endpoint_name="list")
+app.add_api('../green_box.yml', resolver=resolver, validate_responses=True)
 
-    resolver = RestyResolver("green_box.api", collection_endpoint_name="list")
-    app.add_api('../green_box.yml', resolver=resolver, validate_responses=True)
-    return app
-
-if __name__ == "__main__":
-    app = main()
-    app.run(debug=True, port=8080)
+app.run(debug=True, port=8080)
