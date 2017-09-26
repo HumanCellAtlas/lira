@@ -12,7 +12,6 @@ from itertools import combinations
 import connexion
 from connexion.resolver import RestyResolver
 from google.cloud import storage
-from google.cloud.exceptions import NotFound
 from google.auth.exceptions import DefaultCredentialsError
 from google.oauth2 import service_account
 
@@ -24,13 +23,16 @@ try:
         key_location, scopes=scopes)
     client = storage.Client(credentials=credentials, project=credentials.project_id)
     logging.debug('Configuring listener credentials using %s' % key_location)
+    TEST = False
 except IOError:
-    client = storage.Client()
-    logging.debug('Configuring listener using default credentials')
-except DefaultCredentialsError:
-    logging.debug(
-        'Could not configure listener using expected json key or default credentials')
-    raise
+    try:
+        client = storage.Client()
+        logging.debug('Configuring listener using default credentials')
+        TEST = False
+    except DefaultCredentialsError:
+        logging.debug(
+            'Could not configure listener using expected json key or default credentials')
+        TEST = True
 
 
 def verify_gs_link(link):
@@ -47,6 +49,9 @@ def verify_gs_link(link):
     #     raise ValueError(
     #         'Malformed google storage link. Link must specify both a bucket '
     #         'and key: {malformed_link}'.format(malformed_link=link))
+    if TEST:
+        return
+
     fields = link.split('/')
     if len(fields) < 4:
         raise ValueError(
@@ -125,5 +130,3 @@ with open(config_path) as f:
 
 resolver = RestyResolver("green_box.api", collection_endpoint_name="list")
 app.add_api('../green_box.yml', resolver=resolver, validate_responses=True)
-
-app.run(debug=True, port=8080)
