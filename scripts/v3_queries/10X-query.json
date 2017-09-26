@@ -1,0 +1,19 @@
+{
+  "query": {
+    "bool": {
+      "must": [{
+        "match": {
+          "files.assay_json.single_cell.cell_handling": "10x_v2"
+        }
+      }, {
+        "match": {
+          "files.assay_json.rna.library_construction": "10x_v2"
+        }
+      }, {
+        "match": {
+          "files.sample_json.donor.species.ontology": 9606
+        }
+      }]
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "query": {
+    "bool": {
+      "must": [{
+        "match": {
+          "files.assay_json.rna.library_construction": "smart-seq2"
+        }
+      }, {
+        "match": {
+          "files.assay_json.seq.paired_ends": "yes"
+        }
+      }, {
+        "match": {
+          "files.sample_json.donor.species.ontology": 9606
+        }
+      }],
+      "should": [{
+        "match": {
+          "files.assay_json.single_cell.cell_handling": "FACs"
+        }
+      }, {
+        "match": {
+          "files.assay_json.single_cell.cell_handling": "mouth-pipetting"
+        }
+      }]
+    }
+  }
+}
