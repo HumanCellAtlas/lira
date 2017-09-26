@@ -13,7 +13,8 @@ WORKDIR /secondary-analysis
 
 RUN pip install \
   wheel \
-  connexion
+  connexion \
+  google-cloud
 
 RUN apt-get install -y lsb-release curl && \
   export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" && \
