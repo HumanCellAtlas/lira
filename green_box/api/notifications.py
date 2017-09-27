@@ -46,11 +46,14 @@ def post(body):
     subprocess.check_output(['gsutil', 'cp', wdl['wdl_cloud_path'], '.'])
     subprocess.check_output(['gsutil', 'cp', wdl['default_inputs_cloud_path'], '.'])
     subprocess.check_output(['gsutil', 'cp', wdl['wdl_deps_cloud_path'], '.'])
+    subprocess.check_output(['gsutil', 'cp', wdl['options_cloud_path'], '.'])
 
     wdl_file = wdl['wdl_file']
     wdl_deps_file = wdl['wdl_deps_file']
     wdl_default_inputs_file = wdl['default_inputs_file']
-    cromwell_response = start_workflow(wdl_file, wdl_deps_file, 'cromwell_inputs.json', wdl_default_inputs_file, green_config)
+    options_file = wdl['options_file']
+    cromwell_response = start_workflow(wdl_file, wdl_deps_file, 'cromwell_inputs.json',
+                                        wdl_default_inputs_file, options_file, green_config)
 
     # Respond
     if cromwell_response.status_code > 201:
@@ -85,13 +88,16 @@ def compose_inputs(workflow_name, uuid, version, provenance_script):
     inputs[workflow_name + '.provenance_script'] = provenance_script
     return inputs
 
-def start_workflow(wdl_file, zip_file, inputs_file, inputs_file2, green_config):
-    with open(wdl_file, 'rb') as wdl, open(zip_file, 'rb') as deps, open(inputs_file, 'rb') as inputs, open(inputs_file2, 'rb') as inputs2:
+def start_workflow(wdl_file, zip_file, inputs_file, inputs_file2, options_file, green_config):
+    with open(wdl_file, 'rb') as wdl, open(zip_file, 'rb') as deps, \
+        open(inputs_file, 'rb') as inputs, open(inputs_file2, 'rb') as inputs2, \
+        open(options_file, 'rb') as options:
         files = {
           'wdlSource': wdl,
           'workflowInputs': inputs,
           'workflowInputs_2': inputs2,
-          'wdlDependencies': deps
+          'wdlDependencies': deps,
+          'workflowOptions': options
         }
 
         response = requests.post(green_config.cromwell_url, files=files, auth=HTTPBasicAuth(green_config.cromwell_user, green_config.cromwell_password))
