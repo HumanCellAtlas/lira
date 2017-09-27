@@ -4,11 +4,13 @@
   "cromwell_password": "test",
   "cromwell_url": "test",
   "provenance_script": "test",
-  "wdl_cloud_path": "test",
-  "wdl_file": "test",
-  "workflow_name": "test",
-  "wdl_deps_cloud_path": "test",
-  "wdl_deps_file": "test",
-  "default_inputs_cloud_path": "test",
-  "default_inputs_file": "test"
+  "wdls": [
+    {
+      "subscription_id": 222,
+      "wdl_link": "gs://broad-dsde-mint-dev-teststorage/prepare_and_analyze_ss2_single_sample.wdl",
+      "workflow_name": "PrepareAndAnalyzeSs2RsemSingleSample",
+      "wdl_deps_link": "gs://broad-dsde-mint-dev-teststorage/ss2_single_sample_analysis_only.zip",
+      "default_inputs_link": "gs://broad-dsde-mint-dev-teststorage/prepare_and_analyze_ss2_single_sample_default_inputs.json"
+    }
+  ]
 }
