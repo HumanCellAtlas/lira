@@ -10,14 +10,14 @@ Currently, the listener launches either a smartseq2 or 10x count workflow to pro
 
 [Design specs and prototypes for secondary analyses ("green box")](https://docs.google.com/document/d/1_VgySxINPbUsI0w-Gr4fV4DrHRSwdbCMf7b5sCB18uQ/edit?usp=sharing)
 
-#Installation and Setup for Local Development
+### Installation and Setup for Local Development
 1. [Install Docker](https://docs.docker.com/engine/installation/#supported-platforms)
 2. Git clone this repository
 3. Add `config.json` (contains wdl configs and cromwell credentials) and `bucket-reader-key.json` (contains google cloud storage keys) to `/private/etc/secondary-analysis/`
 4. Build the docker container: `bash build_docker.sh dev test`
 5. Run the docker container: `bash run_docker.sh dev test`
 
-#Testing notifications locally
+### Testing notifications locally
 To send a test notification to the listener:  
 1. Set the auth token: `auth=notification_token`  
 2. Send the notification: `curl -X POST -H "Content-type: application/json" "http://localhost:8080/notifications?auth=${notification_token}" -d @test/notification.json`
