@@ -8,6 +8,7 @@ sys.path.insert(0, pkg_root)
 
 import green_box.api as api
 
+
 class TestService(unittest.TestCase):
 
     def test_extract_uuid_version(self):
@@ -24,10 +25,9 @@ class TestService(unittest.TestCase):
         self.assertEqual(subscription_id, 222)
 
     def test_compose_inputs(self):
-        inputs = api.notifications.compose_inputs('foo', 'bar', 'baz', 'asdf')
+        inputs = api.notifications.compose_inputs('foo', 'bar', 'baz')
         self.assertEqual(inputs['foo.bundle_uuid'], 'bar')
         self.assertEqual(inputs['foo.bundle_version'], 'baz')
-        self.assertEqual(inputs['foo.provenance_script'], 'asdf')
 
     def test_is_authenticated_no_auth_header(self):
         self.assertEquals(api.notifications.is_authenticated({'foo': 'bar'}, 'baz'), False)
