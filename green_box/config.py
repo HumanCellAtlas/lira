@@ -70,6 +70,9 @@ class Config:
     def __getitem__(self, item):
         return getattr(self, item)
 
+    def __setitem__(self, key, value):
+        return setattr(self, key, value)
+
 
 class WdlConfig(Config):
     """subclass of Config to check WDL configurations"""
