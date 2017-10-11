@@ -55,7 +55,7 @@ def post(body):
     wdl_default_inputs_file = get_filename_from_gs_link(wdl.wdl_default_inputs_link)
     wdl_deps_file = get_filename_from_gs_link(wdl.wdl_deps_link)
     options_file = get_filename_from_gs_link(wdl.options_link)
-
+    
     cromwell_response = start_workflow(
         wdl_file, wdl_deps_file, 'cromwell_inputs.json',
         wdl_default_inputs_file, options_file, green_config)
