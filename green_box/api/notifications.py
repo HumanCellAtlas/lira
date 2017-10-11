@@ -6,6 +6,7 @@ import json
 import subprocess
 import time
 from flask import make_response, current_app
+from google.cloud import storage  # Imports the Google Cloud client library
 
 
 def get_filename_from_gs_link(link):
@@ -112,3 +113,25 @@ def start_workflow(wdl_file, zip_file, inputs_file, inputs_file2, options_file, 
             auth=HTTPBasicAuth(green_config.cromwell_user,
                                green_config.cromwell_password))
         return response
+
+    
+def download_gcs_blob(bucket_name, source_blob_name, destination_file_name=None):
+    """Use google.cloud.storage API to download a blob from the bucket. 
+        Check details: https://cloud.google.com/storage/docs/object-basics#storage-download-object-python
+    """
+    if not destination_file_name:  # destination_file_name is set to source_blob_name by default
+        destination_file_name = source_blob_name
+
+    storage_client = storage.Client()  # Instantiates a client
+    bucket = storage_client.get_bucket(bucket_name)   # Specify the bucket to download from
+    blob = bucket.blob(source_blob_name)  # Specify the blob to download
+
+    blob.download_to_filename(destination_file_name)
+
+    # print('Blob {} downloaded to {}.'.format(
+    #     source_blob_name,
+    #     destination_file_name))
+    
+    return 'Blob {} downloaded to {}.'.format(
+            source_blob_name,
+            destination_file_name)
