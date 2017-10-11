@@ -52,11 +52,14 @@ def post(body):
     subprocess.check_output(['gsutil', 'cp', wdl.options_link, '.'])
 
     # get filenames from links
-    wdl_file = get_filename_from_gs_link(wdl.wdl_link)
-    wdl_default_inputs_file = get_filename_from_gs_link(wdl.wdl_default_inputs_link)
-    wdl_deps_file = get_filename_from_gs_link(wdl.wdl_deps_link)
-    options_file = get_filename_from_gs_link(wdl.options_link)
-
+    # wdl_file = get_filename_from_gs_link(wdl.wdl_link)
+    # wdl_default_inputs_file = get_filename_from_gs_link(wdl.wdl_default_inputs_link)
+    # wdl_deps_file = get_filename_from_gs_link(wdl.wdl_deps_link)
+    # options_file = get_filename_from_gs_link(wdl.options_link)
+    
+    wdl_file, wdl_default_inputs_file, wdl_deps_file, options_file = map(get_filename_from_gs_link,
+          [wdl.wdl_link, wdl.wdl_default_inputs_file, wdl.wdl_deps_link, wdl.options_link])
+    
     cromwell_response = start_workflow(
         wdl_file, wdl_deps_file, 'cromwell_inputs.json',
         wdl_default_inputs_file, options_file, green_config)
