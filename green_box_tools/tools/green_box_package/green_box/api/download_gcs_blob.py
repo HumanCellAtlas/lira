@@ -4,7 +4,6 @@ import logging
 from google.cloud import storage
 from google.auth.exceptions import DefaultCredentialsError
 from google.oauth2 import service_account
-from .config import ListenerConfig
 logging.basicConfig(level=logging.DEBUG)
 
 

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import requests
+import json
+import logging
 from requests.auth import HTTPBasicAuth
 from flask import make_response
 from google.cloud import storage  # Imports the Google Cloud client library
@@ -65,3 +67,28 @@ def start_workflow(wdl_file, zip_file, inputs_file, inputs_file2, options_file, 
             auth=HTTPBasicAuth(green_config.cromwell_user,
                                green_config.cromwell_password))
         return response
+
+
+def download_gcs_blob(authenticated_gcs_client, bucket_name, source_blob_name, destination_file_path='./', destination_file_name=None):
+    """Use google.cloud.storage API to download a blob from the bucket."""
+    if not destination_file_name:  # destination_file_name is set to source_blob_name by default
+        destination_file_name = source_blob_name
+    destination_file_name = validate_path(destination_file_path) + str(source_blob_name)
+
+    try:
+        storage_client = authenticated_gcs_client  # pass the client as a parameter here
+        bucket = storage_client.get_bucket(bucket_name)
+        blob = bucket.blob(source_blob_name)
+        blob.download_to_filename(destination_file_name)
+        logging.info('Blob {} downloaded to {}.'.format(source_blob_name, destination_file_name))
+    except:
+        logging.debug(
+            'An error occurred during downloading blob {} from Google Cloud Storage'.format(source_blob_name))
+
+
+def validate_path(filepath):
+    """Validate if the filepath ends with slash, if not, add the slash to the end."""
+    if not str(filepath).endswith('/'):
+        return str(filepath)+'/'
+    return str(filepath)
+

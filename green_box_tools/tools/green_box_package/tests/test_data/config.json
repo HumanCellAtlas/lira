@@ -1,0 +1,33 @@
+{
+  "notification_token": "test",
+  "cromwell_user": "test",
+  "cromwell_password": "test",
+  "cromwell_url": "test",
+  "MAX_CONTENT_LENGTH": 10000,
+  "wdls": [
+    {
+      "subscription_id": 222,
+      "wdl_link": "gs://broad-dsde-mint-dev-teststorage/prepare_and_analyze_ss2_single_sample.wdl",
+      "workflow_name": "PrepareAndAnalyzeSs2RsemSingleSample",
+      "wdl_deps_link": "gs://broad-dsde-mint-dev-teststorage/ss2_single_sample_analysis_only.zip",
+      "wdl_default_inputs_link": "gs://broad-dsde-mint-dev-teststorage/prepare_and_analyze_ss2_single_sample_default_inputs.json",
+      "options_link": "gs://broad-dsde-mint-dev/an_options_file.json"
+    },
+    {
+      "subscription_id": 333,
+      "workflow_name": "PrepareAndAnalyzeMockSmartseq2",
+      "wdl_link": "gs://broad-dsde-mint-dev-teststorage/prepare_and_analyze_mock_smartseq2.wdl",
+      "wdl_default_inputs_link": "gs://broad-dsde-mint-dev-teststorage/prepare_and_analyze_mock_smartseq2_default_inputs.json",
+      "wdl_deps_link": "gs://broad-dsde-mint-dev-teststorage/mock_smartseq2.zip",
+      "options_link": "gs://broad-dsde-mint-dev/an_options_file.json"
+    },
+    {
+      "subscription_id": 1,
+      "wdl_link": "gs://broad-dsde-mint-dev-teststorage/wrapper_ss2_single_sample.wdl",
+      "workflow_name": "WrapperSs2RsemSingleSample",
+      "wdl_deps_link": "gs://broad-dsde-mint-dev-teststorage/ss2_single_sample_analysis_only.zip",
+      "wdl_default_inputs_link": "gs://broad-dsde-mint-dev-teststorage/wrapper_ss2_single_sample_example_static.json",
+      "options_link": "gs://broad-dsde-mint-dev/an_options_file.json"
+    }
+  ]
+}

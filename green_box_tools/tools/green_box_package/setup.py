@@ -4,11 +4,11 @@ from setuptools import setup
 
 
 setup(
-    name='listener',
+    name='green-box-listener',
 
     version='1.0.0.dev1',
 
-    description='Utility for listener component of Green-Box of HCA-DCP',
+    description='Utility for listener components of Green-Box of HCA-DCP',
 
     url='https://github.com/HumanCellAtlas/secondary-analysis',
 
@@ -28,10 +28,10 @@ setup(
         'Programming Language :: Python :: 3 :: Only',
     ],
 
-    packages=['listener', 'tests'],
+    packages=['green_box', 'tests'],
 
     # Prequisite packages
-    install_requires=[],
+    install_requires=['connexion', 'google-cloud', 'requests'],
 
     # Commandline entry points
     entry_points={

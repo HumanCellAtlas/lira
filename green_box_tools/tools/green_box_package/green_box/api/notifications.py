@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# notifications.py
+
 import connexion
 import requests
 import logging
@@ -13,7 +13,6 @@ from utils import is_authenticated
 from utils import extract_uuid_version_subscription_id
 from utils import compose_inputs
 from utils import start_workflow
-from download_gcs_blob import Download_gcs_blob
 
 
 def post(body):
@@ -55,10 +54,11 @@ def post(body):
             [wdl.wdl_link, wdl.wdl_default_inputs_file, wdl.wdl_deps_link, wdl.options_link])
     
     # Get files from gcs # [x] todo change to using google.cloud.storage
-    download_gcs_blob(bucket_name, wdl_file, '.')
-    download_gcs_blob(bucket_name, wdl_default_inputs_file, '.')
-    ldownload_gcs_blob(bucket_name, wdl_deps_file, '.')
-    download_gcs_blob(bucket_name, options_file, '.')
+    storage_client = current_app.client
+    download_gcs_blob(storage_client, bucket_name, wdl_file, '.')
+    download_gcs_blob(storage_client, bucket_name, wdl_default_inputs_file, '.')
+    ldownload_gcs_blob(storage_client, bucket_name, wdl_deps_file, '.')
+    download_gcs_blob(storage_client, bucket_name, options_file, '.')
 
     cromwell_response = start_workflow(
         wdl_file, wdl_deps_file, 'cromwell_inputs.json',

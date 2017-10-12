@@ -1,0 +1,91 @@
+swagger: '2.0'
+info:
+  title: HCA DCP Green Box API
+  description: Human Cell Atlas Data Coordination Platform Secondary Analysis ("Green Box") API
+  version: "0.0.1"
+host: localhost:8080
+schemes:
+  - https
+produces:
+  - application/json
+paths:
+  /:
+    get:
+      summary: health check
+      operationId: 'api.health.get'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/HealthCheckResponse'
+        default:
+          description: Error
+          schema:
+            type: string
+  /notifications:
+    post:
+      summary: Send notifications
+      description: |
+        Notify green about bundles to process
+      consumes:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          required: false
+          schema:
+            $ref: '#/definitions/Notification'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/NotificationResponse'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Error
+          schema:
+            type: string
+definitions:
+  Notification:
+    type: object
+    properties:
+      match:
+        $ref: '#/definitions/Match'
+  Match:
+    type: object
+    properties:
+      bundle_uuid:
+        type: string
+      bundle_version:
+        type: string
+  Error:
+    type: object
+    properties:
+      error:
+        type: string
+  NotificationResponse:
+    type: object
+    properties:
+      result:
+        type: object
+        properties:
+          status:
+            type: string
+          id:
+            type: string
+  HealthCheckResponse:
+    type: object
+    properties:
+      status:
+        type: string
