@@ -3,18 +3,23 @@
 import os
 import sys
 import unittest
-import unittest.mock as mock
-from unittest.mock import call
+
+try:
+    import unittest.mock as mock
+    from unittest.mock import call
+except:
+    import mock
+    from mock import call
+
+
 import requests_mock
-import json
-import requests
 from six.moves import http_client
 import tempfile
 
 pkg_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
 sys.path.insert(0, pkg_root)
 
-from greenbox_tools.listener_utils.listener_utils.utils import *
+from listener_utils.utils import *
 
 
 def _make_credentials():
@@ -101,7 +106,7 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(inputs['foo.bundle_uuid'], 'bar')
         self.assertEqual(inputs['foo.bundle_version'], 'baz')
 
-    @mock.patch("greenbox_tools.listener_utils.listener_utils.utils.open", create=True)
+    @mock.patch("listener_utils.utils.open", create=True)
     @requests_mock.mock()
     def test_start_workflow(self, mock_open, mock_request):
         """NOTE: This is just a workaround unittest, Integration test should be imported to further test!"""
