@@ -31,10 +31,5 @@ setup(
     packages=['green_box', 'tests'],
 
     # Prequisite packages
-    install_requires=['connexion', 'google-cloud', 'requests'],
-
-    # Commandline entry points
-    entry_points={
-
-    }
+    install_requires=['connexion', 'google-cloud', 'requests', 'mock-request'],
 )
