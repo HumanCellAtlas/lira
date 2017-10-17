@@ -55,7 +55,7 @@ def post(body):
     storage_client = current_app.client.storage_client
     download_gcs_blob(storage_client, bucket_name, wdl_file)
     download_gcs_blob(storage_client, bucket_name, wdl_default_inputs_file)
-    ldownload_gcs_blob(storage_client, bucket_name, wdl_deps_file)
+    download_gcs_blob(storage_client, bucket_name, wdl_deps_file)
     download_gcs_blob(storage_client, bucket_name, options_file)
     
     cromwell_response = start_workflow(
