@@ -128,10 +128,11 @@ def download_gcs_blob(authenticated_gcs_client, bucket_name, source_blob_name, d
     if not isinstance(authenticated_gcs_client, storage.Client):
         raise TypeError('Provided client is not a valid google cloud storage client object.')
 
+    storage_client = authenticated_gcs_client  # pass the client as a parameter here
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(source_blob_name)
+
     try:
-        storage_client = authenticated_gcs_client  # pass the client as a parameter here
-        bucket = storage_client.bucket(bucket_name)
-        blob = bucket.blob(source_blob_name)
         blob.download_to_filename(destination_file_name)
         logging.info('Blob {0} downloaded to {1}.'.format(source_blob_name, destination_file_name))
     except:
@@ -160,7 +161,6 @@ class LazyProperty:
 
 
 class GoogleCloudStorageClient:
-    """This is the lazy initialized client for Google cloud storage."""
     def __init__(self, key_location, scopes):
         self.key_location, self.scopes = key_location, scopes
 
