@@ -4,7 +4,7 @@ from setuptools import setup
 
 
 setup(
-    name='green-box-listener',
+    name='green-box-tools',
 
     version='1.0.0.dev1',
 
@@ -28,8 +28,9 @@ setup(
         'Programming Language :: Python :: 3 :: Only',
     ],
 
-    packages=['green_box', 'tests'],
+    packages=['listener_utils', 'tests'],
 
     # Prequisite packages
-    install_requires=['connexion', 'google-cloud', 'requests', 'mock-request'],
+    # Note 'mock' is just for python2!!!
+    install_requires=['connexion', 'google-cloud', 'requests', 'requests-mock', 'mock'],
 )

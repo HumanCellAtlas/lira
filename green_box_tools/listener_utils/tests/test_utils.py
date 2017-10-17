@@ -182,5 +182,12 @@ class TestUtils(unittest.TestCase):
             )
             assert os.path.exists(dest_file.name)  # NOTE: this is just a workaround, wait for integration test!
 
-    if __name__ == '__main__':
-        unittest.main()
+    def test_lazyproperty_initialize_late_with_gcs_client(self):
+        gcs_client = GoogleCloudStorageClient(key_location="test_key", scopes=['test_scope'])
+        self.assertIsNotNone(gcs_client)
+        self.assertEqual(gcs_client.key_location, "test_key")
+        self.assertEqual(gcs_client.scopes[0], "test_scope")
+
+
+if __name__ == '__main__':
+    unittest.main()

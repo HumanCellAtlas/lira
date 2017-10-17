@@ -15,6 +15,8 @@ RUN pip install wheel
 
 RUN pip install connexion
 
+RUN pip install google-cloud
+
 RUN apt-get install -y lsb-release curl && \
   export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" && \
   echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
@@ -22,5 +24,7 @@ RUN apt-get install -y lsb-release curl && \
   apt-get update && apt-get install -y google-cloud-sdk
 
 COPY . .
+
+RUN pip install -e 'green_box_tools/listener_utils'
 
 CMD ["bash", "listener-start.sh"]
