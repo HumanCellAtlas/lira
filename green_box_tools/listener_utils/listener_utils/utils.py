@@ -54,10 +54,7 @@ def is_authenticated(args, token):
     :param token: Token object.
     :return boolean: True if authenticated else return False.
     """
-    if args.get('auth') == token:
-        return True
-    else:
-        return False
+    return args.get('auth') == token
 
 
 def extract_uuid_version_subscription_id(msg):

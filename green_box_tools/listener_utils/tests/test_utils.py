@@ -5,9 +5,11 @@ import sys
 import unittest
 
 try:
+    # if python3
     import unittest.mock as mock
     from unittest.mock import call
 except:
+    # if python2
     import mock
     from mock import call
 
@@ -28,7 +30,7 @@ def _make_credentials():
     return mock.Mock(spec=google.auth.credentials.Credentials)
 
 
-def _make_response(status=http_client.OK, content=b'', headers={}):
+def _make_response(status=http_client.OK, content=b'', headers={}):  # this is python3 style
     response = requests.Response()
     response.status_code = status
     response._content = content
