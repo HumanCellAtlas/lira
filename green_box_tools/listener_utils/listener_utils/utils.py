@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import requests
 import json
 import logging
@@ -24,11 +22,6 @@ def parse_bucket_blob_from_gs_link(path):
     :return str: A string of bucket name.
     :return str: A string of blob. name
     """
-    # Below block only works for PYTHON3
-    # if not path.startswith('gs://'):
-    #     raise ValueError('%s path is not a valid link')
-    # prefix, _, bucket, *blob = path.split('/')
-
     if not path.startswith('gs://'):
         raise ValueError('%s path is not a valid link')
     (prefix, _, bucket), blob = path.split('/')[:3], path.split('/')[3:]

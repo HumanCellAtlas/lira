@@ -1,12 +1,13 @@
 Overview
 ========
 
-This package provides utilities for extracting the code in the secondary-analysis repo that might be reusable outside the listener itself. Meanwhile, this package also trying to simplify the call trail when the listener is called.
+This package provides utilities used in the secondary analysis service that may be reusable elsewhere,
+with elaborate docstrings.
 
-This package has below functions:
+This package provides the following:
 
-- Provide reusable code that actually calls the Cromwell API.
+- Reusable code that actually calls the Cromwell API to start a workflow.
 
-- Provide utility functions support listener of Green-Box.
+- Reusable code that interacting with Google Cloud Storage API.
 
-- Provide lazy-initialized client class for Google-Cloud Storage API.
+- Utility functions that support listener of Green-Box.
