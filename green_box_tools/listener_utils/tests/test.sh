@@ -5,7 +5,7 @@
 env=$1
 tag=$2
 if [ -z "$env" ] || [ -z "$tag" ]; then
-    echo "Must pass in tag and env to use for docker image, e.g. test.sh dev test"
+    echo "Must pass in tag and env to be used for building and running docker image! e.g. test.sh dev test"
     exit 1
 fi
 

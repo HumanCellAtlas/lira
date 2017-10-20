@@ -12,7 +12,7 @@ def post(body):
     green_config = current_app.config
     if not utils.is_authenticated(connexion.request.args, green_config.notification_token):
         time.sleep(1)
-        return response_with_server_header(dict(error='Unauthorized'), 401)
+        return utils.response_with_server_header(dict(error='Unauthorized'), 401)
 
     logger.info("Notification received")
     logger.info(body)
@@ -23,7 +23,7 @@ def post(body):
     # Find wdl config where the subscription_id matches the notification's subscription_id
     id_matches = [wdl for wdl in green_config.wdls if wdl.subscription_id == subscription_id]
     if len(id_matches) == 0:
-        return response_with_server_header(
+        return utils.response_with_server_header(
             dict(error='Not Found: No wdl config found with subscription id {}'
                        ''.format(subscription_id)), 404)
     wdl = id_matches[0]

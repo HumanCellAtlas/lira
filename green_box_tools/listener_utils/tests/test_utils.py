@@ -8,7 +8,7 @@ try:
     # if python3
     import unittest.mock as mock
     from unittest.mock import call
-except:
+except ImportError:
     # if python2
     import mock
     from mock import call
