@@ -11,11 +11,11 @@ RUN apt-get -y install --no-install-recommends \
 RUN mkdir /secondary-analysis
 WORKDIR /secondary-analysis
 
-RUN pip install wheel
-
-RUN pip install connexion
-
-RUN pip install google-cloud
+# pip doesn't preserve the order that we ask to install things when we give a big list and
+# we need wheel before we can install anything else
+RUN pip install wheel && \
+    pip install connexion \
+                google-cloud
 
 COPY . .
 

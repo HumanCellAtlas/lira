@@ -18,5 +18,10 @@ setup(
     packages=['listener_utils', 'tests'],
 
     # Required packages
-    install_requires=['connexion', 'google-cloud', 'requests', 'requests-mock', 'mock'],
+    install_requires=['Flask>=0.12.2',
+                      'connexion>=1.1.15',
+                      'requests>=2.18.4',
+                      'google-cloud',
+                      'requests-mock',
+                      'mock'],
 )
