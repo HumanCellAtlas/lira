@@ -1,4 +1,4 @@
-"""This module contains utility functions of listener.
+"""This module contains utility functions and classes of listener.
 """
 import json
 import logging
@@ -11,7 +11,7 @@ def response_with_server_header(body, status=200):
 
     :param obj body: HTTP response body content that is JSON-serializable.
     :param int status: HTTP response status code.
-    :return flask.wrappers.Response : HTTP response with information of server in header.
+    :return flask.wrappers.Response response: HTTP response with information of server in header.
     """
     response = make_response(json.dumps(body), status)
     response.headers['Server'] = 'Secondary Analysis Service'

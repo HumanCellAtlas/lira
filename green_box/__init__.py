@@ -8,8 +8,8 @@ import json
 import logging
 import connexion
 from connexion.resolver import RestyResolver
-from listener_utils import ListenerConfig
-from listener_utils import LazyProperty, GoogleCloudStorageClient
+from listener_utils.listener_utils import ListenerConfig
+from listener_utils.listener_utils import GoogleCloudStorageClient
 
 logging.basicConfig(level=logging.DEBUG)
 

@@ -19,6 +19,6 @@ RUN pip install wheel && \
 
 COPY . .
 
-RUN pip install -e 'green_box_tools/listener_utils'
+RUN pip install -e 'listener_utils'
 
 CMD ["bash", "listener-start.sh"]

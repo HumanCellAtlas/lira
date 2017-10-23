@@ -1,21 +1,19 @@
 #!/usr/bin/env python
 import json
-import listener_utils as utils
+import listener_utils.listener_utils as utils
 import os
+import io
 import requests
 import requests_mock
 from six.moves import http_client
 import sys
-import tempfile
 import unittest
 try:
     # if python3
     import unittest.mock as mock
-    from unittest.mock import call
 except ImportError:
     # if python2
     import mock
-    from mock import call
 
 pkg_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
 sys.path.insert(0, pkg_root)
@@ -54,13 +52,13 @@ def _make_requests_session(responses):
 class TestUtils(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        from google.cloud.storage.client import Client
         cls.PROJECT = 'PROJECT'
         cls.CREDENTIALS = _make_credentials()
         cls.BUCKET_NAME = 'BUCKET_NAME'
-        cls.client = Client(project=cls.PROJECT, credentials=cls.CREDENTIALS)
+        cls.client = mock.Mock(project=cls.PROJECT, credentials=cls.CREDENTIALS)
         cls.bucket = cls.client.bucket(cls.BUCKET_NAME)
-        cls.blob_name = cls.bucket.blob('test_blob')
+        cls.blob_name = 'test_blob'
+        cls.blob = cls.bucket.blob(cls.blob_name)
 
     def test_get_filename_from_gs_link(self):
         """Test if get_filename_from_gs_link can get correct filename from google cloud storage link.
@@ -122,35 +120,18 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(inputs['foo.bundle_uuid'], 'bar')
         self.assertEqual(inputs['foo.bundle_version'], 'baz')
 
-    @mock.patch("listener_utils.utils.open", create=True)
     @requests_mock.mock()
-    def test_start_workflow(self, mock_open, mock_request):
+    def test_start_workflow(self, mock_request):
         """This is a temporary unit test using mocks, to be replaced with an integration test later.
         """
-        wdl_file = "wdl_file"
-        zip_file = "zip_file"
-        inputs_file = "inputs_file"
-        inputs_file2 = "inputs_file2"
-        options_file = "options_file"
+        wdl_file = io.BytesIO(b"wdl_file")
+        zip_file = io.BytesIO(b"zip_file")
+        inputs_file = io.BytesIO(b"inputs_file")
+        inputs_file2 = io.BytesIO(b"inputs_file2")
+        options_file = io.BytesIO(b"options_file")
         green_config = type('Config', (object,), {"cromwell_url": "http://cromwell_url",
                                                   "cromwell_user": "cromwell_user",
                                                   "cromwell_password": "cromwell_password"})
-
-        mock_open.side_effect = [
-            mock.mock_open(read_data=wdl_file).return_value,
-            mock.mock_open(read_data=zip_file).return_value,
-            mock.mock_open(read_data=inputs_file).return_value,
-            mock.mock_open(read_data=inputs_file2).return_value,
-            mock.mock_open(read_data=options_file).return_value
-        ]
-
-        file = {
-            'wdlSource': wdl_file,
-            'workflowInputs': inputs_file,
-            'workflowInputs_2': inputs_file2,
-            'wdlDependencies': zip_file,
-            'workflowOptions': options_file
-        }
 
         def _request_callback(request, context):
             context.status_code = 200
@@ -163,31 +144,17 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.headers.get('test'), 'header')
 
-        # Check file open actions
-        calls = [call(wdl_file, 'rb'), call(zip_file, 'rb'), call(inputs_file, 'rb'),
-                 call(inputs_file2, 'rb'), call(options_file, 'rb')]
-        mock_open.assert_has_calls(calls)
-
-    def test_create_gcs_client(self):
-        """Test if google cloud storage client can be created and set up correctly from
-         Project and Credential information.
-        """
-        from google.cloud.storage.bucket import Bucket
-
-        self.assertIsInstance(self.bucket, Bucket)
-        self.assertIs(self.bucket.client, self.client)
-        self.assertEqual(self.bucket.name, self.BUCKET_NAME)
+    def test_download_to_bytes_readable(self):
+        """Test if download_to_bytes_readable correctly download blob and store it into Bytes Buffer."""
+        result = utils.download_to_bytes_readable(self.bucket.blob(self.blob_name))
+        self.assertIsInstance(result, io.BytesIO)
 
     def test_download_gcs_blob(self):
         """Test if download_gcs_blob can correctly create destination file on the disk."""
-        with tempfile.NamedTemporaryFile() as dest_file:
-            utils.download_gcs_blob(
-                self.client,
-                self.BUCKET_NAME,
-                self.blob_name,
-                dest_file.name
-            )
-            assert os.path.exists(dest_file.name)
+        gcs_client = utils.GoogleCloudStorageClient(key_location="test_key", scopes=['test_scope'])
+        gcs_client.storage_client = self.client
+        result = utils.download_gcs_blob(gcs_client, self.BUCKET_NAME, self.blob_name)
+        self.assertIsInstance(result, io.BytesIO)
 
     def test_lazyproperty_initialize_late_for_gcs_client(self):
         """Test if the LazyProperty decorator can work well with GoogleCloudStorageClient class."""

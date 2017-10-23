@@ -3,13 +3,14 @@ import logging
 import json
 import time
 from flask import current_app
-import listener_utils as utils
+import listener_utils.listener_utils as utils
 
 
 def post(body):
     # Check authentication
     logger = logging.getLogger('green-box')
     green_config = current_app.config
+
     if not utils.is_authenticated(connexion.request.args, green_config.notification_token):
         time.sleep(1)
         return utils.response_with_server_header(dict(error='Unauthorized'), 401)
@@ -46,12 +47,12 @@ def post(body):
     wdl_deps_file = utils.get_filename_from_gs_link(wdl.wdl_deps_link)
     options_file = utils.get_filename_from_gs_link(wdl.options_link)
 
-    # Get files from gcs
-    storage_client = current_app.gcs_client.storage_client
-    utils.download_gcs_blob(storage_client, bucket_name, wdl_file)
-    utils.download_gcs_blob(storage_client, bucket_name, wdl_default_inputs_file)
-    utils.download_gcs_blob(storage_client, bucket_name, wdl_deps_file)
-    utils.download_gcs_blob(storage_client, bucket_name, options_file)
+    # Get files from gcs and store in Bytes Buffer
+    gcs_client = current_app.gcs_client
+    wdl_file = utils.download_gcs_blob(gcs_client, bucket_name, wdl_file)
+    wdl_default_inputs_file = utils.download_gcs_blob(gcs_client, bucket_name, wdl_default_inputs_file)
+    wdl_deps_file = utils.download_gcs_blob(gcs_client, bucket_name, wdl_deps_file)
+    options_file = utils.download_gcs_blob(gcs_client, bucket_name, options_file)
     
     cromwell_response = utils.start_workflow(
         wdl_file, wdl_deps_file, 'cromwell_inputs.json',

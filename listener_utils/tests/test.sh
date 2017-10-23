@@ -11,11 +11,11 @@ fi
 
 
 # Change directory to build dockerfile
-cd ../../../
+cd ../../
 
 docker build -t gcr.io/broad-dsde-mint-$env/listener:$tag .
 
 # Change back directory
 cd -
-
-docker run -e listener_config=test_data/config.json gcr.io/broad-dsde-mint-$env/listener:$tag bash -c "python -m unittest discover -v tests"
+ls
+docker run -e listener_config=test_data/config.json gcr.io/broad-dsde-mint-$env/listener:$tag bash -c "python -m unittest discover -v"

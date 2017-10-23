@@ -2,7 +2,7 @@
 import unittest
 import json
 from copy import deepcopy
-from listener_utils import ListenerConfig
+from listener_utils.listener_utils import ListenerConfig
 
 
 class TestStartupVerification(unittest.TestCase):

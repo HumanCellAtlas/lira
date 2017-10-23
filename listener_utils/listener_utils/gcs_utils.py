@@ -3,6 +3,7 @@
 import logging
 from google.cloud import storage
 from google.oauth2 import service_account
+from io import BytesIO
 
 
 def get_filename_from_gs_link(link):
@@ -28,22 +29,38 @@ def parse_bucket_blob_from_gs_link(path):
     return bucket, '/'.join(blob)
 
 
-def download_gcs_blob(authenticated_gcs_client, bucket_name, source_blob_name, destination_file_name=None):
+def download_to_bytes_readable(blob):
+    """Return a bytes file-like object readable by requests and REST APIs
+
+    :param google.cloud.storage.Blob blob: google storage blob
+    :return BufferedIOBase: readable file object
+    """
+    string_buffer = BytesIO()
+    blob.download_to_file(string_buffer)
+    string_buffer.seek(0)
+    return string_buffer
+
+
+def download_gcs_blob(gcs_client, bucket_name, source_blob_name):
     """Use google.cloud.storage API to download a blob from the bucket.
 
-    :param google.cloud.storage.client.Client authenticated_gcs_client: An authenticated google cloud storage client.
+    :param GoogleCloudStorageClient gcs_client: A GoogleCloudStorageClient object with a
+            google.cloud.storage.client.Client instance as a lazy-initialized property.
     :param str bucket_name: A string of bucket name.
     :param str source_blob_name: A string of source blob name that to be downloaded.
-    :param str destination_file_name: A string of destination file name.
+    :return BufferedIOBase: Readable file object returned by download_to_bytes_readable.
     """
     logging.getLogger()
 
-    if not destination_file_name:  # destination_file_name is set to source_blob_name by default
-        destination_file_name = './' + source_blob_name
+    # Make sure the lazy property storage_client of gcs_client instance initialized at least once
+    if not gcs_client.storage_client:
+        gcs_client.storage_client
+    authenticated_gcs_client = gcs_client.storage_client
 
     bucket = authenticated_gcs_client.bucket(bucket_name)
     blob = bucket.blob(source_blob_name)
-    blob.download_to_filename(destination_file_name)
+    # blob.download_to_filename(destination_file_name)
+    return download_to_bytes_readable(blob)
 
 
 class LazyProperty:
@@ -77,6 +94,10 @@ class GoogleCloudStorageClient:
 
     @LazyProperty
     def storage_client(self):
+        """This lazy property returns an authenticated google cloud storage client.
+
+        :return google.cloud.storage.client.Client: An authenticated google cloud storage client.
+        """
         logging.getLogger()
         logging.debug('Configuring listener credentials using %s' % self.key_location)
         credentials = service_account.Credentials.from_service_account_file(
