@@ -8,14 +8,14 @@ import json
 import logging
 import connexion
 from connexion.resolver import RestyResolver
-from .config import ListenerConfig
+from listener_utils import ListenerConfig
+from listener_utils import LazyProperty, GoogleCloudStorageClient
 
 logging.basicConfig(level=logging.DEBUG)
-from listener_utils import LazyProperty, GoogleCloudStorageClient
 
 # Create lazy initialized GCS client here
 gcs_client = GoogleCloudStorageClient(key_location='/etc/secondary-analysis/bucket-reader-key.json',
-                                  scopes=['https://www.googleapis.com/auth/devstorage.read_only'])
+                                      scopes=['https://www.googleapis.com/auth/devstorage.read_only'])
 app = connexion.App(__name__)
 
 config_path = os.environ['listener_config']

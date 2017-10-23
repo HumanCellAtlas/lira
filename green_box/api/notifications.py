@@ -47,11 +47,6 @@ def post(body):
     options_file = utils.get_filename_from_gs_link(wdl.options_link)
 
     # Get files from gcs
-    # subprocess.check_output(['gsutil', 'cp', wdl.wdl_link, '.'])
-    # subprocess.check_output(['gsutil', 'cp', wdl.wdl_default_inputs_link, '.'])
-    # subprocess.check_output(['gsutil', 'cp', wdl.wdl_deps_link, '.'])
-    # subprocess.check_output(['gsutil', 'cp', wdl.options_link, '.'])
-
     storage_client = current_app.gcs_client.storage_client
     utils.download_gcs_blob(storage_client, bucket_name, wdl_file)
     utils.download_gcs_blob(storage_client, bucket_name, wdl_default_inputs_file)
