@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import json
-import listener_utils.listener_utils as utils
+import listener_utils as utils
 import os
 import io
 import requests
@@ -145,8 +145,8 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(result.headers.get('test'), 'header')
 
     def test_download_to_bytes_readable(self):
-        """Test if download_to_bytes_readable correctly download blob and store it into Bytes Buffer."""
-        result = utils.download_to_bytes_readable(self.bucket.blob(self.blob_name))
+        """Test if download_to_buffer correctly download blob and store it into Bytes Buffer."""
+        result = utils.download_to_buffer(self.bucket.blob(self.blob_name))
         self.assertIsInstance(result, io.BytesIO)
 
     def test_download_gcs_blob(self):

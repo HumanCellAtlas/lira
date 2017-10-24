@@ -17,5 +17,5 @@ docker build -t gcr.io/broad-dsde-mint-$env/listener:$tag .
 
 # Change back directory
 cd -
-ls
+
 docker run -e listener_config=test_data/config.json gcr.io/broad-dsde-mint-$env/listener:$tag bash -c "python -m unittest discover -v"

@@ -19,6 +19,6 @@ RUN pip install wheel && \
 
 COPY . .
 
-RUN pip install -e 'listener_utils'
+RUN cd listener_utils && python setup.py install
 
 CMD ["bash", "listener-start.sh"]

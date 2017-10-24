@@ -29,11 +29,11 @@ def parse_bucket_blob_from_gs_link(path):
     return bucket, '/'.join(blob)
 
 
-def download_to_bytes_readable(blob):
+def download_to_buffer(blob):
     """Return a bytes file-like object readable by requests and REST APIs
 
     :param google.cloud.storage.Blob blob: google storage blob
-    :return BufferedIOBase: readable file object
+    :return _io.BufferedIOBase: readable file object
     """
     string_buffer = BytesIO()
     blob.download_to_file(string_buffer)
@@ -48,7 +48,7 @@ def download_gcs_blob(gcs_client, bucket_name, source_blob_name):
             google.cloud.storage.client.Client instance as a lazy-initialized property.
     :param str bucket_name: A string of bucket name.
     :param str source_blob_name: A string of source blob name that to be downloaded.
-    :return BufferedIOBase: Readable file object returned by download_to_bytes_readable.
+    :return BufferedIOBase: File-like object returned by download_to_buffer.
     """
     logging.getLogger()
 
@@ -59,8 +59,7 @@ def download_gcs_blob(gcs_client, bucket_name, source_blob_name):
 
     bucket = authenticated_gcs_client.bucket(bucket_name)
     blob = bucket.blob(source_blob_name)
-    # blob.download_to_filename(destination_file_name)
-    return download_to_bytes_readable(blob)
+    return download_to_buffer(blob)
 
 
 class LazyProperty:

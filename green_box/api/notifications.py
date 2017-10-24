@@ -3,7 +3,7 @@ import logging
 import json
 import time
 from flask import current_app
-import listener_utils.listener_utils as utils
+import listener_utils as utils
 
 
 def post(body):
@@ -38,7 +38,7 @@ def post(body):
     logger.info(wdl)
     logger.info('Launching {0} workflow in Cromwell'.format(wdl.workflow_name))
 
-    # ToDo: Parse bucket at initialization time in config class, throw an error if malformed.
+    # TODO: Parse bucket at initialization time in config class, throw an error if malformed.
     bucket_name, _ = utils.parse_bucket_blob_from_gs_link(wdl.wdl_link)
 
     # get filenames from links
