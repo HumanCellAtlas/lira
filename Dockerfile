@@ -11,16 +11,13 @@ RUN apt-get -y install --no-install-recommends \
 RUN mkdir /secondary-analysis
 WORKDIR /secondary-analysis
 
-RUN pip install wheel
-
-RUN pip install connexion
-
-RUN apt-get install -y lsb-release curl && \
-  export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" && \
-  echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
-  curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
-  apt-get update && apt-get install -y google-cloud-sdk
+# pip doesn't preserve the order that we ask to install things when we give a big list and
+# we need wheel before we can install anything else
+RUN pip install wheel && \
+    pip install connexion
 
 COPY . .
+
+RUN cd green_box_utils && pip install .
 
 CMD ["bash", "listener-start.sh"]
