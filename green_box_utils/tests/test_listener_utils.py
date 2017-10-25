@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import json
-import listener_utils as utils
 import os
 import io
 import requests
@@ -14,6 +13,11 @@ try:
 except ImportError:
     # if python2
     import mock
+
+from green_box_utils import gcs_utils
+from green_box_utils import cromwell_utils
+from green_box_utils import listener_utils
+
 
 pkg_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
 sys.path.insert(0, pkg_root)
@@ -64,14 +68,14 @@ class TestUtils(unittest.TestCase):
         """Test if get_filename_from_gs_link can get correct filename from google cloud storage link.
         """
         link = "gs://test_bucket_name/test_wdl_file.wdl"
-        self.assertEqual(utils.get_filename_from_gs_link(link), 'test_wdl_file.wdl')
+        self.assertEqual(gcs_utils.get_filename_from_gs_link(link), 'test_wdl_file.wdl')
 
     def test_parse_bucket_blob_from_gs_link_one_slash(self):
         """Test if parse_bucket_blob_from_gs_link can correctly parse bucket name and blob name
          from a single slash google cloud storage link.
          """
         link = "gs://test_bucket_name/test_wdl_file.wdl"
-        bucket_name, blob_name = utils.parse_bucket_blob_from_gs_link(link)
+        bucket_name, blob_name = gcs_utils.parse_bucket_blob_from_gs_link(link)
         self.assertEqual(bucket_name, 'test_bucket_name')
         self.assertEqual(blob_name, 'test_wdl_file.wdl')
 
@@ -80,24 +84,24 @@ class TestUtils(unittest.TestCase):
          from a slash google cloud storage link with extra slashes.
         """
         link = "gs://test_bucket_name/special/test/wdl/file.wdl"
-        bucket_name, blob_name = utils.parse_bucket_blob_from_gs_link(link)
+        bucket_name, blob_name = gcs_utils.parse_bucket_blob_from_gs_link(link)
         self.assertEqual(bucket_name, 'test_bucket_name')
         self.assertEqual(blob_name, 'special/test/wdl/file.wdl')
 
     def test_is_authenticated_no_auth_header(self):
         """Request without 'auth' key in header should not be treated as authenticated.
         """
-        self.assertFalse(utils.is_authenticated({'foo': 'bar'}, 'baz'))
+        self.assertFalse(listener_utils.is_authenticated({'foo': 'bar'}, 'baz'))
 
     def test_is_authenticated_wrong_auth_value(self):
         """Request with wrong auth value(token) in header should not be treated as authenticated.
         """
-        self.assertFalse(utils.is_authenticated({'auth': 'bar'}, 'foo'))
+        self.assertFalse(listener_utils.is_authenticated({'auth': 'bar'}, 'foo'))
 
     def test_is_authenticated_valid(self):
         """Request with valid auth and token information should be treated as authenticated.
         """
-        self.assertTrue(utils.is_authenticated({'auth': 'bar'}, 'bar'))
+        self.assertTrue(listener_utils.is_authenticated({'auth': 'bar'}, 'bar'))
 
     def test_extract_uuid_version_subscription_id(self):
         """Test if extract_uuid_version_subscription_id can correctly extract uuid, version
@@ -109,14 +113,14 @@ class TestUtils(unittest.TestCase):
                 'bundle_version': 'bar'
             }
         }
-        uuid, version, subscription_id = utils.extract_uuid_version_subscription_id(body)
+        uuid, version, subscription_id = listener_utils.extract_uuid_version_subscription_id(body)
         self.assertEqual(uuid, 'foo')
         self.assertEqual(version, 'bar')
         self.assertEqual(subscription_id, "85test0j-u6y6-uuuu-a90a-kk8")
 
     def test_compose_inputs(self):
         """Test if compose_inputs can correctly create Cromwell inputs file containing bundle uuid and version"""
-        inputs = utils.compose_inputs('foo', 'bar', 'baz')
+        inputs = listener_utils.compose_inputs('foo', 'bar', 'baz')
         self.assertEqual(inputs['foo.bundle_uuid'], 'bar')
         self.assertEqual(inputs['foo.bundle_version'], 'baz')
 
@@ -140,25 +144,25 @@ class TestUtils(unittest.TestCase):
 
         # Check request actions
         mock_request.post(green_config.cromwell_url, json=_request_callback)
-        result = utils.start_workflow(wdl_file, zip_file, inputs_file, inputs_file2, options_file, green_config)
+        result = cromwell_utils.start_workflow(wdl_file, zip_file, inputs_file, inputs_file2, options_file, green_config)
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.headers.get('test'), 'header')
 
     def test_download_to_bytes_readable(self):
         """Test if download_to_buffer correctly download blob and store it into Bytes Buffer."""
-        result = utils.download_to_buffer(self.bucket.blob(self.blob_name))
+        result = gcs_utils.download_to_buffer(self.bucket.blob(self.blob_name))
         self.assertIsInstance(result, io.BytesIO)
 
     def test_download_gcs_blob(self):
         """Test if download_gcs_blob can correctly create destination file on the disk."""
-        gcs_client = utils.GoogleCloudStorageClient(key_location="test_key", scopes=['test_scope'])
+        gcs_client = gcs_utils.GoogleCloudStorageClient(key_location="test_key", scopes=['test_scope'])
         gcs_client.storage_client = self.client
-        result = utils.download_gcs_blob(gcs_client, self.BUCKET_NAME, self.blob_name)
+        result = gcs_utils.download_gcs_blob(gcs_client, self.BUCKET_NAME, self.blob_name)
         self.assertIsInstance(result, io.BytesIO)
 
     def test_lazyproperty_initialize_late_for_gcs_client(self):
         """Test if the LazyProperty decorator can work well with GoogleCloudStorageClient class."""
-        gcs_client = utils.GoogleCloudStorageClient(key_location="test_key", scopes=['test_scope'])
+        gcs_client = gcs_utils.GoogleCloudStorageClient(key_location="test_key", scopes=['test_scope'])
         self.assertIsNotNone(gcs_client)
         self.assertEqual(gcs_client.key_location, "test_key")
         self.assertEqual(gcs_client.scopes[0], "test_scope")

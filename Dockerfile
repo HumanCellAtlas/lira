@@ -18,6 +18,6 @@ RUN pip install wheel && \
 
 COPY . .
 
-RUN cd listener_utils && pip install .
+RUN cd green_box_utils && pip install .
 
 CMD ["bash", "listener-start.sh"]

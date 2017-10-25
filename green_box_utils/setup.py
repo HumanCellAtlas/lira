@@ -15,7 +15,7 @@ setup(
         'Topic :: Scientific/Engineering :: Bio-Informatics',
         'Programming Language :: Python :: 3 :: Only',
     ],
-    packages=['listener_utils', 'tests'],
+    packages=['green_box_utils', 'tests'],
 
     # Required packages
     install_requires=['Flask>=0.12.2',

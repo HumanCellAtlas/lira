@@ -2,7 +2,7 @@
 import unittest
 import json
 from copy import deepcopy
-from listener_utils import ListenerConfig
+from green_box_utils import listener_utils
 
 
 class TestStartupVerification(unittest.TestCase):
@@ -17,14 +17,14 @@ class TestStartupVerification(unittest.TestCase):
         config = deepcopy(self.correct_test_config)
 
         try:  # make sure ListenerConfig executes
-            result = ListenerConfig(config)
+            result = listener_utils.ListenerConfig(config)
         except BaseException as exception:
             self.fail(
                 'ListenerConfig constructor raised an exception: {exception}'
                 .format(exception=exception))
 
         # check correct type
-        self.assertIsInstance(result, ListenerConfig)
+        self.assertIsInstance(result, listener_utils.ListenerConfig)
 
     def test_config_missing_required_field_throws_value_error(self):
 
@@ -35,15 +35,15 @@ class TestStartupVerification(unittest.TestCase):
             return config
 
         mangled_config = delete_wdl_field('subscription_id')
-        self.assertRaises(ValueError, ListenerConfig, mangled_config)
+        self.assertRaises(ValueError, listener_utils.ListenerConfig, mangled_config)
         mangled_config = delete_wdl_field('workflow_name')
-        self.assertRaises(ValueError, ListenerConfig, mangled_config)
+        self.assertRaises(ValueError, listener_utils.ListenerConfig, mangled_config)
         mangled_config = delete_wdl_field('wdl_link')
-        self.assertRaises(ValueError, ListenerConfig, mangled_config)
+        self.assertRaises(ValueError, listener_utils.ListenerConfig, mangled_config)
         mangled_config = delete_wdl_field('wdl_default_inputs_link')
-        self.assertRaises(ValueError, ListenerConfig, mangled_config)
+        self.assertRaises(ValueError, listener_utils.ListenerConfig, mangled_config)
         mangled_config = delete_wdl_field('wdl_deps_link')
-        self.assertRaises(ValueError, ListenerConfig, mangled_config)
+        self.assertRaises(ValueError, listener_utils.ListenerConfig, mangled_config)
 
     def test_config_duplicate_wdl_raises_value_error(self):
 
@@ -54,12 +54,12 @@ class TestStartupVerification(unittest.TestCase):
             return config
 
         mangled_config = add_duplicate_wdl_definition()
-        self.assertRaises(ValueError, ListenerConfig, mangled_config)
+        self.assertRaises(ValueError, listener_utils.ListenerConfig, mangled_config)
 
     def test_listener_config_exposes_all_methods_requested_in_notifications(self):
         # test that the calls made in notifications refer to attributes that
         # ListenerConfig exposes
-        config = ListenerConfig(self.correct_test_config)
+        config = listener_utils.ListenerConfig(self.correct_test_config)
         requested_listener_attributes = [
             'notification_token', 'wdls', 'cromwell_url', 'cromwell_user',
             'cromwell_password', 'MAX_CONTENT_LENGTH']
