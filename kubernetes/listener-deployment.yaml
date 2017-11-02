@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: listener
-        image: gcr.io/broad-dsde-mint-dev/listener:real-smartseq2-v10
+        image: gcr.io/broad-dsde-mint-dev/listener:0.1.0
         ports:
         - containerPort: 8080
         volumeMounts:

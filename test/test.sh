@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-touch test_key.json
 docker build -t gcr.io/broad-dsde-mint-dev/listener:test ..
 
 # Tell Jenkins to run both unittests in root folder and listener_utils package folder
