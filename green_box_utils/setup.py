@@ -21,7 +21,8 @@ setup(
     install_requires=['Flask>=0.12.2',
                       'connexion>=1.1.15',
                       'requests>=2.18.4',
-                      'google-cloud',
+                      'google-auth',
+                      'google-cloud-storage',
                       'requests-mock',
                       'mock'],
 )

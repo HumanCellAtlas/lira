@@ -142,6 +142,9 @@ class WdlConfig(Config):
             'options_link'
         }
 
+    def __str__(self):
+        s = 'WdlConfig({0}, {1}, {2}, {3}, {4}, {5})'
+        return s.format(self.subscription_id, self.wdl_link, self.workflow_name, self.wdl_deps_link, self.wdl_default_inputs_link, self.options_link)
 
 class ListenerConfig(Config):
     """subclass of Config to check listener configurations"""
