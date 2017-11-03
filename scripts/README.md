@@ -1,4 +1,4 @@
-###Set-up
+### Set-up
 1. Install requirements to run the scripts with `pip install -r requirements.txt`
 2. Create a `scripts/config.sh` file that contains all of the inputs defined in `scripts/config-template.sh`
    and replace the placeholder values with real values
