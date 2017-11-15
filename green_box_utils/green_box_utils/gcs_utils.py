@@ -2,7 +2,7 @@
 """
 import logging
 from google.cloud import storage
-from google.oauth2 import service_account
+import google.auth
 from io import BytesIO
 
 
@@ -24,9 +24,10 @@ def parse_bucket_blob_from_gs_link(path):
     """
     if not path.startswith('gs://'):
         raise ValueError('%s path is not a valid link')
-    (prefix, _, bucket), blob = path.split('/')[:3], path.split('/')[3:]
+    parts = path.split('/', 3)
+    (prefix, _, bucket), blob = parts[:3], parts[3]
 
-    return bucket, '/'.join(blob)
+    return bucket, blob
 
 
 def download_to_buffer(blob):
@@ -59,10 +60,11 @@ def download_gcs_blob(gcs_client, bucket_name, source_blob_name):
 
     bucket = authenticated_gcs_client.bucket(bucket_name)
     blob = bucket.blob(source_blob_name)
+    logging.debug('bucket: {0}, blob: {1}'.format(bucket_name, source_blob_name))
     return download_to_buffer(blob)
 
 
-class LazyProperty:
+class LazyProperty(object):
     """This class implements a decorator for lazy-initializing class properties.
 
         Instead of implementing Singleton Pattern, this decorator accepts multiple
@@ -80,9 +82,10 @@ class LazyProperty:
         else:
             val = self.func(instance)
             setattr(instance, self.func.__name__, val)
+            return val
 
 
-class GoogleCloudStorageClient:
+class GoogleCloudStorageClient(object):
     def __init__(self, key_location, scopes):
         """This class implements the client to interact with Google Cloud Storage.
 
@@ -99,7 +102,7 @@ class GoogleCloudStorageClient:
         """
         logging.getLogger()
         logging.debug('Configuring listener credentials using %s' % self.key_location)
-        credentials = service_account.Credentials.from_service_account_file(
-            self.key_location, scopes=self.scopes)
-        client = storage.Client(credentials=credentials, project=credentials.project_id)
+
+        credentials, project = google.auth.default(scopes=self.scopes)
+        client = storage.Client(credentials=credentials, project=project)
         return client

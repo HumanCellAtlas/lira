@@ -41,13 +41,11 @@ def post(body):
     logger.info('Launching {0} workflow in Cromwell'.format(wdl.workflow_name))
 
     # TODO: Parse bucket at initialization time in config class, throw an error if malformed.
-    bucket_name, _ = gcs_utils.parse_bucket_blob_from_gs_link(wdl.wdl_link)
-
     # get filenames from links
-    wdl_file = gcs_utils.get_filename_from_gs_link(wdl.wdl_link)
-    wdl_default_inputs_file = gcs_utils.get_filename_from_gs_link(wdl.wdl_default_inputs_link)
-    wdl_deps_file = gcs_utils.get_filename_from_gs_link(wdl.wdl_deps_link)
-    options_file = gcs_utils.get_filename_from_gs_link(wdl.options_link)
+    bucket_name, wdl_file = gcs_utils.parse_bucket_blob_from_gs_link(wdl.wdl_link)
+    _, wdl_default_inputs_file = gcs_utils.parse_bucket_blob_from_gs_link(wdl.wdl_default_inputs_link)
+    _, wdl_deps_file = gcs_utils.parse_bucket_blob_from_gs_link(wdl.wdl_deps_link)
+    _, options_file = gcs_utils.parse_bucket_blob_from_gs_link(wdl.options_link)
 
     # Get files from gcs and store in Bytes Buffer
     gcs_client = current_app.gcs_client
@@ -55,10 +53,11 @@ def post(body):
     wdl_default_inputs_file = gcs_utils.download_gcs_blob(gcs_client, bucket_name, wdl_default_inputs_file)
     wdl_deps_file = gcs_utils.download_gcs_blob(gcs_client, bucket_name, wdl_deps_file)
     options_file = gcs_utils.download_gcs_blob(gcs_client, bucket_name, options_file)
-    
-    cromwell_response = cromwell_utils.start_workflow(
-        wdl_file, wdl_deps_file, 'cromwell_inputs.json',
-        wdl_default_inputs_file, options_file, green_config)
+
+    with open('cromwell_inputs.json') as cromwell_inputs_file:
+        cromwell_response = cromwell_utils.start_workflow(
+            wdl_file, wdl_deps_file, cromwell_inputs_file,
+            wdl_default_inputs_file, options_file, green_config)
 
     # Respond
     if cromwell_response.status_code > 201:

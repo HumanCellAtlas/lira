@@ -1,0 +1,22 @@
+{
+  "cromwell_url": "https://cromwell.mint-{env}.broadinstitute.org/api/workflows/v1",
+  "MAX_CONTENT_LENGTH": 10000,
+  "wdls": [
+    {
+      "subscription_id": "{10x_subscription_id}",
+      "workflow_name": "Wrapper10xCount",
+      "wdl_link": "gs://broad-dsde-mint-{env}-pipelines/10x/{10x_version}/infrastructure/{pipeline_tools_version}/wrapper.wdl",
+      "wdl_deps_link": "gs://broad-dsde-mint-{env}-pipelines/10x/{10x_version}/infrastructure/{pipeline_tools_version}/dependencies.zip",
+      "wdl_default_inputs_link": "gs://broad-dsde-mint-{env}-pipelines/10x/{10x_version}/infrastructure/{pipeline_tools_version}/static_inputs.json",
+      "options_link": "gs://broad-dsde-mint-{env}-pipelines/10x/{10x_version}/infrastructure/{pipeline_tools_version}/options.json"
+    },
+    {
+      "subscription_id": "{ss2_subscription_id}",
+      "workflow_name": "WrapperSs2RsemSingleSample",
+      "wdl_link": "gs://broad-dsde-mint-{env}-pipelines/ss2/{ss2_version}/infrastructure/{pipeline_tools_version}/wrapper.wdl",
+      "wdl_deps_link": "gs://broad-dsde-mint-{env}-pipelines/ss2/{ss2_version}/infrastructure/{pipeline_tools_version}/dependencies.zip",
+      "wdl_default_inputs_link": "gs://broad-dsde-mint-{env}-pipelines/ss2/{ss2_version}/infrastructure/{pipeline_tools_version}/static_inputs.json",
+      "options_link": "gs://broad-dsde-mint-{env}-pipelines/ss2/{ss2_version}/infrastructure/{pipeline_tools_version}/options.json"
+    }
+  ]
+}
