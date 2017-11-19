@@ -2,6 +2,7 @@
 """
 import logging
 
+
 class Config:
 
     def __init__(self, config_dictionary, flask_config_values=None):
@@ -31,18 +32,18 @@ class Config:
         raise NotImplementedError
 
     def _verify_fields(self):
-        """Verify wdl config contains valid entries for exactly the expected fields"""
+        """Verify config contains required fields"""
 
         wdl_keys = set(self.config_dictionary)
         extra_keys = wdl_keys - self.required_fields
         missing_keys = self.required_fields - wdl_keys
         if missing_keys:
             raise ValueError(
-                'The following WDL configuration is missing key(s): {keys}\n{wdl}'
+                'The following configuration is missing key(s): {keys}\n{wdl}'
                 ''.format(wdl=self.config_dictionary, keys=', '.join(missing_keys)))
         if extra_keys:
             logging.warning(
-                'The following WDL configuration has unexpected key(s): {keys}\n{wdl}'
+                'The following configuration has unexpected key(s): {keys}\n{wdl}'
                 ''.format(wdl=self.config_dictionary, keys=', '.join(extra_keys)))
 
     def __eq__(self, other):
@@ -83,15 +84,16 @@ class WdlConfig(Config):
         return {
             'subscription_id',
             'wdl_link',
+            'analysis_wdl',
             'workflow_name',
-            'wdl_deps_link',
             'wdl_default_inputs_link',
             'options_link'
         }
 
     def __str__(self):
-        s = 'WdlConfig({0}, {1}, {2}, {3}, {4}, {5})'
-        return s.format(self.subscription_id, self.wdl_link, self.workflow_name, self.wdl_deps_link, self.wdl_default_inputs_link, self.options_link)
+        s = 'WdlConfig({0}, {1}, {2}, {3}, {4}, {5}, {6})'
+        return s.format(self.subscription_id, self.wdl_link, self.analysis_wdl,
+            self.workflow_name, self.wdl_default_inputs_link, self.options_link)
 
 class ListenerConfig(Config):
     """subclass of Config to check listener configurations"""
@@ -113,12 +115,14 @@ class ListenerConfig(Config):
     @property
     def required_fields(self):
         return {
-            'wdls',
-            'notification_token',
-            'cromwell_user',
+            'env',
+            'submit_wdl',
             'cromwell_url',
+            'cromwell_user',
             'cromwell_password',
-            'MAX_CONTENT_LENGTH'
+            'notification_token',
+            'MAX_CONTENT_LENGTH',
+            'wdls'
         }
 
     @staticmethod
@@ -132,3 +136,9 @@ class ListenerConfig(Config):
                 'One or more wdl specifications contains a duplicated subscription ID '
                 'but have non-identical configurations. Please check configuration file '
                 'contents.')
+
+    def __str__(self):
+        s = 'ListenerConfig({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})'
+        return s.format(self.env, self.submit_wdl, self.cromwell_url,
+            '(cromwell_user)', '(cromwell_password)', '(notification_token)',
+            self.MAX_CONTENT_LENGTH, self.wdls)
