@@ -37,3 +37,8 @@ Deploy new code:
 3. Update `listener-deployment.yaml` image with the pushed docker image
 4. Set listener config secret `bash populate-listener-config-secret.sh`
 5. Update deployment: `kubectl apply -f listener-deployment.yaml --record`
+
+Check the status of new deployment:
+1. Get all pods: `kubectl get pods`
+2. Check pod's logs: `kubectl describe pod ${pod_name}`
+3. Check pod application’s logs: `kubectl logs ${pod_name}`
