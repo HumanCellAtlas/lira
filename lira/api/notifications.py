@@ -37,13 +37,13 @@ def post(body):
     cromwell_inputs_file = json.dumps(inputs)
 
     # Read files into memory
-    wdl_file = lira_utils.download(wdl.wdl_link)
-    wdl_default_inputs_file = lira_utils.download(wdl.wdl_default_inputs_link)
-    options_file = lira_utils.download(wdl.options_link)
+    wdl_file = cromwell_tools.download(wdl.wdl_link)
+    wdl_default_inputs_file = cromwell_tools.download(wdl.wdl_default_inputs_link)
+    options_file = cromwell_tools.download(wdl.options_link)
 
     # Create zip of analysis and submit wdls
-    url_to_contents = lira_utils.download_to_map([wdl.analysis_wdl, green_config.submit_wdl])
-    wdl_deps_file = lira_utils.make_zip_in_memory(url_to_contents)
+    url_to_contents = cromwell_tools.download_to_map([wdl.analysis_wdl, green_config.submit_wdl])
+    wdl_deps_file = cromwell_tools.make_zip_in_memory(url_to_contents)
 
     cromwell_response = cromwell_tools.start_workflow(
         wdl_file, wdl_deps_file, cromwell_inputs_file,
