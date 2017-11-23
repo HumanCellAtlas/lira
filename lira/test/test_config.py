@@ -15,7 +15,7 @@ class TestStartupVerification(unittest.TestCase):
         # Change to test directory, as tests may have been invoked from another dir
         dir = os.path.abspath(os.path.dirname(__file__))
         os.chdir(dir)
-        with open('config.json', 'rb') as f:
+        with open('data/config.json', 'rb') as f:
             cls.correct_test_config = json.load(f)
 
     def test_correct_config_throws_no_errors(self):
@@ -47,7 +47,7 @@ class TestStartupVerification(unittest.TestCase):
         self.assertRaises(ValueError, config.ListenerConfig, mangled_config)
         mangled_config = delete_wdl_field('wdl_default_inputs_link')
         self.assertRaises(ValueError, config.ListenerConfig, mangled_config)
-        mangled_config = delete_wdl_field('wdl_deps_link')
+        mangled_config = delete_wdl_field('analysis_wdl')
         self.assertRaises(ValueError, config.ListenerConfig, mangled_config)
 
     def test_config_duplicate_wdl_raises_value_error(self):
@@ -75,7 +75,7 @@ class TestStartupVerification(unittest.TestCase):
         wdl = test_config.wdls[0]
         requested_wdl_attributes = [
             'subscription_id', 'wdl_link', 'workflow_name', 'wdl_default_inputs_link',
-            'wdl_deps_link', 'options_link']
+            'options_link']
         for attr in requested_wdl_attributes:
             self.assertTrue(hasattr(wdl, attr), 'missing attribute %s' % attr)
 
