@@ -12,7 +12,7 @@ paths:
   /:
     get:
       summary: health check
-      operationId: 'green_box.api.health.get'
+      operationId: 'api.health.get'
       responses:
         200:
           description: OK

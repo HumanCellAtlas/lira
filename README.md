@@ -17,10 +17,34 @@ Currently, the listener launches either a smartseq2 or 10x count workflow to pro
 4. Build the docker container: `bash build_docker.sh dev test`
 5. Run the docker container: `bash run_docker.sh dev test`
 
+### Run unit tests
+There are two ways to do this, with and without Docker.
+
+To run unit tests without building the docker image, you should create a virtual environment with the requirements for Lira:
+
+```
+virtualenv test-env
+source test-env/bin/activate
+pip install -r requirements.txt
+```
+
+Then, from the root of the lira repo, do:
+```
+python -m unittest discover -v
+```
+This will run all of Lira's unit tests.
+
+You can also run the unit tests from inside the docker image, if you don't want to create a virtualenv.
+You can do this by running:
+```
+cd lira/test
+bash test.sh
+```
+
 ### Testing notifications locally
 To send a test notification to the listener:  
 1. Set the auth token: `auth=notification_token`  
-2. Send the notification: `curl -X POST -H "Content-type: application/json" "http://localhost:8080/notifications?auth=${notification_token}" -d @test/notification.json`
+2. Send the notification: `curl -X POST -H "Content-type: application/json" "http://localhost:8080/notifications?auth=${notification_token}" -d @lira/test/notification.json`
 
 **Note:** The `subscription_id` in `notification.json` determines which workflow will be launched to process the data contained in the bundle.
 

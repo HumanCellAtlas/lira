@@ -3,9 +3,9 @@ import logging
 import json
 import time
 from flask import current_app
-from green_box_utils import gcs_utils
-from green_box_utils import cromwell_utils
-from green_box_utils import listener_utils
+from pipeline_tools import gcs_utils
+from cromwell_tools import cromwell_tools
+import utils as listener_utils
 
 
 def post(body):
@@ -55,9 +55,10 @@ def post(body):
     options_file = gcs_utils.download_gcs_blob(gcs_client, bucket_name, options_file)
 
     with open('cromwell_inputs.json') as cromwell_inputs_file:
-        cromwell_response = cromwell_utils.start_workflow(
+        cromwell_response = cromwell_tools.start_workflow(
             wdl_file, wdl_deps_file, cromwell_inputs_file,
-            wdl_default_inputs_file, options_file, green_config)
+            wdl_default_inputs_file, options_file, green_config.cromwell_url,
+            green_config.cromwell_user, green_config.cromwell_password)
 
     # Respond
     if cromwell_response.status_code > 201:
