@@ -45,11 +45,10 @@ def post(body):
     url_to_contents = lira_utils.download_to_map([wdl.analysis_wdl, green_config.submit_wdl])
     wdl_deps_file = lira_utils.make_zip_in_memory(url_to_contents)
 
-    with open('cromwell_inputs.json') as cromwell_inputs_file:
-        cromwell_response = cromwell_tools.start_workflow(
-            wdl_file, wdl_deps_file, cromwell_inputs_file,
-            wdl_default_inputs_file, options_file, green_config.cromwell_url,
-            green_config.cromwell_user, green_config.cromwell_password)
+    cromwell_response = cromwell_tools.start_workflow(
+        wdl_file, wdl_deps_file, cromwell_inputs_file,
+        wdl_default_inputs_file, options_file, green_config.cromwell_url,
+        green_config.cromwell_user, green_config.cromwell_password)
 
     # Respond
     if cromwell_response.status_code > 201:

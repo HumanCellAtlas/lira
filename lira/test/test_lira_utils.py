@@ -37,9 +37,10 @@ class TestUtils(unittest.TestCase):
 
     def test_compose_inputs(self):
         """Test if compose_inputs can correctly create Cromwell inputs file containing bundle uuid and version"""
-        inputs = lira_utils.compose_inputs('foo', 'bar', 'baz')
+        inputs = lira_utils.compose_inputs('foo', 'bar', 'baz', 'asdf')
         self.assertEqual(inputs['foo.bundle_uuid'], 'bar')
         self.assertEqual(inputs['foo.bundle_version'], 'baz')
+        self.assertEquals(inputs['foo.runtime_environment'], 'asdf')
 
     def test_download_to_map(self):
         """Test download_to_map with local files to ensure it builds the map of paths to contents correctly"""

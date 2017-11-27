@@ -47,16 +47,20 @@ def extract_uuid_version_subscription_id(msg):
     return uuid, version, subscription_id
 
 
-def compose_inputs(workflow_name, uuid, version):
+def compose_inputs(workflow_name, uuid, version, env):
     """Create Cromwell inputs file containing bundle uuid and version.
 
     :param str workflow_name: The name of the workflow.
     :param str uuid: uuid of the bundle.
     :param str version: version of the bundle.
+    :param str env: runtime environment, such as 'dev', 'staging', 'int' or 'prod'.
     :return dict: A dictionary of workflow inputs.
     """
-    return {workflow_name + '.bundle_uuid': uuid,
-            workflow_name + '.bundle_version': str(version)}
+    return {
+        workflow_name + '.bundle_uuid': uuid,
+        workflow_name + '.bundle_version': version,
+        workflow_name + '.runtime_environment': env
+    }
 
 
 def download_to_map(urls):
