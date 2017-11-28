@@ -42,29 +42,6 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(inputs['foo.bundle_version'], 'baz')
         self.assertEquals(inputs['foo.runtime_environment'], 'asdf')
 
-    def test_download_to_map(self):
-        """Test download_to_map with local files to ensure it builds the map of paths to contents correctly"""
-        urls = ['data/a.txt', 'data/b.txt']
-        urls_to_content = lira_utils.download_to_map(urls)
-        self.assertIn('data/a.txt', urls_to_content)
-        self.assertIn('data/b.txt', urls_to_content)
-        self.assertEqual(urls_to_content['data/a.txt'], 'aaa\n')
-        self.assertEqual(urls_to_content['data/b.txt'], 'bbb\n')
-
-    def test_make_zip_in_memory(self):
-        """Test make_zip_in_memory produces an in-memory zip file with the expected contents"""
-        urls_to_content = {
-            'data/a.txt': 'aaa\n',
-            'data/b.txt': 'bbb\n'
-        }
-        bytes_buf = lira_utils.make_zip_in_memory(urls_to_content)
-        with zipfile.ZipFile(bytes_buf, 'r') as zf:
-            with zf.open('a.txt') as f1:
-                f1_contents = f1.read()
-            with zf.open('b.txt') as f2:
-                f2_contents = f2.read()
-        self.assertEqual(f1_contents, 'aaa\n')
-        self.assertEqual(f2_contents, 'bbb\n')
 
 if __name__ == '__main__':
     unittest.main()
