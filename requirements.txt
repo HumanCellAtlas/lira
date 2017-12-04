@@ -4,5 +4,5 @@ google-auth
 google-cloud-storage
 flask
 requests
-git+git://github.com/broadinstitute/cromwell-tools.git@ds_move_make_zip_to_cromwell_tools_310
+git+git://github.com/broadinstitute/cromwell-tools.git
 git+git://github.com/HumanCellAtlas/pipeline-tools.git
