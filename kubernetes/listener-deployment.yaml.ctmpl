@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: listener
-        image: gcr.io/broad-dsde-mint-dev/listener:0.1.0
+        image: gcr.io/broad-dsde-mint-dev/listener:{{env "DOCKER_TAG"}}
         ports:
         - containerPort: 8080
         volumeMounts:
