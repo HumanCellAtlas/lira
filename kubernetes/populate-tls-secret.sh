@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
-kubectl create secret tls hca-tls-secret \
-  --cert=/etc/secondary-analysis/fullchain.pem \
-  --key=/etc/secondary-analysis/privkey.pem
+secret_name=$1
+cert_dir=$2
+
+kubectl create secret tls $secret_name \
+  --cert=$cert_dir/fullchain.pem \
+  --key=$cert_dir/privkey.pem
