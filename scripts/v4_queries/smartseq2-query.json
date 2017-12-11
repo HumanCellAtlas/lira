@@ -1,0 +1,42 @@
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "files.assay_json.content.rna.library_construction": "smart-seq2"
+          }
+        },
+        {
+          "match": {
+            "files.assay_json.content.seq.paired_ends": true
+          }
+        },
+        {
+          "match": {
+            "files.sample_json.samples.content.ncbi_taxon_id": 9606
+          }
+        }
+      ],
+      "should": [
+        {
+          "match": {
+            "files.assay_json.content.single_cell.cell_handling": "FACS"
+          }
+        },
+        {
+          "match": {
+            "files.assay_json.content.single_cell.cell_handling": "mouth-pipetting"
+          }
+        }
+      ],
+      "must_not": [
+        {
+          "exists": {
+            "field": "files.analysis_json"
+          }
+        }
+      ]
+    }
+  }
+}
