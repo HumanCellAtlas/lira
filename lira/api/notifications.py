@@ -3,9 +3,9 @@ import logging
 import json
 import time
 from flask import current_app
-from pipeline_tools import gcs_utils
 from cromwell_tools import cromwell_tools
 import lira_utils
+
 
 def post(body):
     # Check authentication
@@ -46,9 +46,15 @@ def post(body):
     wdl_deps_file = cromwell_tools.make_zip_in_memory(url_to_contents)
 
     cromwell_response = cromwell_tools.start_workflow(
-        wdl_file, wdl_deps_file, cromwell_inputs_file,
-        wdl_default_inputs_file, options_file, green_config.cromwell_url,
-        green_config.cromwell_user, green_config.cromwell_password)
+        wdl_file=wdl_file,
+        zip_file=wdl_deps_file,
+        inputs_file=cromwell_inputs_file,
+        inputs_file2=wdl_default_inputs_file,
+        options_file=options_file,
+        url=green_config.cromwell_url,
+        user=green_config.cromwell_user,
+        password=green_config.cromwell_password
+    )
 
     # Respond
     if cromwell_response.status_code > 201:
