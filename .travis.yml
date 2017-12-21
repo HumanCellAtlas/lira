@@ -1,0 +1,12 @@
+language: python
+python:
+- '2.7'
+sudo: enabled
+services: docker
+script: cd lira/test && bash test.sh
+notifications:
+  slack:
+    on_success: change
+    on_failure: always
+    rooms:
+      secure: HF8JfcDeAgvCJLtM/6Nms1/NrmGXbiSKEru3jCxLw/gizAhJiAvirCHVlZJAiA7Uu0EePQMM0GK3/3D7F7Sh7vuluLVxK17IctbhO2fU9URAU9KX9pqL908JK1Z+ZAkgjgjFW8enWrPrE9oMGLxptl+IXjCRp1YntpkghbinY2cRFiUhFD60mkObpeoq905qRvaB9sOlNbXKJ0I0MiK/3JSuc4QFeZ/2GvXBUhV7tfR+Y1BP8gjX0i/FTKNf33p8K1rhguZ1uM2cTJT96NQR2Z3Y0Ed1UfkSYu5e2Xefuhc83Nane8dkkfKFs5Rf7O0mrIKDk3Nk2nDo5KUI2QpD36XZv/JqfTwnCSP3V0Y7mi9xoNeoUsbqK7q5nSPHiM5Zqyd2nnXXkoec3nJDMqKV6cgkTUffNoLWpqDmdGO+q6Pkcu2usqPMYy1T/y0NRjdT3j8w9V1OU44Tr4J5OzGanZ75I0HwkA3ddIBrnx1aRfvbovZwKFEFB7olqqvE0LimvyxBYtZGvFp84ThqiwWUOxtSPHfKqLSHd5vqqsXkarBzfjZTJjzFPf5MVJNx5qdVMeXDgcawkKqcX7ugPWt00WQ1Wx8rsZrWX7D8jp1vMRrUfJrTu7dlNQgYDoVoa9DjAH4Q32lUAsDMn7rclqZNoHpvqkFigsDOVN4dCa7pA1E=
