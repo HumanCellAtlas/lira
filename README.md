@@ -1,6 +1,8 @@
 # secondary-analysis
 
-[![](https://img.shields.io/badge/slack-%23secondary--analysis-5BBC66.svg)](https://humancellatlas.slack.com/messages/secondary-analysis/)
+| Slack Channel | Container | Linux-Python2.7 |
+|:-------:|:---------:|:---------:|
+| [![](https://img.shields.io/badge/slack-%23secondary--analysis-5BBC66.svg)](https://humancellatlas.slack.com/messages/secondary-analysis/) | [![Docker Repository on Quay](https://quay.io/repository/humancellatlas/secondary-analysis-lira/status "Docker Repository on Quay")](https://quay.io/repository/humancellatlas/secondary-analysis-lira) | [![Build Status](https://travis-ci.org/HumanCellAtlas/lira.svg?branch=ds_travis_test_354)](https://travis-ci.org/HumanCellAtlas/lira) |
 
 Prototype Secondary Analysis Service (Green Box) for the Human Cell Atlas. 
 
