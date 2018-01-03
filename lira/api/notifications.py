@@ -9,7 +9,7 @@ import lira_utils
 
 def post(body):
     # Check authentication
-    logger = logging.getLogger('green-box')
+    logger = logging.getLogger("Lira | {module_path}".format(module_path=__name__))
     green_config = current_app.config
 
     if not lira_utils.is_authenticated(connexion.request.args, green_config.notification_token):
@@ -17,7 +17,7 @@ def post(body):
         return lira_utils.response_with_server_header(dict(error='Unauthorized'), 401)
 
     logger.info("Notification received")
-    logger.info(body)
+    logger.debug("Received notification body: {notification}".format(notification=body))
 
     # Get bundle uuid, version and subscription_id
     uuid, version, subscription_id = lira_utils.extract_uuid_version_subscription_id(body)
@@ -29,8 +29,8 @@ def post(body):
             dict(error='Not Found: No wdl config found with subscription id {}'
                        ''.format(subscription_id)), 404)
     wdl = id_matches[0]
-    logger.info(wdl)
-    logger.info('Launching {0} workflow in Cromwell'.format(wdl.workflow_name))
+    logger.debug("Matched WDL: {wdl}".format(wdl=wdl))
+    logger.info("Launching {workflow_name} workflow in Cromwell".format(workflow_name=wdl.workflow_name))
 
     # Prepare inputs
     inputs = lira_utils.compose_inputs(wdl.workflow_name, uuid, version, green_config.env)
@@ -58,7 +58,8 @@ def post(body):
 
     # Respond
     if cromwell_response.status_code > 201:
-        logger.error(cromwell_response.text)
+        logger.error("HTTP error content: {content}".format(content=cromwell_response.text))
         return lira_utils.response_with_server_header(dict(result=cromwell_response.text), 500)
-    logger.info(cromwell_response.json())
+    logger.info("Cromwell response: {response}".format(response=cromwell_response.json()))
+
     return lira_utils.response_with_server_header(cromwell_response.json())

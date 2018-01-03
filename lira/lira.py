@@ -15,6 +15,7 @@ from pipeline_tools import gcs_utils
 
 def main():
     logging.basicConfig(level=logging.DEBUG)
+    logger = logging.getLogger("Lira | {module_path}".format(module_path=__name__))
 
     # Create lazy initialized GCS client here
     gcs_client = gcs_utils.GoogleCloudStorageClient(key_location='/etc/secondary-analysis/bucket-reader-key.json',
@@ -29,6 +30,8 @@ def main():
     resolver = RestyResolver("api", collection_endpoint_name="list")
     app.add_api('lira.yml', resolver=resolver, validate_responses=True)
     app.run(port=8080)
+
+    logger.info("Lira started to run")
 
 if __name__ == '__main__':
     main()
