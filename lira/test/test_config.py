@@ -47,8 +47,14 @@ class TestStartupVerification(unittest.TestCase):
         self.assertRaises(ValueError, config.ListenerConfig, mangled_config)
         mangled_config = delete_wdl_field('wdl_default_inputs_link')
         self.assertRaises(ValueError, config.ListenerConfig, mangled_config)
-        mangled_config = delete_wdl_field('analysis_wdl')
+        mangled_config = delete_wdl_field('analysis_wdls')
         self.assertRaises(ValueError, config.ListenerConfig, mangled_config)
+
+    def test_error_thrown_when_analysis_wdl_is_not_list(self):
+        test_config = deepcopy(self.correct_test_config)
+        test_config['wdls'][0]['analysis_wdls'] = 'bare string'
+        with self.assertRaises(TypeError):
+            config.ListenerConfig(test_config)
 
     def test_config_duplicate_wdl_raises_value_error(self):
 
