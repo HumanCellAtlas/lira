@@ -42,7 +42,7 @@ def post(body):
     options_file = cromwell_tools.download(wdl.options_link)
 
     # Create zip of analysis and submit wdls
-    url_to_contents = cromwell_tools.download_to_map([wdl.analysis_wdl, green_config.submit_wdl])
+    url_to_contents = cromwell_tools.download_to_map(wdl.analysis_wdls + [green_config.submit_wdl])
     wdl_deps_file = cromwell_tools.make_zip_in_memory(url_to_contents)
 
     cromwell_response = cromwell_tools.start_workflow(

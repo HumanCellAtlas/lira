@@ -1,26 +1,33 @@
 {
   "env": "dev",
-  "cromwell_url": "https://cromwell.mint-dev.broadinstitute.org/api/workflows/v1", 
-  "cromwell_password": "test", 
-  "cromwell_user": "test", 
-  "notification_token": "test", 
-  "MAX_CONTENT_LENGTH": 10000, 
-  "submit_wdl": "https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/master/adapter_pipelines/submit.wdl", 
+  "cromwell_url": "https://cromwell.mint-dev.broadinstitute.org/api/workflows/v1",
+  "cromwell_password": "test",
+  "cromwell_user": "test",
+  "notification_token": "test",
+  "MAX_CONTENT_LENGTH": 10000,
+  "submit_wdl": "https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/v0.1.5/adapter_pipelines/submit.wdl",
   "wdls": [
     {
-      "subscription_id": "3e3e176b-629f-46ea-b01d-e36bd650dc54", 
-      "analysis_wdl": "https://raw.githubusercontent.com/HumanCellAtlas/skylab/master/10x/count/count.wdl", 
-      "options_link": "https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/master/adapter_pipelines/10x/options.json", 
-      "wdl_default_inputs_link": "https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/master/adapter_pipelines/10x/adapter_example_static.json", 
-      "wdl_link": "https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/master/adapter_pipelines/10x/adapter.wdl", 
+      "subscription_id": "3e3e176b-629f-46ea-b01d-e36bd650dc54",
+      "analysis_wdls": ["https://raw.githubusercontent.com/HumanCellAtlas/skylab/10x_v0.1.0/10x/count/count.wdl"],
+      "options_link": "https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/10x_v0.1.0/adapter_pipelines/10x/options.json",
+      "wdl_default_inputs_link": "https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/10x_v0.1.0/adapter_pipelines/10x/adapter_example_static.json",
+      "wdl_link": "https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/v0.1.0/adapter_pipelines/10x/adapter.wdl",
       "workflow_name": "Adapter10xCount"
-    }, 
+    },
     {
-      "subscription_id": "dd17bb03-7634-47a4-9fd3-a55580ac3b1c", 
-      "analysis_wdl": "https://raw.githubusercontent.com/HumanCellAtlas/skylab/master/smartseq2_single_sample/ss2_single_sample.wdl", 
-      "options_link": "https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/master/adapter_pipelines/smart_seq2/options.json", 
-      "wdl_default_inputs_link": "https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/master/adapter_pipelines/smart_seq2/adapter_example_static_demo.json", 
-      "wdl_link": "https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/master/adapter_pipelines/smart_seq2/adapter.wdl", 
+      "subscription_id": "dd17bb03-7634-47a4-9fd3-a55580ac3b1c",
+      "analysis_wdls": [
+        "https://raw.githubusercontent.com/HumanCellAtlas/skylab/smartseq2_v0.2.0/smartseq2_single_sample/ss2_single_sample.wdl",
+        "https://raw.githubusercontent.com/HumanCellAtlas/skylab/smartseq2_v0.2.0/smartseq2_single_sample/pipelines/hisat2_QC_pipeline.wdl",
+        "https://raw.githubusercontent.com/HumanCellAtlas/skylab/smartseq2_v0.2.0/smartseq2_single_sample/pipelines/hisat2_rsem_pipeline.wdl",
+        "https://raw.githubusercontent.com/HumanCellAtlas/skylab/smartseq2_v0.2.0/pipelines/tasks/hisat2.wdl",
+        "https://raw.githubusercontent.com/HumanCellAtlas/skylab/smartseq2_v0.2.0/pipelines/tasks/picard.wdl",
+        "https://raw.githubusercontent.com/HumanCellAtlas/skylab/smartseq2_v0.2.0/pipelines/tasks/rsem.wdl"
+      ],
+      "options_link": "https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/v0.1.5/adapter_pipelines/smart_seq2/options.json",
+      "wdl_default_inputs_link": "https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/v0.1.5/adapter_pipelines/smart_seq2/adapter_example_static_demo.json",
+      "wdl_link": "https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/v0.1.5/adapter_pipelines/smart_seq2/adapter.wdl",
       "workflow_name": "AdapterSs2RsemSingleSample"
     }
   ]

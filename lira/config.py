@@ -3,7 +3,7 @@
 import logging
 
 
-class Config:
+class Config(object):
 
     def __init__(self, config_dictionary, flask_config_values=None):
         """abstract class that defines some useful configuration checks for the listener
@@ -17,7 +17,6 @@ class Config:
           those generated from a connexxion App
         """
         self.config_dictionary = config_dictionary
-        self._verify_fields()
 
         # make keys accessible in the namespace, grab any extra flask arguments
         for k, v in config_dictionary.items():
@@ -25,6 +24,8 @@ class Config:
         if isinstance(flask_config_values, dict):
             for k, v in flask_config_values.items():
                 setattr(self, k, v)
+
+        self._verify_fields()
 
     @property
     def required_fields(self):
@@ -57,7 +58,7 @@ class Config:
         result = ''
         for v in self.required_fields:
             field_value = getattr(self, v)
-            if isinstance(field_value, (str, unicode, int)):
+            if isinstance(field_value, (str, unicode, int, list)):
                 result += str(field_value)
             elif isinstance(field_value, Config):
                 result += field_value.to_string()
@@ -84,15 +85,20 @@ class WdlConfig(Config):
         return {
             'subscription_id',
             'wdl_link',
-            'analysis_wdl',
+            'analysis_wdls',
             'workflow_name',
             'wdl_default_inputs_link',
             'options_link'
         }
 
+    def _verify_fields(self):
+        super(WdlConfig, self)._verify_fields()
+        if not isinstance(self.analysis_wdls, list):
+            raise TypeError('analysis_wdls must be a list')
+
     def __str__(self):
-        s = 'WdlConfig({0}, {1}, {2}, {3}, {4}, {5}, {6})'
-        return s.format(self.subscription_id, self.wdl_link, self.analysis_wdl,
+        s = 'WdlConfig({0}, {1}, {2}, {3}, {4}, {5})'
+        return s.format(self.subscription_id, self.wdl_link, self.analysis_wdls,
             self.workflow_name, self.wdl_default_inputs_link, self.options_link)
 
 class ListenerConfig(Config):
