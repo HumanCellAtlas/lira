@@ -8,6 +8,9 @@ if [ -z $config_file ]; then
     exit 1
 fi
 
+config_secret_name=listener-config-$(date '+%Y-%m-%d-%H-%M')
+echo $config_secret_name
+
 kubectl create secret generic \
-    listener-config-$(date '+%Y-%m-%d-%H-%M') \
+    $config_secret_name \
     --from-file=config=$config_file \
