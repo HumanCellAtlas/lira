@@ -1,4 +1,4 @@
-FROM ubuntu:17.04
+FROM ubuntu:16.04
 
 RUN apt-get update && apt-get upgrade -y
 
@@ -8,6 +8,8 @@ RUN apt-get -y install --no-install-recommends \
   vim \
   nmap \
   git
+
+RUN pip install --upgrade pip
 
 RUN pip install wheel
 
