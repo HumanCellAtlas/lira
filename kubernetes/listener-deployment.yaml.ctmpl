@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: listener
-        image: gcr.io/broad-dsde-mint-dev/listener:{{env "DOCKER_TAG"}}
+        image: quay.io/humancellatlas/secondary-analysis-lira:{{env "DOCKER_TAG"}}
         ports:
         - containerPort: 8080
         volumeMounts:
@@ -24,7 +24,7 @@ spec:
       volumes:
       - name: listener-config
         secret:
-          secretName: listener-config
+          secretName: {{env "LIRA_CONFIG"}}
           items:
           - key: config
             path: config.json

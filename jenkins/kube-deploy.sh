@@ -102,7 +102,7 @@ context="gke_${GOOGLE_PROJECT}_${ZONE}_${KUBE_CLUSTER}"
 # should check if yaml needs rendering
 
 # Render template for deployment
-docker run -i --rm  ${DOCKER_OPTS} -e DOCKER_TAG=${DOCKER_TAG} -e ENV=${ENV} -v ${VAULT_TOKEN_FILE}:/root/.vault-token -v ${PWD}/kubernetes:/working broadinstitute/dsde-toolbox:k8s /usr/local/bin/render-ctmpl.sh /working/${KUBE_YAML}.ctmpl
+docker run -i --rm  ${DOCKER_OPTS} -e LIRA_CONFIG=${LIRA_CONFIG} -e DOCKER_TAG=${DOCKER_TAG} -e ENV=${ENV} -v ${VAULT_TOKEN_FILE}:/root/.vault-token -v ${PWD}/kubernetes:/working broadinstitute/dsde-toolbox:k8s /usr/local/bin/render-ctmpl.sh /working/${KUBE_YAML}.ctmpl
 
 # kube  commands
 
