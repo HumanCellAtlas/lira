@@ -4,7 +4,7 @@ import json
 import time
 from flask import current_app
 from cromwell_tools import cromwell_tools
-import lira_utils
+from lira import lira_utils
 
 
 def post(body):
