@@ -1,0 +1,32 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: listener
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: listener
+    spec:
+      containers:
+      - name: listener
+        image: quay.io/humancellatlas/secondary-analysis-lira:{{env "DOCKER_TAG"}}
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: listener-config
+          mountPath: /etc/secondary-analysis
+          readOnly: true
+        env:
+        - name: listener_config
+          value: /etc/secondary-analysis/config.json
+      volumes:
+      - name: listener-config
+        secret:
+          secretName: {{env "LIRA_CONFIG"}}
+          items:
+          - key: config
+            path: config.json
+          - key: bucket-reader-key
+            path: bucket-reader-key.json
