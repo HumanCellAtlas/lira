@@ -3,6 +3,7 @@ connexion
 google-auth
 google-cloud-storage
 flask
+gunicorn
 requests
 git+git://github.com/broadinstitute/cromwell-tools.git
 git+git://github.com/HumanCellAtlas/pipeline-tools.git

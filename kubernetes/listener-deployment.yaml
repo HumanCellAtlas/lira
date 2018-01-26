@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: listener
-        image: gcr.io/broad-dsde-mint-dev/listener:0.1.0
+        image: quay.io/humancellatlas/secondary-analysis-lira:v0.5.0
         ports:
         - containerPort: 8080
         volumeMounts:
@@ -24,9 +24,7 @@ spec:
       volumes:
       - name: listener-config
         secret:
-          secretName: listener-config
+          secretName: listener-config-2018-01-22
           items:
           - key: config
             path: config.json
-          - key: bucket-reader-key
-            path: bucket-reader-key.json

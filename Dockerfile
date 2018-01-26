@@ -22,4 +22,4 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-CMD ["python", "lira/lira.py"]
+ENTRYPOINT ["bash", "start_lira.sh"]
