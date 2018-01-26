@@ -28,5 +28,3 @@ spec:
           items:
           - key: config
             path: config.json
-          - key: bucket-reader-key
-            path: bucket-reader-key.json
