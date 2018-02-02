@@ -6,7 +6,7 @@ import logging
 class Config(object):
 
     def __init__(self, config_dictionary, flask_config_values=None):
-        """abstract class that defines some useful configuration checks for the listener
+        """abstract class that defines some useful configuration checks for Lira 
 
         This object takes a dictionary of values and verifies them against expected_keys.
          It additionally accepts values from a flask config object, which it merges
@@ -35,17 +35,18 @@ class Config(object):
     def _verify_fields(self):
         """Verify config contains required fields"""
 
-        wdl_keys = set(self.config_dictionary)
-        extra_keys = wdl_keys - self.required_fields
-        missing_keys = self.required_fields - wdl_keys
+        given_keys = set(self.config_dictionary)
+        extra_keys = given_keys - self.required_fields
+        missing_keys = self.required_fields - given_keys
         if missing_keys:
             raise ValueError(
-                'The following configuration is missing key(s): {keys}\n{wdl}'
-                ''.format(wdl=self.config_dictionary, keys=', '.join(missing_keys)))
+                'The following configuration is missing key(s): {keys}'
+                ''.format(keys=', '.join(missing_keys)))
         if extra_keys:
-            logging.warning(
-                'The following configuration has unexpected key(s): {keys}\n{wdl}'
-                ''.format(wdl=self.config_dictionary, keys=', '.join(extra_keys)))
+            logger = logging.getLogger('Lira | {module_path}'.format(module_path=__name__))
+            logger.info(
+                'Configuration has non-required key(s): {keys}'
+                ''.format(keys=', '.join(extra_keys)))
 
     def __eq__(self, other):
         return isinstance(other, WdlConfig) and hash(self) == hash(other)
@@ -53,21 +54,16 @@ class Config(object):
     def __ne__(self, other):
         return not self.__eq__(other)
 
-    def to_string(self):
+    def __str__(self):
         """recursively collapse a config object into a hashable string"""
         result = ''
         for v in self.required_fields:
             field_value = getattr(self, v)
-            if isinstance(field_value, (str, unicode, int, list)):
-                result += str(field_value)
-            elif isinstance(field_value, Config):
-                result += field_value.to_string()
-            else:
-                raise ValueError('Config fields must either be strings or config objects')
+            result += str(field_value)
         return result
 
     def __hash__(self):
-        return hash(self.to_string())
+        return hash(str(self))
 
     # needed for flask interface
     def __getitem__(self, item):
@@ -87,7 +83,7 @@ class WdlConfig(Config):
             'wdl_link',
             'analysis_wdls',
             'workflow_name',
-            'wdl_default_inputs_link',
+            'wdl_static_inputs_link',
             'options_link'
         }
 
@@ -99,24 +95,31 @@ class WdlConfig(Config):
     def __str__(self):
         s = 'WdlConfig({0}, {1}, {2}, {3}, {4}, {5})'
         return s.format(self.subscription_id, self.wdl_link, self.analysis_wdls,
-            self.workflow_name, self.wdl_default_inputs_link, self.options_link)
+            self.workflow_name, self.wdl_static_inputs_link, self.options_link)
 
-class ListenerConfig(Config):
-    """subclass of Config to check listener configurations"""
+class LiraConfig(Config):
+    """subclass of Config representing Lira configuration"""
 
-    def __init__(self, json_config_object, *args, **kwargs):
+    def __init__(self, config_object, *args, **kwargs):
+        logger = logging.getLogger('Lira | {module_path}'.format(module_path=__name__))
+
+        # Default value that can be overridden
+        self.cache_wdls = True
 
         # parse the wdls section
         wdl_configs = []
         try:
-            for wdl in json_config_object['wdls']:
+            for wdl in config_object['wdls']:
                 wdl_configs.append(WdlConfig(wdl))
         except KeyError:
             raise ValueError('supplied config file must contain a "wdls" section.')
         self._verify_wdl_configs(wdl_configs)
-        json_config_object['wdls'] = wdl_configs
+        config_object['wdls'] = wdl_configs
 
-        Config.__init__(self, json_config_object, *args, **kwargs)
+        if config_object.get('dry_run'):
+            logger.warning('***Lira is running in dry_run mode and will NOT launch any workflows***')
+
+        Config.__init__(self, config_object, *args, **kwargs)
 
     @property
     def required_fields(self):
@@ -135,7 +138,8 @@ class ListenerConfig(Config):
     def _verify_wdl_configs(wdl_configs):
         """Additional verification for wdl configurations"""
         if len(wdl_configs) != len(set(wdl_configs)):
-            logging.warning('duplicate wdl definitions detected in config.json')
+            logger = logging.getLogger('Lira | {module_path}'.format(module_path=__name__))
+            logger.warning('duplicate wdl definitions detected in config.json')
 
         if len(wdl_configs) != len(set([wdl.subscription_id for wdl in wdl_configs])):
             raise ValueError(
@@ -144,7 +148,7 @@ class ListenerConfig(Config):
                 'contents.')
 
     def __str__(self):
-        s = 'ListenerConfig({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})'
+        s = 'LiraConfig({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})'
         return s.format(self.env, self.submit_wdl, self.cromwell_url,
             '(cromwell_user)', '(cromwell_password)', '(notification_token)',
             self.MAX_CONTENT_LENGTH, self.wdls)

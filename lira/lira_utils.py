@@ -5,7 +5,7 @@ import logging
 from flask import make_response
 
 
-def response_with_server_header(body, status=200):
+def response_with_server_header(body, status):
     """Add information of server to header.We are doing this to overwrite the default flask Server header. The
      default header is a security risk because it provides too much information about server internals.
 
@@ -13,7 +13,7 @@ def response_with_server_header(body, status=200):
     :param int status: HTTP response status code.
     :return flask.wrappers.Response response: HTTP response with information of server in header.
     """
-    response = make_response(json.dumps(body), status)
+    response = make_response(json.dumps(body, indent=2) + '\n', status)
     response.headers['Server'] = 'Secondary Analysis Service'
     response.headers['Content-type'] = 'application/json'
     return response
@@ -57,3 +57,25 @@ def compose_inputs(workflow_name, uuid, version, env):
         workflow_name + '.bundle_version': version,
         workflow_name + '.runtime_environment': env
     }
+
+
+def noop_lru_cache(maxsize=None, typed=False):
+    """Decorator that serves as a mock of the functools.lru_cache decorator, which
+    is only available in Python 3. We use this mock as a placeholder in Python 2
+    to avoid blowing up when the real decorator isn't available. It merely
+    calls through to the decorated function and provides a dummy cache_info()
+    function.
+    """
+    def cache_info():
+        return 'No cache info available. Cache is disabled.'
+
+    def cache_clear():
+        pass
+
+    def real_noop_lru_cache(fn):
+        def wrapper(*args, **kwargs):
+            return fn(*args, **kwargs)
+        wrapper.cache_info = cache_info
+        wrapper.cache_clear = cache_clear
+        return wrapper
+    return real_noop_lru_cache

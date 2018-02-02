@@ -36,7 +36,7 @@ paths:
           schema:
             $ref: '#/definitions/Notification'
       responses:
-        200:
+        201:
           description: OK
           schema:
             $ref: '#/definitions/NotificationResponse'
@@ -77,13 +77,10 @@ definitions:
   NotificationResponse:
     type: object
     properties:
-      result:
-        type: object
-        properties:
-          status:
-            type: string
-          id:
-            type: string
+      status:
+        type: string
+      id:
+        type: string
   HealthCheckResponse:
     type: object
     properties:
