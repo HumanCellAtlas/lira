@@ -1,8 +1,7 @@
 FROM ubuntu:16.04
 
-RUN apt-get update && apt-get upgrade -y
-
-RUN apt-get -y install --no-install-recommends \
+RUN apt-get update && apt-get upgrade -y && \
+  apt-get -y install --no-install-recommends \
   python-pip \
   python-setuptools \
   vim \
