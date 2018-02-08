@@ -10,7 +10,8 @@ import connexion
 from connexion.resolver import RestyResolver
 import argparse
 
-import config
+from . import lira_config
+from .api import notifications
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--host', default='0.0.0.0')
@@ -26,8 +27,10 @@ app = connexion.App(__name__)
 application = app.app
 
 config_path = os.environ['listener_config']
+logger.info('Using config file at {0}'.format(config_path))
 with open(config_path) as f:
-    app.app.config = config.ListenerConfig(json.load(f), app.app.config)
+    app.app.config = lira_config.LiraConfig(json.load(f), app.app.config)
+    app.app.prepare_submission = notifications.create_prepare_submission_function(app.app.config.cache_wdls)
 
 resolver = RestyResolver('lira.api', collection_endpoint_name='list')
 app.add_api('lira.yml', resolver=resolver, validate_responses=True)

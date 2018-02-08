@@ -40,7 +40,7 @@ class TestUtils(unittest.TestCase):
         inputs = lira_utils.compose_inputs('foo', 'bar', 'baz', 'asdf')
         self.assertEqual(inputs['foo.bundle_uuid'], 'bar')
         self.assertEqual(inputs['foo.bundle_version'], 'baz')
-        self.assertEquals(inputs['foo.runtime_environment'], 'asdf')
+        self.assertEqual(inputs['foo.runtime_environment'], 'asdf')
 
 
 if __name__ == '__main__':

@@ -1,12 +1,13 @@
 {{with $environment := env "ENV"}}
 {{with $cromwellSecrets := vault (printf "secret/dsde/mint/%s/common/htpasswd" $environment)}}
+{{with $listenerSecret := vault (printf "secret/dsde/mint/%s/listener/listener_secret" $environment)}}
     {
       "MAX_CONTENT_LENGTH": 10000,
       "cromwell_password": "{{$cromwellSecrets.Data.cromwell_password}}",
       "cromwell_url": "https://cromwell.mint-{{ env "ENV" }}.broadinstitute.org/api/workflows/v1",
       "cromwell_user": "{{$cromwellSecrets.Data.cromwell_user}}",
       "env": "{{ env "ENV" }}",
-      "notification_token": "{{env "NOTIFICATION_TOKEN" }}",
+      "notification_token": "{{$listenerSecret.Data.notification_token}}",
       "submit_wdl": "{{ env "PIPELINE_TOOLS_PREFIX" }}/adapter_pipelines/submit.wdl",
       "wdls": [
         {
@@ -14,27 +15,28 @@
             "{{ env "TENX_PREFIX" }}/pipelines/10x/count/count.wdl"
           ],
           "options_link": "{{ env "PIPELINE_TOOLS_PREFIX" }}/adapter_pipelines/10x/options.json",
-          "subscription_id": {{ env "TENX_SUBSCRIPTION_ID" }},
-          "wdl_default_inputs_link": "{{ env "PIPELINE_TOOLS_PREFIX" }}/adapter_pipelines/10x/adapter_example_static.json",
+          "subscription_id": "{{ env "TENX_SUBSCRIPTION_ID" }}",
+          "wdl_static_inputs_link": "{{ env "PIPELINE_TOOLS_PREFIX" }}/adapter_pipelines/10x/adapter_example_static.json",
           "wdl_link": "{{ env "PIPELINE_TOOLS_PREFIX" }}/adapter_pipelines/10x/adapter.wdl",
           "workflow_name": "Adapter10xCount"
         },
         {
           "analysis_wdls": [
             "{{ env "SS2_PREFIX" }}/pipelines/smartseq2_single_sample/ss2_single_sample.wdl",
-            "{{ env "SS2_PREFIX" }}/library/subworkflows/smartseq2_single_sample/pipelines/hisat2_QC_pipeline.wdl",
-            "{{ env "SS2_PREFIX" }}/library/subworkflows/smartseq2_single_sample/pipelines/hisat2_rsem_pipeline.wdl",
+            "{{ env "SS2_PREFIX" }}/library/subworkflows/hisat2_QC_pipeline.wdl",
+            "{{ env "SS2_PREFIX" }}/library/subworkflows/hisat2_rsem_pipeline.wdl",
             "{{ env "SS2_PREFIX" }}/library/tasks/hisat2.wdl",
             "{{ env "SS2_PREFIX" }}/library/tasks/picard.wdl",
             "{{ env "SS2_PREFIX" }}/library/tasks/rsem.wdl"
           ],
           "options_link": "{{ env "PIPELINE_TOOLS_PREFIX" }}/adapter_pipelines/ss2_single_sample/options.json",
-          "subscription_id": {{ env "SS2_SUBSCRIPTION_ID" }},
-          "wdl_default_inputs_link": "{{ env "PIPELINE_TOOLS_PREFIX" }}/adapter_pipelines/ss2_single_sample/adapter_example_static.json",
+          "subscription_id": "{{ env "SS2_SUBSCRIPTION_ID" }}",
+          "wdl_static_inputs_link": "{{ env "PIPELINE_TOOLS_PREFIX" }}/adapter_pipelines/ss2_single_sample/adapter_example_static.json",
           "wdl_link": "{{ env "PIPELINE_TOOLS_PREFIX" }}/adapter_pipelines/ss2_single_sample/adapter.wdl",
           "workflow_name": "AdapterSmartSeq2SingleCell"
         }
       ]
     }
+{{end}}
 {{end}}
 {{end}}
