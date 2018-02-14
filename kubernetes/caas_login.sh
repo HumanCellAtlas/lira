@@ -9,7 +9,9 @@ WORKFLOW_COLLECTION_ID=$4  # The name of the workflow-collection to create in SA
 FIRECLOUD_CONTACT_EMAIL=$5  # A contact email to use for the FireCloud service account
 FIRECLOUD_GROUP_NAME=$6  # The name of the user group to create in FireCloud to control workflow collection permissions (e.g. "write-access")
 VAULT_TOKEN_FILE=${VAULT_TOKEN_FILE:-"$HOME/.vault-token"}
-FIRECLOUD_URL="https://firecloud.dsde-dev.broadinstitute.org"
+FIRECLOUD_URL=${FIRECLOUD_URL:-"https://firecloud.dsde-dev.broadinstitute.org"}
+FIRECLOUD_API_URL=${FIRECLOUD_URL:-"https://firecloud-orchestration.dsde-dev.broadinstitute.org"}
+SAM_URL=${SAM_URL:-"https://sam.dsde-dev.broadinstitute.org"}
 
 
 #Set gcloud project
@@ -34,4 +36,9 @@ echo "Register the service account for use in Firecloud"
 cd ..
 
 echo "Register the service account in SAM"
-./sam_registration.py ${KEY_FILE_PATH} ${WORKFLOW_COLLECTION_ID} ${FIRECLOUD_GROUP_NAME}
+./sam_registration.py \
+    --json_credentials ${KEY_FILE_PATH} \
+    --workflow_collection_id ${WORKFLOW_COLLECTION_ID} \
+    --firecloud_group_name ${FIRECLOUD_GROUP_NAME} \
+    --sam_url ${SAM_URL} \
+    --firecloud_api_url ${FIRECLOUD_API_URL}
