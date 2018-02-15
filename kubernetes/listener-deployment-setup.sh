@@ -13,33 +13,50 @@ DSS_URL=$4
 PIPELINE_TOOLS_PREFIX=$5
 SS2_PREFIX=$6
 TENX_PREFIX=$7
+LOG_SINK_NAME=$8
+LOG_DESTINATION=$9
 VAULT_TOKEN_FILE=${VAULT_TOKEN_FILE:-"$HOME/.vault-token"}
 
+error=0
 if [ -z $ENV ]; then
     echo -e "\nYou must specify a deployment environment"
     error=1
-elif [ -z $GCLOUD_PROJECT ]; then
+fi
+if [ -z $GCLOUD_PROJECT ]; then
     echo -e "\nYou must specify a gcloud project for the deployment"
     error=1
-elif [ -z $BLUEBOX_SUBSCRIPTION_KEY_DIR ]; then
+fi
+if [ -z $BLUEBOX_SUBSCRIPTION_KEY_DIR ]; then
     echo -e "\nYou must specify a directory in which to store the bluebox subscription key file"
     error=1
-elif [ -z $DSS_URL ]; then
+fi
+if [ -z $DSS_URL ]; then
     echo -e "\nYou must specify a dss url"
     error=1
-elif [ -z $PIPELINE_TOOLS_PREFIX ]; then
+fi
+if [ -z $PIPELINE_TOOLS_PREFIX ]; then
     echo -e "\nYou must specify the pipeline-tools prefix"
     error=1
-elif [ -z $SS2_PREFIX ]; then
+fi
+if [ -z $SS2_PREFIX ]; then
     echo -e "\nYou must specify the SmartSeq2 prefix"
     error=1
-elif [ -z $TENX_PREFIX ]; then
+fi
+if [ -z $TENX_PREFIX ]; then
     echo -e "\nYou must specify the 10x prefix"
+    error=1
+fi
+if [ -z $LOG_SINK_NAME ]; then
+    echo -e "\nYou must specify a log sink name"
+    error=1
+fi
+if [ -z $LOG_DESTINATION ]; then
+    echo -e "\nYou must specify a log destination of form pubsub.googleapis.com/projects/<logs_project_id>/topics/<topic_name>"
     error=1
 fi
 
 if [ $error -eq 1 ]; then
-    echo -e "\nUsage: bash listener-deployment.sh ENV GCLOUD_PROJECT BLUBOX_SUBSCRIPTION_KEY_DIR DSS_URL PIPELINE_TOOLS_PREFIX SS2_PREFIX TENX_PREFIX\n"
+    echo -e "\nUsage: bash listener-deployment.sh ENV GCLOUD_PROJECT BLUBOX_SUBSCRIPTION_KEY_DIR DSS_URL PIPELINE_TOOLS_PREFIX SS2_PREFIX TENX_PREFIX LOG_SINK_NAME LOG_DESTINATION\n"
     exit 1
 fi
 
@@ -87,3 +104,8 @@ docker run -i --rm \
     -v ${VAULT_TOKEN_FILE}:/root/.vault-token \
     -v ${PWD}:/working broadinstitute/dsde-toolbox:k8s \
     /usr/local/bin/render-ctmpl.sh -k /working/listener-config.json.ctmpl
+
+echo -e "\nCreating logging sink\n"
+bash create-logging-sink.sh $LOG_SINK_NAME $LOG_DESTINATION
+
+echo -e "\nFinished setup\n"

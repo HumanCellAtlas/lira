@@ -65,7 +65,28 @@ class TestStartupVerification(unittest.TestCase):
         test_config = deepcopy(self.correct_test_config)
         test_config['cache_wdls'] = False
         config = lira_config.LiraConfig(test_config)
-        self.assertFalse(config.cache_wdls)
+
+    def test_werkzeug_logger_warning_by_default(self):
+        test_config = deepcopy(self.correct_test_config)
+        config = lira_config.LiraConfig(test_config)
+        self.assertEqual(config.log_level_werkzeug, 'WARNING')
+
+    def test_connexion_validation_logger_info_by_default(self):
+        test_config = deepcopy(self.correct_test_config)
+        config = lira_config.LiraConfig(test_config)
+        self.assertEqual(config.log_level_connexion_validation, 'INFO')
+
+    def test_werkzeug_logger_can_be_set_to_debug(self):
+        test_config = deepcopy(self.correct_test_config)
+        test_config['log_level_werkzeug'] = 'DEBUG'
+        config = lira_config.LiraConfig(test_config)
+        self.assertEqual(config.log_level_werkzeug, 'DEBUG')
+
+    def test_connexion_validation_can_be_set_to_debug(self):
+        test_config = deepcopy(self.correct_test_config)
+        test_config['log_level_connexion_validation'] = 'DEBUG'
+        config = lira_config.LiraConfig(test_config)
+        self.assertEqual(config.log_level_connexion_validation, 'DEBUG')
 
     def test_config_duplicate_wdl_raises_value_error(self):
 
@@ -81,15 +102,16 @@ class TestStartupVerification(unittest.TestCase):
     def test_lira_config_exposes_all_methods_requested_in_notifications(self):
         # test that the calls made in notifications refer to attributes that
         # LiraConfig exposes
-        test_config = lira_config.LiraConfig(self.correct_test_config)
+        test_config = deepcopy(self.correct_test_config)
+        config = lira_config.LiraConfig(test_config)
         requested_lira_attributes = [
             'notification_token', 'wdls', 'cromwell_url', 'cromwell_user',
             'cromwell_password', 'MAX_CONTENT_LENGTH']
         for attr in requested_lira_attributes:
-            self.assertTrue(hasattr(test_config, attr), 'missing attribute %s' % attr)
+            self.assertTrue(hasattr(config, attr), 'missing attribute %s' % attr)
 
         # get an example wdl to test
-        wdl = test_config.wdls[0]
+        wdl = config.wdls[0]
         requested_wdl_attributes = [
             'subscription_id', 'wdl_link', 'workflow_name', 'wdl_static_inputs_link',
             'options_link']

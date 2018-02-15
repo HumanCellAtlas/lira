@@ -29,7 +29,16 @@ application = app.app
 config_path = os.environ['listener_config']
 logger.info('Using config file at {0}'.format(config_path))
 with open(config_path) as f:
-    app.app.config = lira_config.LiraConfig(json.load(f), app.app.config)
+    config = lira_config.LiraConfig(json.load(f), app.app.config)
+    app.app.config = config
+
+    # Configure log level for loggers that print query params.
+    # Unless specified otherwise in Lira's config file, these will be set
+    # at ERROR for werkzeug and INFO for connexion.decorators.validation
+    # in order to suppress messages that include query params.
+    logging.getLogger('werkzeug').setLevel(config.log_level_werkzeug)
+    logging.getLogger('connexion.decorators.validation').setLevel(config.log_level_connexion_validation)
+
     app.app.prepare_submission = notifications.create_prepare_submission_function(app.app.config.cache_wdls)
 
 resolver = RestyResolver('lira.api', collection_endpoint_name='list')
