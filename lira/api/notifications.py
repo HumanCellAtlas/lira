@@ -6,7 +6,7 @@ from flask import current_app
 from cromwell_tools import cromwell_tools
 from lira import lira_utils
 
-logger = logging.getLogger("Lira | {module_path}".format(module_path=__name__))
+logger = logging.getLogger("{module_path}".format(module_path=__name__))
 
 
 def post(body):

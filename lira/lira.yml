@@ -9,7 +9,7 @@ schemes:
 produces:
   - application/json
 paths:
-  /:
+  /health:
     get:
       summary: health check
       operationId: 'lira.api.health.get'
