@@ -49,10 +49,11 @@ class TestUtils(unittest.TestCase):
 
     def test_compose_inputs(self):
         """Test if compose_inputs can correctly create Cromwell inputs file containing bundle uuid and version"""
-        inputs = lira_utils.compose_inputs('foo', 'bar', 'baz', 'asdf')
+        inputs = lira_utils.compose_inputs('foo', 'bar', 'baz', 'asdf', False)
         self.assertEqual(inputs['foo.bundle_uuid'], 'bar')
         self.assertEqual(inputs['foo.bundle_version'], 'baz')
         self.assertEqual(inputs['foo.runtime_environment'], 'asdf')
+        self.assertEqual(inputs['foo.use_caas'], False)
 
     def test_parse_github_resource_url(self):
         """Test if parse_github_resource_url can correctly parse Github resource urls."""

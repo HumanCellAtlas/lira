@@ -1,11 +1,18 @@
 {{with $environment := env "ENV"}}
-{{with $cromwellSecrets := vault (printf "secret/dsde/mint/%s/common/htpasswd" $environment)}}
 {{with $listenerSecret := vault (printf "secret/dsde/mint/%s/listener/listener_secret" $environment)}}
     {
+      {{ if env "USE_CAAS" | parseBool }}
+        "collection_name": "{{ env "COLLECTION_NAME" }}",
+        "cromwell_url": "https://cromwell.caas-dev.broadinstitute.org/api/workflows/v1",
+      {{ else }}
+        {{ with $cromwellSecrets := vault (printf "secret/dsde/mint/%s/common/htpasswd" $environment) }}
+          "cromwell_password": "{{$cromwellSecrets.Data.cromwell_password}}",
+          "cromwell_user": "{{$cromwellSecrets.Data.cromwell_user}}",
+          "cromwell_url": "https://cromwell.mint-{{ env "ENV" }}.broadinstitute.org/api/workflows/v1",
+        {{ end }}
+      {{ end }}
       "MAX_CONTENT_LENGTH": 10000,
-      "cromwell_password": "{{$cromwellSecrets.Data.cromwell_password}}",
-      "cromwell_url": "https://cromwell.mint-{{ env "ENV" }}.broadinstitute.org/api/workflows/v1",
-      "cromwell_user": "{{$cromwellSecrets.Data.cromwell_user}}",
+      "use_caas": "{{ env "USE_CAAS" }}",
       "env": "{{ env "ENV" }}",
       "notification_token": "{{$listenerSecret.Data.notification_token}}",
       "submit_wdl": "{{ env "PIPELINE_TOOLS_PREFIX" }}/adapter_pipelines/{{ env "SUBMIT_WDL_DIR" }}submit.wdl",
@@ -35,6 +42,5 @@
         }
       ]
     }
-{{end}}
 {{end}}
 {{end}}

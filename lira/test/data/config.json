@@ -3,6 +3,7 @@
   "cromwell_url": "https://cromwell.mint-dev.broadinstitute.org/api/workflows/v1",
   "cromwell_password": "test",
   "cromwell_user": "test",
+  "use_caas": false,
   "notification_token": "test",
   "MAX_CONTENT_LENGTH": 10000,
   "submit_wdl": "https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/v0.1.5/adapter_pipelines/submit.wdl",

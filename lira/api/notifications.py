@@ -1,6 +1,7 @@
 import connexion
-import logging
 import json
+import logging
+import os
 import time
 from flask import current_app
 from cromwell_tools import cromwell_tools
@@ -35,7 +36,7 @@ def post(body):
     logger.info("Preparing to launch {workflow_name} workflow in Cromwell".format(workflow_name=wdl_config.workflow_name))
 
     # Prepare inputs
-    inputs = lira_utils.compose_inputs(wdl_config.workflow_name, uuid, version, lira_config.env)
+    inputs = lira_utils.compose_inputs(wdl_config.workflow_name, uuid, version, lira_config.env, lira_config.use_caas)
     cromwell_inputs_file = json.dumps(inputs)
 
     # Prepare labels
@@ -58,17 +59,30 @@ def post(body):
         }
         status_code = 201
     else:
+        if lira_config.use_caas:
+            options = lira_utils.compose_caas_options(cromwell_submission.options_file, lira_config.env, lira_config.caas_key)
+            options_file = json.dumps(options)
+            auth = {
+                'caas_key': lira_config.caas_key,
+                'collection_name': lira_config.collection_name
+            }
+        else:
+            options_file = cromwell_submission.options_file
+            auth = {
+                'user': lira_config.cromwell_user,
+                'password': lira_config.cromwell_password
+            }
+
         cromwell_response = cromwell_tools.start_workflow(
             wdl_file=cromwell_submission.wdl_file,
             zip_file=cromwell_tools.make_zip_in_memory(cromwell_submission.wdl_deps_dict),
             inputs_file=cromwell_inputs_file,
             inputs_file2=cromwell_submission.wdl_static_inputs_file,
-            options_file=cromwell_submission.options_file,
+            options_file=options_file,
             url=lira_config.cromwell_url,
-            user=lira_config.cromwell_user,
-            password=lira_config.cromwell_password,
             label=cromwell_labels_file,
-            validate_labels=False  # switch off the validators provided by cromwell_tools
+            validate_labels=False,  # switch off the validators provided by cromwell_tools
+            **auth
         )
         if cromwell_response.status_code > 201:
             logger.error("HTTP error content: {content}".format(content=cromwell_response.text))

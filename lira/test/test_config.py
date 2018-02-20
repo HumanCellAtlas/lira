@@ -15,6 +15,7 @@ class TestStartupVerification(unittest.TestCase):
         # Change to test directory, as tests may have been invoked from another dir
         dir = os.path.abspath(os.path.dirname(__file__))
         os.chdir(dir)
+        os.environ['caas_key'] = '/test/caas_key.json'
         with open('data/config.json', 'r') as f:
             cls.correct_test_config = json.load(f)
 

@@ -21,6 +21,10 @@ spec:
         env:
         - name: listener_config
           value: /etc/secondary-analysis/config.json
+        {{ if (env "USE_CAAS") | parseBool }}
+        - name: caas_key
+          value: /etc/secondary-analysis/caas_key.json
+        {{ end }}
         readinessProbe:
           httpGet:
             path: /health
@@ -32,3 +36,7 @@ spec:
           items:
           - key: config
             path: config.json
+          {{ if (env "USE_CAAS") | parseBool }}
+          - key: caas_key
+            path: caas_key.json
+          {{ end }}
