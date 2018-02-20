@@ -19,7 +19,7 @@ def post(body):
         return lira_utils.response_with_server_header(dict(error='Unauthorized'), 401)
 
     logger.info("Notification received")
-    logger.debug("Received notification body: {notification}".format(notification=body))
+    logger.info("Received notification body: {notification}".format(notification=body))
 
     # Get bundle uuid, version and subscription_id
     uuid, version, subscription_id = lira_utils.extract_uuid_version_subscription_id(body)
@@ -31,7 +31,7 @@ def post(body):
             dict(error='Not Found: No wdl config found with subscription id {}'
                        ''.format(subscription_id)), 404)
     wdl_config = id_matches[0]
-    logger.debug("Matched WDL config: {wdl}".format(wdl=wdl_config))
+    logger.info("Matched WDL config: {wdl}".format(wdl=wdl_config))
     logger.info("Preparing to launch {workflow_name} workflow in Cromwell".format(workflow_name=wdl_config.workflow_name))
 
     # Prepare inputs

@@ -103,8 +103,15 @@ class LiraConfig(Config):
     def __init__(self, config_object, *args, **kwargs):
         logger = logging.getLogger('Lira | {module_path}'.format(module_path=__name__))
 
-        # Default value that can be overridden
+        # Setting default values that can be overridden
         self.cache_wdls = True
+
+        # Setting the following log levels prevents log messages that
+        # print query params in the log.
+        # Werkzeug has INFO messages that log the url including query params of each request.
+        # The Connexion validator has DEBUG messages that do the same.
+        self.log_level_werkzeug = 'WARNING'
+        self.log_level_connexion_validation = 'INFO'
 
         # parse the wdls section
         wdl_configs = []
