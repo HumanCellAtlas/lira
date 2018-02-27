@@ -5,6 +5,7 @@ from copy import deepcopy
 from lira import lira_config
 import os
 import sys
+import logging
 
 
 class TestStartupVerification(unittest.TestCase):
@@ -69,24 +70,24 @@ class TestStartupVerification(unittest.TestCase):
     def test_werkzeug_logger_warning_by_default(self):
         test_config = deepcopy(self.correct_test_config)
         config = lira_config.LiraConfig(test_config)
-        self.assertEqual(config.log_level_werkzeug, 'WARNING')
+        self.assertEqual(config.log_level_werkzeug, logging.WARNING)
 
     def test_connexion_validation_logger_info_by_default(self):
         test_config = deepcopy(self.correct_test_config)
         config = lira_config.LiraConfig(test_config)
-        self.assertEqual(config.log_level_connexion_validation, 'INFO')
+        self.assertEqual(config.log_level_connexion_validation, logging.INFO)
 
     def test_werkzeug_logger_can_be_set_to_debug(self):
         test_config = deepcopy(self.correct_test_config)
-        test_config['log_level_werkzeug'] = 'DEBUG'
+        test_config['log_level_werkzeug'] = logging.DEBUG
         config = lira_config.LiraConfig(test_config)
-        self.assertEqual(config.log_level_werkzeug, 'DEBUG')
+        self.assertEqual(config.log_level_werkzeug, logging.DEBUG)
 
     def test_connexion_validation_can_be_set_to_debug(self):
         test_config = deepcopy(self.correct_test_config)
-        test_config['log_level_connexion_validation'] = 'DEBUG'
+        test_config['log_level_connexion_validation'] = logging.DEBUG
         config = lira_config.LiraConfig(test_config)
-        self.assertEqual(config.log_level_connexion_validation, 'DEBUG')
+        self.assertEqual(config.log_level_connexion_validation, logging.DEBUG)
 
     def test_config_duplicate_wdl_raises_value_error(self):
 

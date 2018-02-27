@@ -21,6 +21,10 @@ spec:
         env:
         - name: listener_config
           value: /etc/secondary-analysis/config.json
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
       volumes:
       - name: listener-config
         secret:
