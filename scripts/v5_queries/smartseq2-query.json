@@ -1,0 +1,57 @@
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "files.process_json.processes.content.library_construction_approach": "Smart-seq2"
+
+          }
+        },
+        {
+          "match": {
+            "files.process_json.processes.content.paired_ends": true
+          }
+        },
+        {
+          "match": {
+            "files.biomaterial_json.biomaterials.content.biomaterial_core.ncbi_taxon_id": 9606
+          }
+        }
+      ],
+      "should": [
+        {
+          "match": {
+            "files.process_json.processes.content.biomaterial_collection.dissociation_process.dissociation_method": "FACS"
+          }
+        },
+        {
+          "match": {
+            "files.process_json.processes.content.biomaterial_collection.dissociation_process.dissociation_method": "mouth pipette"
+          }
+        }
+      ],
+      "must_not": [
+        {
+          "match": {
+            "files.process_json.processes.content.process_type.text": "analysis"
+          }
+        }, 
+        {
+          "range": {
+            "files.biomaterial_json.biomaterials.content.biomaterial_core.ncbi_taxon_id": {
+              "lt": 9606
+            }
+          }
+        },
+        {
+          "range": {
+            "files.biomaterial_json.biomaterials.content.biomaterial_core.ncbi_taxon_id": {
+              "gt": 9606
+            }
+          }
+        }
+      ]
+    }
+  }
+}
