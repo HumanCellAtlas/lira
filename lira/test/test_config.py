@@ -4,7 +4,6 @@ import json
 from copy import deepcopy
 from lira import lira_config
 import os
-import sys
 import logging
 
 

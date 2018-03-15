@@ -98,6 +98,7 @@ class WdlConfig(Config):
         return s.format(self.subscription_id, self.wdl_link, self.analysis_wdls,
             self.workflow_name, self.wdl_static_inputs_link, self.options_link)
 
+
 class LiraConfig(Config):
     """subclass of Config representing Lira configuration"""
 

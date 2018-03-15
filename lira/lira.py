@@ -11,15 +11,9 @@ import connexion
 from connexion.resolver import RestyResolver
 import argparse
 
+from . import lira_utils
 from . import lira_config
-from .api import notifications
 
-class MaxLevelFilter(object):
-    """Excludes logs above max_level"""
-    def __init__(self, max_level):
-        self.max_level = max_level
-    def filter(self, log_record):
-        return log_record.levelno <= self.max_level
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--host', default='0.0.0.0')
@@ -38,7 +32,7 @@ with open(config_path) as f:
 logger = logging.getLogger('lira.{module_path}'.format(module_path=__name__))
 logger.info('Using config file at {0}'.format(config_path))
 app.app.config = config
-app.app.prepare_submission = notifications.create_prepare_submission_function(app.app.config.cache_wdls)
+app.app.prepare_submission = lira_utils.create_prepare_submission_function(app.app.config.cache_wdls)
 
 resolver = RestyResolver('lira.api', collection_endpoint_name='list')
 app.add_api('lira.yml', resolver=resolver, validate_responses=True)
