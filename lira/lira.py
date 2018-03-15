@@ -22,9 +22,6 @@ args, _ = parser.parse_known_args()
 
 app = connexion.App(__name__)
 
-# 'application' is not used in this file, but is used by gunicorn
-application = app.app
-
 config_path = os.environ['listener_config']
 with open(config_path) as f:
     config = lira_config.LiraConfig(json.load(f), app.app.config)
