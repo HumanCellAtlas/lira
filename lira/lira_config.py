@@ -192,5 +192,6 @@ class MaxLevelFilter(object):
     """Excludes logs above max_level"""
     def __init__(self, max_level):
         self.max_level = max_level
+
     def filter(self, log_record):
         return log_record.levelno <= self.max_level
