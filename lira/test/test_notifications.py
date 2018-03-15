@@ -1,13 +1,10 @@
 #!/usr/bin/env python
-import unittest
 import json
-from copy import deepcopy
-from lira import lira_config
 import os
-import sys
 import requests_mock
-from lira.api.notifications import create_prepare_submission_function
-from lira import lira_utils
+import unittest
+from lira import lira_config
+from lira.lira_utils import create_prepare_submission_function
 
 try:
     from functools import lru_cache
@@ -126,6 +123,7 @@ class TestNotifications(unittest.TestCase):
         prepare_submission(self.ss2_config, self.submit_wdl)
         requests_after_two_calls = mock_request.call_count
         self.assertTrue(requests_after_two_calls > requests_after_one_call)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import unittest
 from lira import lira_utils
-import zipfile
+
 
 class TestUtils(unittest.TestCase):
 

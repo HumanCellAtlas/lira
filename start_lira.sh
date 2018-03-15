@@ -10,4 +10,4 @@ if [ -z $port ]; then
     port=8080
 fi
 
-gunicorn lira.lira -b 0.0.0.0:$port
+gunicorn lira.lira:app -b 0.0.0.0:$port
