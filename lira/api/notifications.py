@@ -38,6 +38,11 @@ def post(body):
     inputs = lira_utils.compose_inputs(wdl_config.workflow_name, uuid, version, lira_config.env)
     cromwell_inputs_file = json.dumps(inputs)
 
+    # Prepare labels
+    cromwell_labels = json.dumps(body.get('labels'))
+    if cromwell_labels:
+        logger.info("Will add labels: {labels} to the workflow after syntax validation".format(labels=cromwell_labels))
+
     cromwell_submission = current_app.prepare_submission(wdl_config, lira_config.submit_wdl)
     logger.info(current_app.prepare_submission.cache_info())
 
@@ -58,7 +63,8 @@ def post(body):
             options_file=cromwell_submission.options_file,
             url=lira_config.cromwell_url,
             user=lira_config.cromwell_user,
-            password=lira_config.cromwell_password
+            password=lira_config.cromwell_password,
+            label=cromwell_labels
         )
         if cromwell_response.status_code > 201:
             logger.error("HTTP error content: {content}".format(content=cromwell_response.text))
