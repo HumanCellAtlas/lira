@@ -52,13 +52,16 @@ def compose_inputs(workflow_name, uuid, version, env):
     :param str workflow_name: The name of the workflow.
     :param str uuid: uuid of the bundle.
     :param str version: version of the bundle.
-    :param str env: runtime environment, such as 'dev', 'staging', 'int' or 'prod'.
+    :param str env: runtime environment, such as 'dev', 'staging', 'test' or 'prod'.
     :return dict: A dictionary of workflow inputs.
     """
+    environment = 'integration' if env == 'test' else env
     return {
         workflow_name + '.bundle_uuid': uuid,
         workflow_name + '.bundle_version': version,
-        workflow_name + '.runtime_environment': env
+        workflow_name + '.runtime_environment': env,
+        workflow_name + '.dss_url': 'https://dss.{}.data.humancellatlas.org/v1'.format(environment),
+        workflow_name + '.submit_url': 'http://api.ingest.{}.data.humancellatlas.org/'.format(environment)
     }
 
 
