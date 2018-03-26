@@ -96,14 +96,32 @@ class WdlConfig(Config):
             raise TypeError('analysis_wdls must be a list')
 
     def __str__(self):
-        s = 'WdlConfig({0}, {1}, {2}, {3}, {4}, {5}, {6})'
-        return s.format(self.subscription_id, self.wdl_link, self.analysis_wdls,
-            self.workflow_name, self.wdl_static_inputs_link, self.options_link, self.wdl_version)
+        s = 'WdlConfig(subscription_id: {0},' \
+            ' wdl_link: {1},' \
+            ' analysis_wdls: {2},' \
+            ' workflow_name: {3},' \
+            ' wdl_static_inputs_link: {4},' \
+            ' options_link: {5},' \
+            ' wdl_version: {6})'
+        return s.format(
+            self.subscription_id,
+            self.wdl_link,
+            self.analysis_wdls,
+            self.workflow_name,
+            self.wdl_static_inputs_link,
+            self.options_link,
+            self.wdl_version)
 
     def __repr__(self):
         s = 'WdlConfig({0}, {1}, {2}, {3}, {4}, {5}, {6})'
-        return s.format(self.subscription_id, self.wdl_link, self.analysis_wdls,
-            self.workflow_name, self.wdl_static_inputs_link, self.options_link, self.wdl_version)
+        return s.format(
+            self.subscription_id,
+            self.wdl_link,
+            self.analysis_wdls,
+            self.workflow_name,
+            self.wdl_static_inputs_link,
+            self.options_link,
+            self.wdl_version)
 
 
 class LiraConfig(Config):
@@ -149,14 +167,14 @@ class LiraConfig(Config):
         # parse the wdls section
         wdl_configs = []
         try:
-            for wdl in config_object['wdls']:
+            for wdl in config_object['wdls']:  # Parse wdls and instantiate WdlConfig objects
                 wdl_configs.append(WdlConfig(lira_utils.merge_two_dicts(wdl,
                     {'wdl_version': lira_utils.parse_github_resource_url(wdl['analysis_wdls'][0]).version})
-                ))
+                ))  # Add wdl_version to wdlConfig objects by parsing each of the first URL of analysis_wdls
         except KeyError:
             raise ValueError('supplied config file must contain a "wdls" section.')
         self._verify_wdl_configs(wdl_configs)
-        config_object['wdls'] = wdl_configs
+        config_object['wdls'] = wdl_configs  # Store the WdlConfig objects back to wdls section
 
         if config_object.get('dry_run'):
             logger = logging.getLogger('{module_path}'.format(module_path=__name__))
@@ -191,16 +209,35 @@ class LiraConfig(Config):
                 'contents.')
 
     def __str__(self):
-        s = 'LiraConfig({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})'
-        return s.format(self.env, self.submit_wdl, self.cromwell_url,
-            '(cromwell_user)', '(cromwell_password)', '(notification_token)',
-            self.MAX_CONTENT_LENGTH, self.wdls)
+        s = 'LiraConfig(environment: {0},' \
+            ' submit_wdl: {1},' \
+            ' cromwell_url: {2},' \
+            ' cromwell_user(Invisible): {3},' \
+            ' cromwell_password(Invisible): {4},' \
+            ' notification_token(Invisible): {5},' \
+            ' MAX_CONTENT_LENGTH: {6},' \
+            ' wdls: {7})'
+        return s.format(
+            self.env,
+            self.submit_wdl,
+            self.cromwell_url,
+            '(cromwell_user)',
+            '(cromwell_password)',
+            '(notification_token)',
+            self.MAX_CONTENT_LENGTH,
+            self.wdls)
 
     def __repr__(self):
         s = 'LiraConfig({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})'
-        return s.format(self.env, self.submit_wdl, self.cromwell_url,
-            '(cromwell_user)', '(cromwell_password)', '(notification_token)',
-            self.MAX_CONTENT_LENGTH, self.wdls)
+        return s.format(
+            self.env,
+            self.submit_wdl,
+            self.cromwell_url,
+            '(cromwell_user)',
+            '(cromwell_password)',
+            '(notification_token)',
+            self.MAX_CONTENT_LENGTH,
+            self.wdls)
 
 
 class MaxLevelFilter(object):
