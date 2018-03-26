@@ -2,6 +2,7 @@
 """
 import logging
 import sys
+from . import lira_utils
 
 
 class Config(object):
@@ -15,7 +16,7 @@ class Config(object):
 
         :param dict config_dictionary: configuration values to be verified
         :param flask_config_values: flask.config.Config configuration values, for example
-          those generated from a connexxion App
+          those generated from a connexion App
         """
         self.config_dictionary = config_dictionary
 
@@ -85,7 +86,8 @@ class WdlConfig(Config):
             'analysis_wdls',
             'workflow_name',
             'wdl_static_inputs_link',
-            'options_link'
+            'options_link',
+            'wdl_version'
         }
 
     def _verify_fields(self):
@@ -94,9 +96,14 @@ class WdlConfig(Config):
             raise TypeError('analysis_wdls must be a list')
 
     def __str__(self):
-        s = 'WdlConfig({0}, {1}, {2}, {3}, {4}, {5})'
+        s = 'WdlConfig({0}, {1}, {2}, {3}, {4}, {5}, {6})'
         return s.format(self.subscription_id, self.wdl_link, self.analysis_wdls,
-            self.workflow_name, self.wdl_static_inputs_link, self.options_link)
+            self.workflow_name, self.wdl_static_inputs_link, self.options_link, self.wdl_version)
+
+    def __repr__(self):
+        s = 'WdlConfig({0}, {1}, {2}, {3}, {4}, {5}, {6})'
+        return s.format(self.subscription_id, self.wdl_link, self.analysis_wdls,
+            self.workflow_name, self.wdl_static_inputs_link, self.options_link, self.wdl_version)
 
 
 class LiraConfig(Config):
@@ -143,7 +150,9 @@ class LiraConfig(Config):
         wdl_configs = []
         try:
             for wdl in config_object['wdls']:
-                wdl_configs.append(WdlConfig(wdl))
+                wdl_configs.append(WdlConfig(lira_utils.merge_two_dicts(wdl,
+                    {'wdl_version': lira_utils.parse_github_resource_url(wdl['analysis_wdls'][0]).version})
+                ))
         except KeyError:
             raise ValueError('supplied config file must contain a "wdls" section.')
         self._verify_wdl_configs(wdl_configs)
@@ -182,6 +191,12 @@ class LiraConfig(Config):
                 'contents.')
 
     def __str__(self):
+        s = 'LiraConfig({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})'
+        return s.format(self.env, self.submit_wdl, self.cromwell_url,
+            '(cromwell_user)', '(cromwell_password)', '(notification_token)',
+            self.MAX_CONTENT_LENGTH, self.wdls)
+
+    def __repr__(self):
         s = 'LiraConfig({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})'
         return s.format(self.env, self.submit_wdl, self.cromwell_url,
             '(cromwell_user)', '(cromwell_password)', '(notification_token)',

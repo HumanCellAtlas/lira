@@ -5,6 +5,12 @@ from lira import lira_utils
 
 class TestUtils(unittest.TestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        cls.valid_github_url = 'https://github.com/Organization/Repo/blob/master/lib/utils/util.py'
+        cls.valid_github_raw_url = 'https://raw.githubusercontent.com/User1/Repo/v0.3.4/lib/utils/util.py'
+        cls.invalid_github_url = 'https://github.com/User1/Repo.git'
+
     def test_is_authenticated_no_auth_header(self):
         """Request without 'auth' key in header should not be treated as authenticated.
         """
@@ -41,6 +47,24 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(inputs['foo.bundle_uuid'], 'bar')
         self.assertEqual(inputs['foo.bundle_version'], 'baz')
         self.assertEqual(inputs['foo.runtime_environment'], 'asdf')
+
+    def test_parse_github_resource_url(self):
+        """Test if parse_github_resource_url can correctly parse Github resource urls."""
+        self.assertEqual(lira_utils.parse_github_resource_url(self.valid_github_url).repo, 'Repo')
+        self.assertEqual(lira_utils.parse_github_resource_url(self.valid_github_url).owner, 'Organization')
+        self.assertEqual(lira_utils.parse_github_resource_url(self.valid_github_url).version, 'master')
+        self.assertEqual(lira_utils.parse_github_resource_url(self.valid_github_url).file, 'util.py')
+        self.assertEqual(lira_utils.parse_github_resource_url(self.valid_github_url).path, 'lib/utils/util.py')
+        self.assertEqual(lira_utils.parse_github_resource_url(self.valid_github_raw_url).repo, 'Repo')
+        self.assertEqual(lira_utils.parse_github_resource_url(self.valid_github_raw_url).owner, 'User1')
+        self.assertEqual(lira_utils.parse_github_resource_url(self.valid_github_raw_url).version, 'v0.3.4')
+        self.assertEqual(lira_utils.parse_github_resource_url(self.valid_github_raw_url).file, 'util.py')
+        self.assertEqual(lira_utils.parse_github_resource_url(self.valid_github_raw_url).path, 'lib/utils/util.py')
+        self.assertRaises(ValueError, lira_utils.parse_github_resource_url, self.invalid_github_url)
+
+    def test_merge_two_dicts(self):
+        """Test if merge_two_dicts can correctly merge two dicts."""
+        self.assertEqual(lira_utils.merge_two_dicts({'a': 1}, {'b': 2}), {'a': 1, 'b': 2})
 
 
 if __name__ == '__main__':

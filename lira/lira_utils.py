@@ -4,6 +4,9 @@ import json
 import logging
 from cromwell_tools import cromwell_tools
 from flask import make_response
+from urllib.parse import urlparse
+from collections import namedtuple
+
 
 logger = logging.getLogger('lira.{module_path}'.format(module_path=__name__))
 
@@ -63,6 +66,52 @@ def compose_inputs(workflow_name, uuid, version, env):
         workflow_name + '.dss_url': 'https://dss.{}.data.humancellatlas.org/v1'.format(environment),
         workflow_name + '.submit_url': 'http://api.ingest.{}.data.humancellatlas.org/'.format(environment)
     }
+
+
+def parse_github_resource_url(url):
+    """Parse a URL which describes a resource file on Github.
+
+    :param str url: A valid URL which describes a resource file on Github.
+
+    :return collections.namedtuple: A namedtuple with information about: URI scheme, netloc,
+     owner(either User or Organization), repo, version(either git tags or branch name), path, file.
+
+    :raises ValueError: Raise a ValueError when the input URL is invalid.
+    """
+    if url.startswith('git@') or url.endswith('.git'):
+        raise ValueError('{} is not a valid url to a resource file on Github.'.format(url))
+
+    ParseResult = namedtuple('ParseResult', 'scheme netloc owner repo version path file')
+
+    intermediate_result = urlparse(url)
+    scheme, netloc, path_array = intermediate_result.scheme, intermediate_result.netloc,\
+                                 intermediate_result.path.split('/')
+
+    if netloc == 'github.com':
+        owner, repo, version, file = path_array[1], path_array[2], path_array[4], path_array[-1]
+        path = '/'.join(path_array[5:])
+    elif netloc == 'raw.githubusercontent.com':
+        owner, repo, version, file = path_array[1], path_array[2], path_array[3], path_array[-1]
+        path = '/'.join(path_array[4:])
+    else:
+        owner = repo = version = path = file = None
+    return ParseResult(scheme=scheme, netloc=netloc, owner=owner, repo=repo, version=version, path=path, file=file)
+
+
+def merge_two_dicts(x, y):
+    """Merge two dictionaries and return the merged result dictionary.
+
+    :param dict x: Input dictionary one.
+    :param dict y: Input dictionary two.
+
+    :return dict: Merged dictionary.
+    """
+    try:
+        return {**x, **y}  # Simple expression in Python3.5+
+    except SyntaxError:
+        merged = x.copy()
+        merged.update(y)
+        return merged  # Backport compatible in earlier Python versions
 
 
 def noop_lru_cache(maxsize=None, typed=False):
