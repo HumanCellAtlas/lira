@@ -5,5 +5,5 @@ google-cloud-storage
 flask
 gunicorn
 requests
-git+git://github.com/broadinstitute/cromwell-tools.git
+git+git://github.com/broadinstitute/cromwell-tools.git@v0.2.0
 git+git://github.com/HumanCellAtlas/pipeline-tools.git
