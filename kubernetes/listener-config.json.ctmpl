@@ -22,12 +22,10 @@
         },
         {
           "analysis_wdls": [
-            "{{ env "SS2_PREFIX" }}/pipelines/smartseq2_single_sample/ss2_single_sample.wdl",
-            "{{ env "SS2_PREFIX" }}/library/subworkflows/hisat2_QC_pipeline.wdl",
-            "{{ env "SS2_PREFIX" }}/library/subworkflows/hisat2_rsem_pipeline.wdl",
-            "{{ env "SS2_PREFIX" }}/library/tasks/hisat2.wdl",
-            "{{ env "SS2_PREFIX" }}/library/tasks/picard.wdl",
-            "{{ env "SS2_PREFIX" }}/library/tasks/rsem.wdl"
+            "{{ env "SS2_PREFIX" }}/pipelines/smartseq2_single_sample/SmartSeq2SingleSample.wdl",
+            "{{ env "SS2_PREFIX" }}/library/tasks/HISAT2.wdl",
+            "{{ env "SS2_PREFIX" }}/library/tasks/Picard.wdl",
+            "{{ env "SS2_PREFIX" }}/library/tasks/RSEM.wdl"
           ],
           "options_link": "{{ env "PIPELINE_TOOLS_PREFIX" }}/adapter_pipelines/ss2_single_sample/options.json",
           "subscription_id": "{{ env "SS2_SUBSCRIPTION_ID" }}",
