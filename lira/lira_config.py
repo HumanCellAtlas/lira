@@ -96,13 +96,7 @@ class WdlConfig(Config):
             raise TypeError('analysis_wdls must be a list')
 
     def __str__(self):
-        s = 'WdlConfig(subscription_id: {0},' \
-            ' wdl_link: {1},' \
-            ' analysis_wdls: {2},' \
-            ' workflow_name: {3},' \
-            ' wdl_static_inputs_link: {4},' \
-            ' options_link: {5},' \
-            ' wdl_version: {6})'
+        s = 'WdlConfig({0}, {1}, {2}, {3}, {4}, {5}, {6})'
         return s.format(
             self.subscription_id,
             self.wdl_link,
@@ -113,7 +107,13 @@ class WdlConfig(Config):
             self.wdl_version)
 
     def __repr__(self):
-        s = 'WdlConfig({0}, {1}, {2}, {3}, {4}, {5}, {6})'
+        s = 'WdlConfig(subscription_id: {0},' \
+            ' wdl_link: {1},' \
+            ' analysis_wdls: {2},' \
+            ' workflow_name: {3},' \
+            ' wdl_static_inputs_link: {4},' \
+            ' options_link: {5},' \
+            ' wdl_version: {6})'
         return s.format(
             self.subscription_id,
             self.wdl_link,
@@ -209,14 +209,7 @@ class LiraConfig(Config):
                 'contents.')
 
     def __str__(self):
-        s = 'LiraConfig(environment: {0},' \
-            ' submit_wdl: {1},' \
-            ' cromwell_url: {2},' \
-            ' cromwell_user(Invisible): {3},' \
-            ' cromwell_password(Invisible): {4},' \
-            ' notification_token(Invisible): {5},' \
-            ' MAX_CONTENT_LENGTH: {6},' \
-            ' wdls: {7})'
+        s = 'LiraConfig({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})'
         return s.format(
             self.env,
             self.submit_wdl,
@@ -228,7 +221,14 @@ class LiraConfig(Config):
             self.wdls)
 
     def __repr__(self):
-        s = 'LiraConfig({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})'
+        s = 'LiraConfig(environment: {0},' \
+            ' submit_wdl: {1},' \
+            ' cromwell_url: {2},' \
+            ' cromwell_user(Invisible): {3},' \
+            ' cromwell_password(Invisible): {4},' \
+            ' notification_token(Invisible): {5},' \
+            ' MAX_CONTENT_LENGTH: {6},' \
+            ' wdls: {7})'
         return s.format(
             self.env,
             self.submit_wdl,
