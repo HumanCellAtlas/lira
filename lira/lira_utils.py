@@ -4,6 +4,9 @@ import json
 import logging
 from cromwell_tools import cromwell_tools
 from flask import make_response
+from urllib.parse import urlparse
+from collections import namedtuple
+
 
 logger = logging.getLogger('lira.{module_path}'.format(module_path=__name__))
 
@@ -63,6 +66,94 @@ def compose_inputs(workflow_name, uuid, version, env):
         workflow_name + '.dss_url': 'https://dss.{}.data.humancellatlas.org/v1'.format(environment),
         workflow_name + '.submit_url': 'http://api.ingest.{}.data.humancellatlas.org/'.format(environment)
     }
+
+
+def parse_github_resource_url(url):
+    """Parse a URL which describes a resource file on Github.
+
+    A valid URL here means either a valid url to a file on Github, either in raw format or not. For example,
+     both https://github.com/HumanCellAtlas/lira/blob/master/README.md and
+     https://raw.githubusercontent.com/HumanCellAtlas/lira/master/README.md are valid github resource URL here.
+
+    :param str url: A valid URL which describes a resource file on Github.
+
+    :return collections.namedtuple: A namedtuple with information about: URI scheme, netloc,
+     owner(either User or Organization), repo, version(either git tags or branch name), path, file.
+
+    :raises ValueError: Raise a ValueError when the input URL is invalid.
+    """
+    if url.startswith('git@') or url.endswith('.git'):
+        raise ValueError('{} is not a valid url to a resource file on Github.'.format(url))
+
+    ParseResult = namedtuple('ParseResult', 'scheme netloc owner repo version path file')
+
+    intermediate_result = urlparse(url)
+    scheme, netloc, path_array = intermediate_result.scheme, intermediate_result.netloc,\
+                                 intermediate_result.path.split('/')
+
+    if netloc == 'github.com':
+        owner, repo, version, file = path_array[1], path_array[2], path_array[4], path_array[-1]
+        path = '/'.join(path_array[5:])
+    elif netloc == 'raw.githubusercontent.com':
+        owner, repo, version, file = path_array[1], path_array[2], path_array[3], path_array[-1]
+        path = '/'.join(path_array[4:])
+    else:
+        owner = repo = version = path = file = None
+    return ParseResult(scheme=scheme, netloc=netloc, owner=owner, repo=repo, version=version, path=path, file=file)
+
+
+def merge_two_dicts(x, y):
+    """Merge two dictionaries and return the merged result dictionary.
+
+    :param dict x: Input dictionary one.
+    :param dict y: Input dictionary two.
+
+    :return dict: Merged dictionary.
+    """
+    merged = x.copy()
+    merged.update(y)
+    return merged
+
+
+def legalize_cromwell_labels(label):
+    """Legalize invalid labels so that they can be accepted by Cromwell.
+
+    Note: This is a very temporary solution, once Cromwell is more permissive on labels, this function should be
+     deprecated right away. This function will convert integers to strings, all Upper letters to lower letters,
+     replace all '_' to '-', replace all '.' to '-', and replace all ':' to '-'.
+
+    :param str label: A string of key/value of labels need to be legalized.
+
+    :return str: A converted, uglified but legal version of label.
+    """
+    return label.lower().replace('_', '-').replace('.', '-').replace(':', '-')
+
+
+def compose_labels(workflow_name, workflow_version, bundle_uuid, bundle_version, extra_labels=None):
+    """Create Cromwell labels object containing pre-defined labels and possible extra labels.
+
+    The pre-defined workflow labels are: workflow_name, workflow_version, bundle_uuid, bundle_version.
+     This function also accepts dictionary as extra labels.
+
+    :param str workflow_name: The name of the workflow.
+    :param str workflow_version: Version of the workflow.
+    :param str bundle_uuid: Uuid of the bundle.
+    :param str bundle_version: Version of the bundle.
+    :param dict extra_labels: A dictionary of extra labels.
+
+    :return dict: A dictionary of composed workflow labels.
+    """
+    workflow_labels = {
+        "workflow-name": legalize_cromwell_labels(workflow_name),
+        "workflow-version": legalize_cromwell_labels(workflow_version),
+        "bundle-uuid": legalize_cromwell_labels(bundle_uuid),
+        "bundle-version": legalize_cromwell_labels(bundle_version)
+    }
+    if isinstance(extra_labels, dict):
+        extra_labels = {legalize_cromwell_labels(k): legalize_cromwell_labels(v) for k, v in extra_labels.items()}
+        workflow_labels.update(extra_labels)
+
+    return workflow_labels
 
 
 def noop_lru_cache(maxsize=None, typed=False):
