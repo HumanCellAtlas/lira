@@ -1,9 +1,9 @@
-wheel
-connexion
-google-auth
-google-cloud-storage
-flask
-gunicorn
-requests
+wheel==0.31.0
+connexion==1.4
+google-auth==1.4.1
+google-cloud-storage==1.8.0
+flask==0.12.2
+gunicorn==19.7.1
+requests==2.18.4
 git+git://github.com/broadinstitute/cromwell-tools.git@v0.2.0
-git+git://github.com/HumanCellAtlas/pipeline-tools.git
+git+git://github.com/HumanCellAtlas/pipeline-tools.git@v0.14.0
