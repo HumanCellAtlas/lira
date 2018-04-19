@@ -10,7 +10,7 @@ FIRECLOUD_CONTACT_EMAIL=$5  # A contact email to use for the FireCloud service a
 FIRECLOUD_GROUP_NAME=$6  # The name of the user group to create in FireCloud to control workflow collection permissions (e.g. "write-access")
 VAULT_TOKEN_FILE=${VAULT_TOKEN_FILE:-"$HOME/.vault-token"}
 FIRECLOUD_URL=${FIRECLOUD_URL:-"https://firecloud.dsde-dev.broadinstitute.org"}
-FIRECLOUD_API_URL=${FIRECLOUD_URL:-"https://firecloud-orchestration.dsde-dev.broadinstitute.org"}
+FIRECLOUD_API_URL=${FIRECLOUD_API_URL:-"https://firecloud-orchestration.dsde-dev.broadinstitute.org"}
 SAM_URL=${SAM_URL:-"https://sam.dsde-dev.broadinstitute.org"}
 
 

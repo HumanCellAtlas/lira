@@ -10,7 +10,12 @@ CERT_DIR=$3
 FULLCHAIN_FILENAME=$4
 PRIVKEY_FILENAME=$5
 DNS_ZONE_NAME=$6
-DOCKER_TAG=$7 #version of the quay.io/humancellatlas/secondary-analysis-lira image to deploy
+DOCKER_TAG=$7 # version of the quay.io/humancellatlas/secondary-analysis-lira image to deploy
+GCLOUD_PROJECT=$8
+USE_CAAS=$9  # whether or not to use cromwell-as-a-service
+WORKFLOW_COLLECTION_ID=${10}  # The name of the workflow-collection to create in SAM (e.g. "dev-workflows")
+FIRECLOUD_CONTACT_EMAIL=${11}  # A contact email to use for the FireCloud service account
+FIRECLOUD_GROUP_NAME=${12}  # The name of the user group to create in FireCloud to control workflow collection permissions (e.g. "write-access")
 
 GET_CERTS=${GET_CERTS:-"false"}
 VAULT_TOKEN_FILE=${VAULT_TOKEN_FILE:-"$HOME/.vault-token"}
@@ -19,7 +24,6 @@ KUBE_YAML=${KUBE_YAML:-"listener-deployment.yaml"}
 DOMAIN=${DOMAIN:-"broadinstitute.org"}
 PUBLIC_DOMAIN=${PUBLIC_DOMAIN:-"data.humancellatlas.org"}
 PUBLIC_URL=${PUBLIC_URL:-"pipelines.$ENV.$PUBLIC_DOMAIN"}
-
 
 if [ -z $ENV ]; then
     echo -e "\nYou must specify a deployment environment"
@@ -42,12 +46,22 @@ elif [ -z $DNS_ZONE_NAME ]; then
 elif [ -z $DOCKER_TAG ]; then
     echo -e "\nYou must specify the lira docker version to deploy"
     error=1
+elif [ -z $GCLOUD_PROJECT ]; then
+    echo -e "\nYou must specify a gcloud project for the deployment"
+    error=1
+elif [ -z $USE_CAAS ]; then
+    echo -e "\nYou must specify whether to use Cromwell-as-a-Service"
+    error=1
 fi
 
 if [ $error -eq 1 ]; then
     echo -e "\nUsage: bash listener-deployment.sh ENV VAULT_TOKEN CERT_DIR FULLCHAIN_FILENAME PRIVKEY_FILENAME DNS_ZONE_NAME DOCKER_TAG\n"
     exit 1
 fi
+
+
+#Set gcloud project
+gcloud config set project ${GCLOUD_PROJECT}
 
 # Create listener cluster
 printf "\ncreate listener cluster"
@@ -110,13 +124,21 @@ aws route53 change-resource-record-sets \
       }]
     }"
 
+
 # Set listener config secret
 printf "\nset listener config secret"
-LIRA_CONFIG_PATH=$CERT_DIR/config.json
-CONFIG_SECRET_NAME=$(bash populate-listener-config-secret.sh $LIRA_CONFIG_PATH)
+CONFIG_FILE=$CERT_DIR/config.json
+
+if $USE_CAAS; then
+    bash caas_login.sh ${GCLOUD_PROJECT} ${ENV} ${CERT_DIR} ${WORKFLOW_COLLECTION_ID} ${FIRECLOUD_CONTACT_EMAIL} ${FIRECLOUD_GROUP_NAME}
+    CAAS_KEY_FILE=$CERT_DIR/caas-${ENV}-key.json
+    CONFIG_SECRET_NAME=$(bash populate-listener-config-secret.sh $CONFIG_FILE $CAAS_KEY_FILE)
+else
+    CONFIG_SECRET_NAME=$(bash populate-listener-config-secret.sh $CONFIG_FILE)
+fi
 
 # Generate listener-deployment.yaml image with the docker image to deploy
-docker run -i --rm -e LIRA_CONFIG=${CONFIG_SECRET_NAME} -e DOCKER_TAG=${DOCKER_TAG} -v ${VAULT_TOKEN_FILE}:/root/.vault-token -v ${PWD}:/working broadinstitute/dsde-toolbox:k8s /usr/local/bin/render-ctmpl.sh -k /working/${KUBE_YAML}.ctmpl
+docker run -i --rm -e LIRA_CONFIG=${CONFIG_SECRET_NAME} -e DOCKER_TAG=${DOCKER_TAG} -e USE_CAAS=${USE_CAAS} -v ${VAULT_TOKEN_FILE}:/root/.vault-token -v ${PWD}:/working broadinstitute/dsde-toolbox:k8s /usr/local/bin/render-ctmpl.sh -k /working/${KUBE_YAML}.ctmpl
 
 # Create deployment
 printf "\ncreating listener deployment"

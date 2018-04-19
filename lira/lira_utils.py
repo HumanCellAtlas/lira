@@ -49,13 +49,14 @@ def extract_uuid_version_subscription_id(msg):
     return uuid, version, subscription_id
 
 
-def compose_inputs(workflow_name, uuid, version, env):
+def compose_inputs(workflow_name, uuid, version, env, use_caas):
     """Create Cromwell inputs file containing bundle uuid and version.
 
     :param str workflow_name: The name of the workflow.
     :param str uuid: uuid of the bundle.
     :param str version: version of the bundle.
     :param str env: runtime environment, such as 'dev', 'staging', 'test' or 'prod'.
+    :param bool use_caas: whether or not to use cromwell-as-a-service
     :return dict: A dictionary of workflow inputs.
     """
     environment = 'integration' if env == 'test' else env
@@ -64,8 +65,32 @@ def compose_inputs(workflow_name, uuid, version, env):
         workflow_name + '.bundle_version': version,
         workflow_name + '.runtime_environment': env,
         workflow_name + '.dss_url': 'https://dss.{}.data.humancellatlas.org/v1'.format(environment),
-        workflow_name + '.submit_url': 'http://api.ingest.{}.data.humancellatlas.org/'.format(environment)
+        workflow_name + '.submit_url': 'http://api.ingest.{}.data.humancellatlas.org/'.format(environment),
+        workflow_name + '.use_caas': use_caas
     }
+
+
+def compose_caas_options(cromwell_options_file, env, caas_key_file=None):
+    """ Append options for using Cromwell-as-a-service to the default options.json file in the wdl config.
+
+    :param str cromwell_options_file: Contents of the options.json file in the wdl config
+    :param str env: runtime environment, such as 'dev', 'staging', 'test' or 'prod'.
+    :param str caas_key_file: Path to the caas_key_file
+    :return dict: A dictionary of workflow outputs.
+    """
+    options_file = cromwell_options_file
+    if isinstance(options_file, bytes):
+        options_file = cromwell_options_file.decode()
+    options_json = json.loads(options_file)
+
+    with open(caas_key_file) as f:
+        caas_key = f.read()
+    options_json.update({
+        'jes_gcs_root': 'gs://broad-dsde-mint-{}-cromwell-execution/caas-cromwell-executions'.format(env),
+        'google_project': 'broad-dsde-mint-{}'.format(env),
+        'user_service_account_json': caas_key
+    })
+    return options_json
 
 
 def parse_github_resource_url(url):

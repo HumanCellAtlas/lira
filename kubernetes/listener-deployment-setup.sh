@@ -5,7 +5,6 @@
 #   - Update the dss storage service white list (https://github.com/HumanCellAtlas/data-store/blob/master/environment#L63)
 #     to include bluebox-subscription-manager@<GCLOUD_PROJECT>.iam.gserviceaccount.com
 
-
 ENV=$1  #name of the deployment environment (e.g. staging)
 GCLOUD_PROJECT=$2  #ID of the gcloud project (e.g. broad-dsde-mint-staging)
 BLUEBOX_SUBSCRIPTION_KEY_DIR=$3  #absolute path of the subscription key
@@ -15,7 +14,13 @@ SS2_PREFIX=$6
 TENX_PREFIX=$7
 LOG_SINK_NAME=$8
 LOG_DESTINATION=$9
+USE_CAAS=${10}
+COLLECTION_NAME=${11:-""}
 VAULT_TOKEN_FILE=${VAULT_TOKEN_FILE:-"$HOME/.vault-token"}
+CROMWELL_URL=https://cromwell.mint-$ENV.broadinstitute.org/api/workflows/v1
+if ${USE_CAAS}; then
+    CROMWELL_URL=https://cromwell.caas-dev.broadinstitute.org/api/workflows/v1
+fi
 
 error=0
 if [ -z $ENV ]; then
@@ -54,9 +59,16 @@ if [ -z $LOG_DESTINATION ]; then
     echo -e "\nYou must specify a log destination of form pubsub.googleapis.com/projects/<logs_project_id>/topics/<topic_name>"
     error=1
 fi
-
+if [ -z $USE_CAAS ]; then
+    echo -e "\nYou must specify whether to use Cromwell-as-a-Service"
+    error=1
+fi
+if [ $USE_CAAS ] && [ -z $COLLECTION_NAME ]; then
+    echo -e "\nYou must specify a collection to use for creating workflows in Cromwell-as-a-Service"
+    error=1
+fi
 if [ $error -eq 1 ]; then
-    echo -e "\nUsage: bash listener-deployment.sh ENV GCLOUD_PROJECT BLUBOX_SUBSCRIPTION_KEY_DIR DSS_URL PIPELINE_TOOLS_PREFIX SS2_PREFIX TENX_PREFIX LOG_SINK_NAME LOG_DESTINATION\n"
+    echo -e "\nUsage: bash listener-deployment.sh ENV GCLOUD_PROJECT BLUBOX_SUBSCRIPTION_KEY_DIR DSS_URL PIPELINE_TOOLS_PREFIX SS2_PREFIX TENX_PREFIX LOG_SINK_NAME LOG_DESTINATION USE_CAAS COLLECTION_NAME\n"
     exit 1
 fi
 
@@ -64,7 +76,7 @@ fi
 # Set gcloud project
 gcloud config set project ${GCLOUD_PROJECT}
 
-# Create service account & key
+# Create bluebox service account & key
 echo "Creating bluebox-subscription-manager service account and key"
 KEY_FILE_PATH=${BLUEBOX_SUBSCRIPTION_KEY_DIR}/bluebox-subscription-manager-${ENV}-key.json
 gcloud iam service-accounts create bluebox-subscription-manager --display-name=bluebox-subscription-manager
@@ -92,16 +104,19 @@ cd ../kubernetes
 # Generate config
 echo "Creating Lira config"
 docker run -i --rm \
+    -e VAULT_TOKEN=$(cat $VAULT_TOKEN_FILE) \
     -e INPUT_PATH=/working \
     -e OUT_PATH=/working \
     -e ENV=${ENV} \
+    -e USE_CAAS=${USE_CAAS} \
+    -e COLLECTION_NAME=${COLLECTION_NAME} \
+    -e CROMWELL_URL=${CROMWELL_URL} \
     -e NOTIFICATION_TOKEN=${LISTENER_SECRET} \
     -e PIPELINE_TOOLS_PREFIX=${PIPELINE_TOOLS_PREFIX} \
     -e SS2_PREFIX=${SS2_PREFIX} \
     -e SS2_SUBSCRIPTION_ID=${SS2_SUBSCRIPTION_ID} \
     -e TENX_PREFIX=${TENX_PREFIX} \
     -e TENX_SUBSCRIPTION_ID=${TENX_SUBSCRIPTION_ID} \
-    -v ${VAULT_TOKEN_FILE}:/root/.vault-token \
     -v ${PWD}:/working broadinstitute/dsde-toolbox:k8s \
     /usr/local/bin/render-ctmpl.sh -k /working/listener-config.json.ctmpl
 

@@ -2,6 +2,7 @@
 """
 import logging
 import sys
+import os
 from . import lira_utils
 
 
@@ -164,6 +165,20 @@ class LiraConfig(Config):
         logging.getLogger('werkzeug').setLevel(self.log_level_werkzeug)
         logging.getLogger('connexion.decorators.validation').setLevel(self.log_level_connexion_validation)
 
+        # Check cromwell credentials
+        use_caas = config_object.get('use_caas')
+        if not use_caas:
+            config_object['use_caas'] = False
+        if config_object.get('use_caas'):
+            if not config_object.get('collection_name'):
+                self.collection_name = 'lira-{}-workflows'.format(config_object.get('env'))
+            caas_key = os.environ.get('caas_key')
+            if not caas_key:
+                raise ValueError('No service account json key provided for cromwell-as-a-service.')
+            self.caas_key = caas_key
+        elif not config_object.get('cromwell_user') and not config_object.get('cromwell_password'):
+            raise ValueError('User and password required for {}'.format(config_object.get('cromwell_url')))
+
         # parse the wdls section
         wdl_configs = []
         try:
@@ -188,8 +203,7 @@ class LiraConfig(Config):
             'env',
             'submit_wdl',
             'cromwell_url',
-            'cromwell_user',
-            'cromwell_password',
+            'use_caas',
             'notification_token',
             'MAX_CONTENT_LENGTH',
             'wdls'
@@ -210,15 +224,9 @@ class LiraConfig(Config):
 
     def __str__(self):
         s = 'LiraConfig({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})'
-        return s.format(
-            self.env,
-            self.submit_wdl,
-            self.cromwell_url,
-            '(cromwell_user)',
-            '(cromwell_password)',
-            '(notification_token)',
-            self.MAX_CONTENT_LENGTH,
-            self.wdls)
+        return s.format(self.env, self.submit_wdl, self.cromwell_url,
+            ('use_caas: ' + self.use_caas), '(notification_token)',
+            self.MAX_CONTENT_LENGTH,self.wdls)
 
     def __repr__(self):
         s = 'LiraConfig(environment: {0},' \
@@ -236,8 +244,7 @@ class LiraConfig(Config):
             '(cromwell_user)',
             '(cromwell_password)',
             '(notification_token)',
-            self.MAX_CONTENT_LENGTH,
-            self.wdls)
+            self.MAX_CONTENT_LENGTH, self.wdls)
 
 
 class MaxLevelFilter(object):
