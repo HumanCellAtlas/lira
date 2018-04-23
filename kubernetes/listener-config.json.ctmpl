@@ -11,6 +11,7 @@
           "cromwell_url": "https://cromwell.mint-{{ env "ENV" }}.broadinstitute.org/api/workflows/v1",
         {{ end }}
       {{ end }}
+      "version": "{{ env "LIRA_VERSION" }}",
       "MAX_CONTENT_LENGTH": 10000,
       "use_caas": "{{ env "USE_CAAS" }}",
       "env": "{{ env "ENV" }}",
@@ -25,7 +26,8 @@
           "subscription_id": "{{ env "TENX_SUBSCRIPTION_ID" }}",
           "wdl_static_inputs_link": "{{ env "PIPELINE_TOOLS_PREFIX" }}/adapter_pipelines/10x/adapter_example_static.json",
           "wdl_link": "{{ env "PIPELINE_TOOLS_PREFIX" }}/adapter_pipelines/10x/adapter.wdl",
-          "workflow_name": "Adapter10xCount"
+          "workflow_name": "Adapter10xCount",
+          "workflow_version": "{{ env "TENX_VERSION" }}"
         },
         {
           "analysis_wdls": [
@@ -38,7 +40,8 @@
           "subscription_id": "{{ env "SS2_SUBSCRIPTION_ID" }}",
           "wdl_static_inputs_link": "{{ env "PIPELINE_TOOLS_PREFIX" }}/adapter_pipelines/ss2_single_sample/adapter_example_static.json",
           "wdl_link": "{{ env "PIPELINE_TOOLS_PREFIX" }}/adapter_pipelines/ss2_single_sample/adapter.wdl",
-          "workflow_name": "AdapterSmartSeq2SingleCell"
+          "workflow_name": "AdapterSmartSeq2SingleCell",
+          "workflow_version": "{{ env "SS2_VERSION" }}"
         }
       ]
     }

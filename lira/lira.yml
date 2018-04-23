@@ -125,9 +125,9 @@ definitions:
     properties:
       launch_time:
         type: string
-      config_version:
+      lira_version:
         type: string
-      Lira_version:
+      cromwell_tools_version:
         type: string
       submit_wdl_version:
         type: string

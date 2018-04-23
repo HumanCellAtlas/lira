@@ -22,22 +22,20 @@ class TestGetVersion(unittest.TestCase):
         env = mock.patch.dict('os.environ', {'listener_config': 'data/config.json'})
         with env:
             # Import lira here to get the config from os.environ correctly
-            from lira import lira
+            from lira import lira as test_lira
 
-            lira.app.testing = True
-            cls.client = lira.app.app.test_client()
-            lira.app.app.config_name = 'lira-config-2018-01-01-00-59'
-            lira.app.app.launch_time = '2018-01-01 00:59:59 +00:00'
+            test_lira.app.testing = True
+            cls.client = test_lira.app.app.test_client()
+            test_lira.app.app.launch_time = '2018-01-01 00:59:59 +00:00'
 
     def test_get_version(self):
         response = self.client.get('/version')
         json_response = json.loads(response.data.decode('utf-8'))
         logging.info(str(response.status_code))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(json_response.get('config_version'), 'lira-config-2018-01-01-00-59')
         self.assertEqual(json_response.get('launch_time'), '2018-01-01 00:59:59 +00:00')
-        self.assertEqual(json_response.get('Lira_version'), 'v0.1.0')
-        self.assertEqual(json_response.get('Cromwell_tools_version'), cromwell_tools.__version__)
+        self.assertEqual(json_response.get('lira_version'), 'v0.1.0')
+        self.assertEqual(json_response.get('cromwell_tools_version'), cromwell_tools.__version__)
         self.assertEqual(json_response.get('submit_wdl_version'), 'v0.1.5')
         self.assertEqual(json_response.get('run_mode'), 'live_run')
         self.assertEqual(json_response.get('workflow_info').get('AdapterSs2RsemSingleSample').get('version'), 'smartseq2_v0.2.0')

@@ -30,7 +30,6 @@ logger = logging.getLogger('lira.{module_path}'.format(module_path=__name__))
 logger.info('Using config file at {0}'.format(config_path))
 
 app.app.launch_time = arrow.utcnow().format('YYYY-MM-DD HH:mm:ss ZZ')
-app.app.config_name = config_path
 app.app.config = config
 app.app.prepare_submission = lira_utils.create_prepare_submission_function(app.app.config.cache_wdls)
 
