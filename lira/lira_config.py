@@ -88,7 +88,7 @@ class WdlConfig(Config):
             'workflow_name',
             'wdl_static_inputs_link',
             'options_link',
-            'wdl_version'
+            'workflow_version'
         }
 
     def _verify_fields(self):
@@ -105,7 +105,7 @@ class WdlConfig(Config):
             self.workflow_name,
             self.wdl_static_inputs_link,
             self.options_link,
-            self.wdl_version)
+            self.workflow_version)
 
     def __repr__(self):
         s = 'WdlConfig(subscription_id: {0},' \
@@ -114,7 +114,7 @@ class WdlConfig(Config):
             ' workflow_name: {3},' \
             ' wdl_static_inputs_link: {4},' \
             ' options_link: {5},' \
-            ' wdl_version: {6})'
+            ' workflow_version: {6})'
         return s.format(
             self.subscription_id,
             self.wdl_link,
@@ -122,7 +122,7 @@ class WdlConfig(Config):
             self.workflow_name,
             self.wdl_static_inputs_link,
             self.options_link,
-            self.wdl_version)
+            self.workflow_version)
 
 
 class LiraConfig(Config):
@@ -183,9 +183,7 @@ class LiraConfig(Config):
         wdl_configs = []
         try:
             for wdl in config_object['wdls']:  # Parse wdls and instantiate WdlConfig objects
-                wdl_configs.append(WdlConfig(lira_utils.merge_two_dicts(wdl,
-                    {'wdl_version': lira_utils.parse_github_resource_url(wdl['analysis_wdls'][0]).version})
-                ))  # Add wdl_version to wdlConfig objects by parsing each of the first URL of analysis_wdls
+                wdl_configs.append(WdlConfig(wdl))
         except KeyError:
             raise ValueError('supplied config file must contain a "wdls" section.')
         self._verify_wdl_configs(wdl_configs)
@@ -206,7 +204,8 @@ class LiraConfig(Config):
             'use_caas',
             'notification_token',
             'MAX_CONTENT_LENGTH',
-            'wdls'
+            'wdls',
+            'version'
         }
 
     @staticmethod
@@ -224,27 +223,35 @@ class LiraConfig(Config):
 
     def __str__(self):
         s = 'LiraConfig({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})'
-        return s.format(self.env, self.submit_wdl, self.cromwell_url,
-            ('use_caas: ' + self.use_caas), '(notification_token)',
-            self.MAX_CONTENT_LENGTH,self.wdls)
+        return s.format(
+            self.env,
+            self.submit_wdl,
+            self.cromwell_url,
+            ('use_caas: ' + self.use_caas),
+            '(notification_token)',
+            self.MAX_CONTENT_LENGTH,
+            self.wdls,
+            self.version)
+
 
     def __repr__(self):
         s = 'LiraConfig(environment: {0},' \
             ' submit_wdl: {1},' \
             ' cromwell_url: {2},' \
-            ' cromwell_user(Invisible): {3},' \
-            ' cromwell_password(Invisible): {4},' \
-            ' notification_token(Invisible): {5},' \
-            ' MAX_CONTENT_LENGTH: {6},' \
-            ' wdls: {7})'
+            ' use_caas: {3},' \
+            ' notification_token(Invisible): {4},' \
+            ' MAX_CONTENT_LENGTH: {5},' \
+            ' wdls: {6},' \
+            ' lira_version: {7})'
         return s.format(
             self.env,
             self.submit_wdl,
             self.cromwell_url,
-            '(cromwell_user)',
-            '(cromwell_password)',
+            ('use_caas: ' + self.use_caas),
             '(notification_token)',
-            self.MAX_CONTENT_LENGTH, self.wdls)
+            self.MAX_CONTENT_LENGTH,
+            self.wdls,
+            self.version)
 
 
 class MaxLevelFilter(object):

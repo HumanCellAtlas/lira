@@ -2,20 +2,44 @@ swagger: '2.0'
 info:
   title: HCA DCP Green Box API
   description: Human Cell Atlas Data Coordination Platform Secondary Analysis ("Green Box") API
-  version: "0.0.1"
+  version: '0.1.0'
 host: localhost:8080
 schemes:
   - https
 produces:
   - application/json
+tags:
+- name: Listener
+  externalDocs:
+    description: Find out more about the Lira service
+    url: 'https://github.com/HumanCellAtlas/lira/wiki'
+- name: Information
+  description: Information about the Lira service
 paths:
+  /version:
+    get:
+      tags:
+      - Information
+      summary: Return the version of this Lira and its dependencies.
+      operationId: 'lira.api.version.get_version'
+      responses:
+        200:
+          decription: OK
+          schema:
+            $ref: '#/definitions/VersionResponse'
+        default:
+          description: Error
+          schema:
+            type: string
   /health:
     get:
+      tags:
+      - Information
       summary: health check
       operationId: 'lira.api.health.get'
       responses:
         200:
-          description: OK
+          description: Successful Request
           schema:
             $ref: '#/definitions/HealthCheckResponse'
         default:
@@ -24,6 +48,8 @@ paths:
             type: string
   /notifications:
     post:
+      tags:
+      - Listener
       summary: Send notifications
       description: |
         Notify green about bundles to process
@@ -86,3 +112,18 @@ definitions:
     properties:
       status:
         type: string
+  VersionResponse:
+    type: object
+    properties:
+      launch_time:
+        type: string
+      config_version:
+        type: string
+      Lira_version:
+        type: string
+      submit_wdl_version:
+        type: string
+      run_mode:
+        type: string
+      workflow_info:
+        type: object

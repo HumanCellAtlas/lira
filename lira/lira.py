@@ -4,12 +4,12 @@
 Green box description FIXME: elaborate
 """
 import os
-import sys
 import json
 import logging
 import connexion
 from connexion.resolver import RestyResolver
 import argparse
+import arrow
 
 from . import lira_utils
 from . import lira_config
@@ -28,6 +28,9 @@ with open(config_path) as f:
 
 logger = logging.getLogger('lira.{module_path}'.format(module_path=__name__))
 logger.info('Using config file at {0}'.format(config_path))
+
+app.app.launch_time = arrow.utcnow().format('YYYY-MM-DD HH:mm:ss ZZ')
+app.app.config_name = config_path
 app.app.config = config
 app.app.prepare_submission = lira_utils.create_prepare_submission_function(app.app.config.cache_wdls)
 
