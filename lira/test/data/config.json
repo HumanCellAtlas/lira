@@ -1,4 +1,5 @@
 {
+  "version": "v0.1.0",
   "env": "dev",
   "cromwell_url": "https://cromwell.mint-dev.broadinstitute.org/api/workflows/v1",
   "cromwell_password": "test",
@@ -14,7 +15,8 @@
       "options_link": "https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/10x_v0.1.0/adapter_pipelines/10x/options.json",
       "wdl_static_inputs_link": "https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/10x_v0.1.0/adapter_pipelines/10x/adapter_example_static.json",
       "wdl_link": "https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/v0.1.0/adapter_pipelines/10x/adapter.wdl",
-      "workflow_name": "Adapter10xCount"
+      "workflow_name": "Adapter10xCount",
+      "workflow_version": "10x_v0.1.0"
     },
     {
       "subscription_id": "dd17bb03-7634-47a4-9fd3-a55580ac3b1c",
@@ -29,7 +31,8 @@
       "options_link": "https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/v0.1.5/adapter_pipelines/smart_seq2/options.json",
       "wdl_static_inputs_link": "https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/v0.1.5/adapter_pipelines/smart_seq2/adapter_example_static_demo.json",
       "wdl_link": "https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/v0.1.5/adapter_pipelines/smart_seq2/adapter.wdl",
-      "workflow_name": "AdapterSs2RsemSingleSample"
+      "workflow_name": "AdapterSs2RsemSingleSample",
+      "workflow_version": "smartseq2_v0.2.0"
     }
   ]
 }

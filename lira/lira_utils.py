@@ -127,19 +127,6 @@ def parse_github_resource_url(url):
     return ParseResult(scheme=scheme, netloc=netloc, owner=owner, repo=repo, version=version, path=path, file=file)
 
 
-def merge_two_dicts(x, y):
-    """Merge two dictionaries and return the merged result dictionary.
-
-    :param dict x: Input dictionary one.
-    :param dict y: Input dictionary two.
-
-    :return dict: Merged dictionary.
-    """
-    merged = x.copy()
-    merged.update(y)
-    return merged
-
-
 def legalize_cromwell_labels(label):
     """Legalize invalid labels so that they can be accepted by Cromwell.
 
