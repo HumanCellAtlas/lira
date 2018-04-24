@@ -24,9 +24,17 @@ paths:
       operationId: 'lira.api.version.get_version'
       responses:
         200:
-          decription: OK
+          description: OK
           schema:
             $ref: '#/definitions/VersionResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error'
         default:
           description: Error
           schema:
@@ -39,7 +47,7 @@ paths:
       operationId: 'lira.api.health.get'
       responses:
         200:
-          description: Successful Request
+          description: OK
           schema:
             $ref: '#/definitions/HealthCheckResponse'
         default:

@@ -26,7 +26,7 @@ def get_version():
     version_response = {
         "launch_time": current_app.launch_time,
         "config_version": current_app.config_name,
-        "Lira_version": lira_config.get('version'),
+        "Lira_version": lira_config.version,
         "Cromwell_tools_version": cromwell_tools.__version__ or "Unknown",
         "submit_wdl_version": submit_wdl_version,
         "run_mode": "dry_run" if lira_config.get('dry_run') else "live_run",

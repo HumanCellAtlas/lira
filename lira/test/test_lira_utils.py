@@ -79,10 +79,6 @@ class TestUtils(unittest.TestCase):
                          'pipelines/smartseq2_single_sample/ss2_single_sample.wdl')
         self.assertRaises(ValueError, lira_utils.parse_github_resource_url, self.invalid_github_url)
 
-    def test_merge_two_dicts(self):
-        """Test if merge_two_dicts can correctly merge two dicts."""
-        self.assertEqual(lira_utils.merge_two_dicts({'a': 1}, {'b': 2}), {'a': 1, 'b': 2})
-
     def test_compose_labels_no_extra_labels(self):
         """Test if compose_labels can correctly compose labels without extra labels."""
         expected_labels = {

@@ -16,18 +16,18 @@ except ImportError:
 class TestNotifications(unittest.TestCase):
 
     @classmethod
-    def setUpClass(self):
+    def setUpClass(cls):
         """load the config file"""
         # Change to test directory, as tests may have been invoked from another dir
         dir = os.path.abspath(os.path.dirname(__file__))
         os.chdir(dir)
         with open('data/config.json', 'r') as f:
             raw_config = json.load(f)
-        self.test_config = lira_config.LiraConfig(raw_config)
-        self.wdl_configs = self.test_config.wdls
-        self.tenx_config = self.wdl_configs[0]
-        self.ss2_config = self.wdl_configs[1]
-        self.submit_wdl = self.test_config.submit_wdl
+        cls.test_config = lira_config.LiraConfig(raw_config)
+        cls.wdl_configs = cls.test_config.wdls
+        cls.tenx_config = cls.wdl_configs[0]
+        cls.ss2_config = cls.wdl_configs[1]
+        cls.submit_wdl = cls.test_config.submit_wdl
 
     def set_up_mock(self, test_config, mock_request):
         mock_request.get(test_config.submit_wdl, text=test_config.submit_wdl)

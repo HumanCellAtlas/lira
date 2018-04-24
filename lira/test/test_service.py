@@ -2,6 +2,7 @@
 import unittest
 import lira.api.health as health
 
+
 class TestService(unittest.TestCase):
 
     def test_health_check(self):

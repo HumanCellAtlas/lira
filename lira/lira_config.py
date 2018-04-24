@@ -75,6 +75,13 @@ class Config(object):
     def __setitem__(self, key, value):
         return setattr(self, key, value)
 
+    # needed for flask-testing interface
+    def get(self, item):
+        try:
+            return getattr(self, item)
+        except AttributeError:
+            return None
+
 
 class WdlConfig(Config):
     """subclass of Config to check WDL configurations"""
