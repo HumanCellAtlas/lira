@@ -24,7 +24,7 @@ gcloud iam service-accounts create caas-account --display-name=caas-account
 gcloud iam service-accounts keys create ${KEY_FILE_PATH} --iam-account=${IAM_ACCOUNT_EMAIL}
 
 # Add key to vault
-docker run -it --rm -v ${VAULT_TOKEN_FILE}:/root/.vault-token -v ${KEY_DIR}:/keys broadinstitute/dsde-toolbox vault write secret/dsde/mint/${ENV}/listener/caas-${ENV}-key.json @/keys/caas-${ENV}-key.json
+docker run -it --rm -v ${VAULT_TOKEN_FILE}:/root/.vault-token -v ${KEY_DIR}:/keys broadinstitute/dsde-toolbox vault write secret/dsde/mint/${ENV}/listener/caas-${ENV}-key.json value=@/keys/caas-${ENV}-key.json
 
 # Clone firecloud-tools repo
 git clone git@github.com:broadinstitute/firecloud-tools.git
