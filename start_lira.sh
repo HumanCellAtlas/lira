@@ -10,4 +10,5 @@ if [ -z $port ]; then
     port=8080
 fi
 
-gunicorn lira.lira:app -b 0.0.0.0:$port
+# Having too small number for the timeout argument can cause Gunicorn run into CRITICAL worker timeout problems
+gunicorn lira.lira:app -b 0.0.0.0:$port --timeout 120
