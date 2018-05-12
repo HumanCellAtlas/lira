@@ -11,4 +11,4 @@ if [ -z $port ]; then
 fi
 
 # Having too small number for the timeout argument can cause Gunicorn run into CRITICAL worker timeout problems
-gunicorn lira.lira:app -b 0.0.0.0:$port --timeout 120
+gunicorn lira.lira:app -b 0.0.0.0:$port --timeout 120 --workers $((2 * $(getconf _NPROCESSORS_ONLN) + 1))
