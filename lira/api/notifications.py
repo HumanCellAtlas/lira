@@ -1,11 +1,11 @@
 import connexion
 import json
 import logging
-import os
 import time
 from flask import current_app
 from cromwell_tools import cromwell_tools
 from lira import lira_utils
+
 
 logger = logging.getLogger("{module_path}".format(module_path=__name__))
 

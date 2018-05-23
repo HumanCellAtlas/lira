@@ -12,6 +12,7 @@ spec:
       containers:
       - name: listener
         image: quay.io/humancellatlas/secondary-analysis-lira:{{env "DOCKER_TAG"}}
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080
         volumeMounts:
