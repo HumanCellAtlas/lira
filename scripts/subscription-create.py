@@ -7,7 +7,6 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 
 def prep_json(callback_base_url, listener_secret, query_json_file, attachments_file=None):
-    query = {}
     with open(query_json_file) as f:
         query = json.load(f)
 
@@ -17,7 +16,6 @@ def prep_json(callback_base_url, listener_secret, query_json_file, attachments_f
     }
 
     if attachments_file:
-        attachments = {}
         with open(attachments_file) as f:
             attachments = json.load(f)
         payload['attachments'] = attachments
