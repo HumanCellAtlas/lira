@@ -29,6 +29,8 @@ KUBE_YAML="listener-deployment.yaml"
 # namespace
 KUBE_NAMESPACE=${KUBE_NAMESPACE:-"default"}
 
+KUBE_CLUSTER="listener"
+
 # set up temp dir to isolate gcloud commands
 build_tmp="${WORKSPACE}/${BUILD_TAG}"
 mkdir ${build_tmp}

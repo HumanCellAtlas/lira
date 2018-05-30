@@ -4,7 +4,6 @@ import json
 import argparse
 from httplib2 import Http
 from oauth2client.service_account import ServiceAccountCredentials
-from apiclient.discovery import build
 
 def run(dss_url, key_file):
     scopes = ['https://www.googleapis.com/auth/userinfo.email']

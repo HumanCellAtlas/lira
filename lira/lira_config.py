@@ -151,7 +151,7 @@ class LiraConfig(Config):
         # Send logs between log_level_lira and info (inclusive) to stdout.
         # If log_level_lira > INFO then nothing is sent to stdout.
         stdout_handler = logging.StreamHandler(sys.stdout)
-        log_level_lira = config_object.get('log_level_lira', None)
+        log_level_lira = config_object.get('log_level_lira')
         if log_level_lira is not None:
             self.log_level_lira = getattr(logging, log_level_lira)
         stdout_handler.setLevel(self.log_level_lira)
@@ -184,7 +184,11 @@ class LiraConfig(Config):
             if not caas_key:
                 raise ValueError('No service account json key provided for cromwell-as-a-service.')
             self.caas_key = caas_key
-        elif not config_object.get('cromwell_user') and not config_object.get('cromwell_password'):
+            if not config_object.get('google_project'):
+                raise ValueError('No google_project specified. You must specify a project for workflows to run in when using CaaS.')
+            if not config_object.get('gcs_root'):
+                raise ValueError('No gcs_root specified. You must specify a GCS path for workflow outputs to be written to when using CaaS.')
+        elif not config_object.get('cromwell_user') or not config_object.get('cromwell_password'):
             raise ValueError('User and password required for {}'.format(config_object.get('cromwell_url')))
 
         # parse the wdls section
@@ -201,6 +205,14 @@ class LiraConfig(Config):
             logger = logging.getLogger('{module_path}'.format(module_path=__name__))
             logger.warning('***Lira is running in dry_run mode and will NOT launch any workflows***')
 
+        hmac_key = config_object.get('hmac_key')
+        if hmac_key:
+            config_object['hmac_key'] = hmac_key.encode('utf-8')
+
+        # Legitimate notifications from blue box should be received by us shortly after being created.
+        # If a notification's Date header is too old, we will refuse to accept it, configured by stale_notification_timeout.
+        config_object['stale_notification_timeout'] = config_object.get('stale_notification_timeout', 0)
+
         Config.__init__(self, config_object, *args, **kwargs)
 
     @property
@@ -210,10 +222,11 @@ class LiraConfig(Config):
             'submit_wdl',
             'cromwell_url',
             'use_caas',
-            'notification_token',
             'MAX_CONTENT_LENGTH',
             'wdls',
-            'version'
+            'version',
+            'dss_url',
+            'ingest_url'
         }
 
     @staticmethod
@@ -230,36 +243,38 @@ class LiraConfig(Config):
                 'contents.')
 
     def __str__(self):
-        s = 'LiraConfig({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})'
+        s = 'LiraConfig({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8})'
         return s.format(
             self.env,
             self.submit_wdl,
             self.cromwell_url,
             ('use_caas: ' + self.use_caas),
-            '(notification_token)',
             self.MAX_CONTENT_LENGTH,
             self.wdls,
-            self.version)
-
+            self.version,
+            dss_url,
+            ingest_url)
 
     def __repr__(self):
         s = 'LiraConfig(environment: {0},' \
             ' submit_wdl: {1},' \
             ' cromwell_url: {2},' \
             ' use_caas: {3},' \
-            ' notification_token(Invisible): {4},' \
-            ' MAX_CONTENT_LENGTH: {5},' \
-            ' wdls: {6},' \
-            ' lira_version: {7})'
+            ' MAX_CONTENT_LENGTH: {4},' \
+            ' wdls: {5},' \
+            ' lira_version: {6}' \
+            ' dss_url: {7}' \
+            ' ingest_url: {8})'
         return s.format(
             self.env,
             self.submit_wdl,
             self.cromwell_url,
             ('use_caas: ' + self.use_caas),
-            '(notification_token)',
             self.MAX_CONTENT_LENGTH,
             self.wdls,
-            self.version)
+            self.version,
+            dss_url,
+            ingest_url)
 
 
 class MaxLevelFilter(object):

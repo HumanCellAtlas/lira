@@ -1,9 +1,12 @@
 {{with $environment := env "ENV"}}
 {{with $listenerSecret := vault (printf "secret/dsde/mint/%s/listener/listener_secret" $environment)}}
+{{with $hmac_keys := vault (printf "secret/dsde/mint/%s/listener/hmac_keys" $environment)}}
     {
       {{ if env "USE_CAAS" | parseBool }}
         "collection_name": "{{ env "COLLECTION_NAME" }}",
         "cromwell_url": "https://cromwell.caas-dev.broadinstitute.org/api/workflows/v1",
+        "google_project": "broad-dsde-mint-{{$environment}}",
+        "gcs_root": "gs://broad-dsde-mint-{{$environment}}-cromwell-execution/caas-cromwell-executions",
       {{ else }}
         {{ with $cromwellSecrets := vault (printf "secret/dsde/mint/%s/common/htpasswd" $environment) }}
           "cromwell_password": "{{$cromwellSecrets.Data.cromwell_password}}",
@@ -14,8 +17,14 @@
       "version": "{{ env "LIRA_VERSION" }}",
       "MAX_CONTENT_LENGTH": 10000,
       "use_caas": {{ env "USE_CAAS" | parseBool }},
-      "env": "{{ env "ENV" }}",
+      "env": "{{$environment}}",
+      "dss_url": "https://dss.{{ if eq $environment "test" }}integration{{ else }}{{$environment}}{{ end }}.data.humancellatlas.org/v1",
+      "ingest_url": "http://api.ingest.{{ if eq $environment "test" }}integration{{ else }}{{$environment}}{{ end }}.data.humancellatlas.org/",
+    {{ if env "USE_HMAC" | parseBool }}
+      "hmac_key": "{{$hmac_keys.Data.current_key}}",
+    {{ else }}
       "notification_token": "{{$listenerSecret.Data.notification_token}}",
+    {{ end }}
       "submit_wdl": "{{ env "PIPELINE_TOOLS_PREFIX" }}/adapter_pipelines/{{ env "SUBMIT_WDL_DIR" }}submit.wdl",
       "wdls": [
         {
@@ -45,5 +54,6 @@
         }
       ]
     }
+{{end}}
 {{end}}
 {{end}}
