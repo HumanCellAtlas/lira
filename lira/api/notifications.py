@@ -82,6 +82,7 @@ def post(body):
             url=lira_config.cromwell_url,
             label=cromwell_labels_file,
             validate_labels=False,  # switch off the validators provided by cromwell_tools
+            on_hold=lira_config.submit_and_hold,
             **auth
         )
         if cromwell_response.status_code > 201:

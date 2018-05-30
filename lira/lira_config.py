@@ -138,6 +138,7 @@ class LiraConfig(Config):
     def __init__(self, config_object, *args, **kwargs):
         # Setting default values that can be overridden
         self.cache_wdls = True
+        self.submit_and_hold = False
 
         # Setting the following log levels prevents log messages that
         # print query params in the log.
