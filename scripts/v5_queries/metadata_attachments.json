@@ -1,0 +1,14 @@
+{
+  "project_shortname": {
+    "type": "jmespath",
+    "expression": "files.project_json.content.project_core.project_shortname"
+  },
+  "submitter_id": {
+    "type": "jmespath",
+    "expression": "files.project_json.hca_ingest.submitter_id"
+  },
+  "sample_id": {
+    "type": "jmespath",
+    "expression": "files.links_json.links[?source_type=='biomaterial' && destination_type=='sequencing_process'].source_id"
+  }
+}
