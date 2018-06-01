@@ -19,7 +19,7 @@
 Switch to the correct environment:
 1. Get cluster credentials: `gcloud container clusters --project [project] --zone [zone] get-credentials listener`
 2. Find the context name for the environment you want: `kubectl config get-contexts`
-3. Set the context: `kubectl config set-context [name]` where `name` is the context name, e.g. gke_broad-dsde-mint-dev_us-central1-b_listener
+3. Switch context: `kubectl config use-context [name]` where `name` is the context name, e.g. gke_broad-dsde-mint-dev_us-central1-b_listener. Or `kubectl config set-context [name]` if you haven't tried to use this particular context before. It's possible you will need to do `kubectl config delete-cluster [name]` to clear out stale local config with a wrong IP address for a cluster and then `gcloud container clusters get-credentials listener` to refresh the local config in ~/.kube/config.
 
 Deploy new code:
 1. Build docker image: `bash build_docker.sh [env] [tag]`
@@ -31,10 +31,10 @@ Deploy new code:
 Deploy and use new tls secret:
 To obtain a new certificate, see [HumanCellAtlas/secondary-analysis/certs/README.md](https://github.com/HumanCellAtlas/secondary-analysis/blob/master/certs/README.md).
 Once you've obtained the new certificate, follow the instructions below.
-1. `bash populate-tls-secret.sh hca-tls-secret-yyyy-mm-dd /path/to/local/certs`
+1. `bash populate-tls-secret.sh hca-tls-secret /path/to/local/certs`. The script will append the date and time to the secret name you provide.
 2. Edit listener-ingress.yaml to use new secret
-3. `kubectl apply -f listener-ingress.yaml`
-4. Test: `curl https://pipelines.[env].data.humancellatlas.org` and `kubectl describe ingress listener` for detailed status. Expect to get 502 errors for ~15 minutes while things update.
+3. `kubectl apply -f listener-ingress.yaml`.
+4. In your browser, try navigating to https://pipelines.[env].data.humancellatlas.org/health and then checking the certificate expiry date (click on the lock in the address bar in Chrome). If the ingress doesn't start using the new certificate you might need to add or modify an annotation in the ingress yaml, then `kubectl apply -f listener-ingress.yaml` to force it to refresh. (This can be any annotation you like --it's sole purpose is to get GKE to notice that the yaml file has changed and requires updating the load balancer). You can do `kubectl describe ingress listener` to get detailed status. The update should not cause any downtime.
 
 Check the status of new deployment:
 1. Get all pods: `kubectl get pods`
