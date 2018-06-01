@@ -57,6 +57,17 @@ class TestStartupVerification(unittest.TestCase):
         with self.assertRaises(TypeError):
             lira_config.LiraConfig(test_config)
 
+    def test_submit_and_hold_is_false_by_default(self):
+        test_config = deepcopy(self.correct_test_config)
+        config = lira_config.LiraConfig(test_config)
+        self.assertFalse(config.submit_and_hold)
+
+    def test_submit_and_hold_can_be_set_to_true(self):
+        test_config = deepcopy(self.correct_test_config)
+        test_config['submit_and_hold'] = True
+        config = lira_config.LiraConfig(test_config)
+        self.assertTrue(config.submit_and_hold)
+
     def test_cache_wdls_is_true_by_default(self):
         test_config = deepcopy(self.correct_test_config)
         config = lira_config.LiraConfig(test_config)
@@ -66,6 +77,7 @@ class TestStartupVerification(unittest.TestCase):
         test_config = deepcopy(self.correct_test_config)
         test_config['cache_wdls'] = False
         config = lira_config.LiraConfig(test_config)
+        self.assertFalse(config.cache_wdls)
 
     def test_werkzeug_logger_warning_by_default(self):
         test_config = deepcopy(self.correct_test_config)
