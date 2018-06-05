@@ -6,6 +6,11 @@ from cromwell_tools import cromwell_tools
 from flask import make_response
 from urllib.parse import urlparse
 from collections import namedtuple
+from requests_http_signature import HTTPSignatureAuth
+import hashlib
+import base64
+import email.utils
+from datetime import datetime, timedelta, timezone
 
 
 logger = logging.getLogger('lira.{module_path}'.format(module_path=__name__))
@@ -25,14 +30,96 @@ def response_with_server_header(body, status):
     return response
 
 
-def is_authenticated(args, token):
-    """Check if is authenticated.
+def is_authenticated(request, config):
+    """Check if message is authentic.
 
-    :param dict args: A dictionary of arguments.
-    :param str token: Notification token string in listener's notification config file.
-    :return boolean: True if authenticated else return False.
+    Args:
+        request: The request object
+        config (LiraConfig): Lira's configuration
+
+    Returns:
+        True if message verifiably came from storage service, else False.
     """
-    return args.get('auth') == token
+    if hasattr(config, 'hmac_key'):
+        return _is_authenticated_hmac(request, config.hmac_key, config.stale_notification_timeout)
+    else:
+        return _is_authenticated_query_param(request.args, config.notification_token)
+
+
+def _is_authenticated_hmac(request, hmac_key, stale_notification_timeout=0):
+    """Check if message is authentic
+
+    Args:
+        request: the request object
+        hmac_key (bytes): the hmac key
+        stale_notification_timeout (int): timeout beyond which we refuse to accept the message,
+    even if everything else checks out
+
+    Returns:
+        True if message is verifiably from the storage service, False otherwise
+    """
+    # Since we use the same key and algorithm for all subscriptions,
+    # we will always try to verify notifications with that one.
+    def key_resolver(key_id, algorithm):
+        return hmac_key
+
+    try:
+        # Make sure there's an auth header with a valid signature
+        auth_header = request.headers.get('Authorization')
+        if auth_header and 'date' not in auth_header:
+            raise AssertionError('No date in auth header: {0}'.format(auth_header))
+        HTTPSignatureAuth.verify(request, key_resolver=key_resolver)
+
+        # Make sure notification isn't too old
+        _check_date(request.headers.get('Date'), stale_notification_timeout)
+
+        # Make sure given body digest and calculated digest match
+        digest_from_header = request.headers.get('Digest')
+        calculated_digest = _calculate_digest(request)
+        if calculated_digest != digest_from_header:
+            logger.error('Auth error: digests do not match')
+            return False
+        return True
+    except AssertionError as e:
+        logger.error('Auth error: {0}'.format(e))
+        return False
+
+
+def _check_date(date_header, stale_notification_timeout):
+    """Verify that there is a date header and the message isn't too old.
+
+    Args:
+        date_header (str): timestamp indicating date/time message was sent
+        stale_notification_timeout (int): message age in seconds beyond which we refuse to accept it
+
+    Raises:
+        AssertionError if there is no date header or the message is too old
+    """
+    if not date_header:
+        raise AssertionError('No date header')
+    datetime_from_header = email.utils.parsedate_to_datetime(date_header)
+    diff = datetime.now(timezone.utc) - datetime_from_header
+    if diff > timedelta(seconds=stale_notification_timeout) and stale_notification_timeout > 0:
+        raise AssertionError('Message is more than {0} seconds old'.format(stale_notification_timeout))
+
+
+def _calculate_digest(request):
+    """Calculate the digest of the request body and make a string of the type
+    expected by the requests-http-signature library.
+
+    Args:
+        request: the request object
+
+    Returns:
+        (str) containing digest
+    """
+    raw_digest = hashlib.sha256(request.get_data()).digest()
+    digest_string = "SHA-256=" + base64.b64encode(raw_digest).decode()
+    return digest_string
+
+
+def _is_authenticated_query_param(params, token):
+    return params.get('auth') == token
 
 
 def extract_uuid_version_subscription_id(msg):
@@ -49,45 +136,48 @@ def extract_uuid_version_subscription_id(msg):
     return uuid, version, subscription_id
 
 
-def compose_inputs(workflow_name, uuid, version, env, use_caas):
+def compose_inputs(workflow_name, uuid, version, lira_config):
     """Create Cromwell inputs file containing bundle uuid and version.
 
-    :param str workflow_name: The name of the workflow.
-    :param str uuid: uuid of the bundle.
-    :param str version: version of the bundle.
-    :param str env: runtime environment, such as 'dev', 'staging', 'test' or 'prod'.
-    :param bool use_caas: whether or not to use cromwell-as-a-service
-    :return dict: A dictionary of workflow inputs.
+    Args:
+        workflow_name (str): The name of the workflow.
+        uuid (str): uuid of the bundle.
+        version (str): version of the bundle.
+        lira_config (LiraConfig): Lira configuration
+
+    Returns:
+        A dictionary of workflow inputs.
     """
-    environment = 'integration' if env == 'test' else env
     return {
         workflow_name + '.bundle_uuid': uuid,
         workflow_name + '.bundle_version': version,
-        workflow_name + '.runtime_environment': env,
-        workflow_name + '.dss_url': 'https://dss.{}.data.humancellatlas.org/v1'.format(environment),
-        workflow_name + '.submit_url': 'http://api.ingest.{}.data.humancellatlas.org/'.format(environment),
-        workflow_name + '.use_caas': use_caas
+        workflow_name + '.runtime_environment': lira_config.env,
+        workflow_name + '.dss_url': lira_config.dss_url,
+        workflow_name + '.submit_url': lira_config.ingest_url,
+        workflow_name + '.use_caas': lira_config.use_caas
     }
 
 
-def compose_caas_options(cromwell_options_file, env, caas_key_file=None):
+def compose_caas_options(cromwell_options_file, lira_config):
     """ Append options for using Cromwell-as-a-service to the default options.json file in the wdl config.
 
-    :param str cromwell_options_file: Contents of the options.json file in the wdl config
-    :param str env: runtime environment, such as 'dev', 'staging', 'test' or 'prod'.
-    :param str caas_key_file: Path to the caas_key_file
-    :return dict: A dictionary of workflow outputs.
+    Args:
+        cromwell_options_file (str): Contents of the options.json file in the wdl config
+        lira_config (LiraConfig): Lira configuration
+
+    Returns:
+        A dictionary of workflow outputs.
     """
     options_file = cromwell_options_file
     if isinstance(options_file, bytes):
         options_file = cromwell_options_file.decode()
     options_json = json.loads(options_file)
 
-    with open(caas_key_file) as f:
+    with open(lira_config.caas_key) as f:
         caas_key = f.read()
     options_json.update({
-        'jes_gcs_root': 'gs://broad-dsde-mint-{}-cromwell-execution/caas-cromwell-executions'.format(env),
-        'google_project': 'broad-dsde-mint-{}'.format(env),
+        'jes_gcs_root': lira_config.gcs_root,
+        'google_project': lira_config.google_project,
         'user_service_account_json': caas_key
     })
     return options_json

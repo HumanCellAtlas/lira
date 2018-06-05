@@ -9,7 +9,6 @@ WORKFLOW_COLLECTION_ID=$4  # The name of the workflow-collection to create in SA
 FIRECLOUD_CONTACT_EMAIL=$5  # A contact email to use for the FireCloud service account
 FIRECLOUD_GROUP_NAME=$6  # The name of the user group to create in FireCloud to control workflow collection permissions (e.g. "write-access")
 VAULT_TOKEN_FILE=${VAULT_TOKEN_FILE:-"$HOME/.vault-token"}
-FIRECLOUD_URL=${FIRECLOUD_URL:-"https://firecloud.dsde-dev.broadinstitute.org"}
 FIRECLOUD_API_URL=${FIRECLOUD_API_URL:-"https://firecloud-orchestration.dsde-dev.broadinstitute.org"}
 SAM_URL=${SAM_URL:-"https://sam.dsde-dev.broadinstitute.org"}
 
@@ -31,7 +30,7 @@ git clone git@github.com:broadinstitute/firecloud-tools.git
 cd firecloud-tools
 
 echo "Register the service account for use in Firecloud"
-./run.sh scripts/register_service_account/register_service_account.py -j ${KEY_FILE_PATH} -e ${FIRECLOUD_CONTACT_EMAIL} -u ${FIRECLOUD_URL}
+./run.sh scripts/register_service_account/register_service_account.py -j ${KEY_FILE_PATH} -e ${FIRECLOUD_CONTACT_EMAIL} -u ${FIRECLOUD_API_URL}
 
 cd ..
 

@@ -15,7 +15,7 @@ def post(body):
 
     # Check authentication
     lira_config = current_app.config
-    if not lira_utils.is_authenticated(connexion.request.args, lira_config.notification_token):
+    if not lira_utils.is_authenticated(connexion.request, lira_config):
         time.sleep(1)
         return lira_utils.response_with_server_header(dict(error='Unauthorized'), 401)
 
@@ -28,6 +28,7 @@ def post(body):
     # Find wdl config where the subscription_id matches the notification's subscription_id
     id_matches = [wdl for wdl in lira_config.wdls if wdl.subscription_id == subscription_id]
     if len(id_matches) == 0:
+        logger.info('No wdl config found for subscription {0}'.format(subscription_id))
         return lira_utils.response_with_server_header(
             dict(error='Not Found: No wdl config found with subscription id {}'
                        ''.format(subscription_id)), 404)
@@ -36,7 +37,7 @@ def post(body):
     logger.info("Preparing to launch {workflow_name} workflow in Cromwell".format(workflow_name=wdl_config.workflow_name))
 
     # Prepare inputs
-    inputs = lira_utils.compose_inputs(wdl_config.workflow_name, uuid, version, lira_config.env, lira_config.use_caas)
+    inputs = lira_utils.compose_inputs(wdl_config.workflow_name, uuid, version, lira_config)
     cromwell_inputs_file = json.dumps(inputs)
 
     # Prepare labels
@@ -60,7 +61,7 @@ def post(body):
         status_code = 201
     else:
         if lira_config.use_caas:
-            options = lira_utils.compose_caas_options(cromwell_submission.options_file, lira_config.env, lira_config.caas_key)
+            options = lira_utils.compose_caas_options(cromwell_submission.options_file, lira_config)
             options_file = json.dumps(options)
             auth = {
                 'caas_key': lira_config.caas_key,

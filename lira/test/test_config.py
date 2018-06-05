@@ -15,9 +15,11 @@ class TestStartupVerification(unittest.TestCase):
         # Change to test directory, as tests may have been invoked from another dir
         dir = os.path.abspath(os.path.dirname(__file__))
         os.chdir(dir)
-        os.environ['caas_key'] = '/test/caas_key.json'
         with open('data/config.json', 'r') as f:
             cls.correct_test_config = json.load(f)
+
+    def setUp(self):
+        os.environ['caas_key'] = 'data/fake_caas_key.json'
 
     def test_correct_config_throws_no_errors(self):
         test_config = deepcopy(self.correct_test_config)
@@ -100,6 +102,114 @@ class TestStartupVerification(unittest.TestCase):
         test_config['log_level_connexion_validation'] = logging.DEBUG
         config = lira_config.LiraConfig(test_config)
         self.assertEqual(config.log_level_connexion_validation, logging.DEBUG)
+
+    def test_stale_notification_timeout_defaults_to_zero(self):
+        test_config = deepcopy(self.correct_test_config)
+        config = lira_config.LiraConfig(test_config)
+        self.assertEqual(config.stale_notification_timeout, 0)
+
+    def test_stale_notification_timeout_can_be_set(self):
+        test_config = deepcopy(self.correct_test_config)
+        test_config['stale_notification_timeout'] = 123
+        config = lira_config.LiraConfig(test_config)
+        self.assertEqual(config.stale_notification_timeout, 123)
+
+    def test_hmac_keys_defaults_to_none(self):
+        test_config = deepcopy(self.correct_test_config)
+        config = lira_config.LiraConfig(test_config)
+        self.assertFalse(hasattr(config, 'hmac_key'))
+
+    def test_hmac_key_can_be_set(self):
+        test_config = deepcopy(self.correct_test_config)
+        test_config['hmac_key'] = 'fake_key'
+        config = lira_config.LiraConfig(test_config)
+        self.assertEqual(config.hmac_key, 'fake_key'.encode('utf-8'))
+
+    def test_notification_token_not_required(self):
+        test_config = deepcopy(self.correct_test_config)
+        test_config.pop('notification_token')
+        config = lira_config.LiraConfig(test_config)
+
+    def test_use_caas_defaults_to_false(self):
+        test_config = deepcopy(self.correct_test_config)
+        config = lira_config.LiraConfig(test_config)
+        self.assertFalse(config.use_caas)
+
+    def test_use_caas_can_be_set_to_true(self):
+        test_config = deepcopy(self.correct_test_config)
+        test_config['use_caas'] = 'true'
+        test_config['google_project'] = 'fake project'
+        test_config['gcs_root'] = 'fake gcs root'
+        config = lira_config.LiraConfig(test_config)
+        self.assertTrue(config.use_caas)
+
+    def test_using_caas_requires_google_project(self):
+        test_config = deepcopy(self.correct_test_config)
+        test_config['use_caas'] = 'true'
+        test_config['gcs_root'] = 'fake gcs root'
+        with self.assertRaises(ValueError):
+            config = lira_config.LiraConfig(test_config)
+
+    def test_using_caas_requires_gcs_root(self):
+        test_config = deepcopy(self.correct_test_config)
+        test_config['use_caas'] = 'true'
+        test_config['google_project'] = 'fake project'
+        with self.assertRaises(ValueError):
+            config = lira_config.LiraConfig(test_config)
+
+    def test_using_caas_requires_caas_key(self):
+        test_config = deepcopy(self.correct_test_config)
+        test_config['use_caas'] = 'true'
+        test_config['google_project'] = 'fake project'
+        test_config['gcs_root'] = 'fake gcs root'
+        del os.environ['caas_key']
+        with self.assertRaises(ValueError):
+            config = lira_config.LiraConfig(test_config)
+
+    def test_cromwell_user_required_if_not_caas(self):
+        test_config = deepcopy(self.correct_test_config)
+        test_config['use_caas'] = 'false'
+        test_config['cromwell_password'] = 'fake password'
+        test_config.pop('cromwell_user')
+        with self.assertRaises(ValueError):
+            config = lira_config.LiraConfig(test_config)
+
+    def test_cromwell_password_required_if_not_caas(self):
+        test_config = deepcopy(self.correct_test_config)
+        test_config['use_caas'] = 'false'
+        test_config['cromwell_user'] = 'fake user'
+        test_config.pop('cromwell_password')
+        with self.assertRaises(ValueError):
+            config = lira_config.LiraConfig(test_config)
+
+    def test_user_and_password_not_required_when_using_caas(self):
+        test_config = deepcopy(self.correct_test_config)
+        test_config['use_caas'] = 'true'
+        test_config['google_project'] = 'fake project'
+        test_config['gcs_root'] = 'fake gcs root'
+        test_config.pop('cromwell_user')
+        test_config.pop('cromwell_password')
+        config = lira_config.LiraConfig(test_config)
+
+    def test_collection_name_default_is_correct(self):
+        test_config = deepcopy(self.correct_test_config)
+        test_config['env'] = 'fake-env'
+        test_config.pop('collection_name', None)
+        test_config['use_caas'] = 'true'
+        test_config['google_project'] = 'fake project'
+        test_config['gcs_root'] = 'fake gcs root'
+        config = lira_config.LiraConfig(test_config)
+        self.assertEqual(config.collection_name, 'lira-fake-env-workflows')
+
+    def test_collection_name_can_be_set(self):
+        test_config = deepcopy(self.correct_test_config)
+        test_config['env'] = 'fake-env'
+        test_config['collection_name'] = 'fake-collection-name'
+        test_config['use_caas'] = 'true'
+        test_config['google_project'] = 'fake project'
+        test_config['gcs_root'] = 'fake gcs root'
+        config = lira_config.LiraConfig(test_config)
+        self.assertEqual(config.collection_name, 'fake-collection-name')
 
     def test_config_duplicate_wdl_raises_value_error(self):
 
