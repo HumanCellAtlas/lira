@@ -4,12 +4,12 @@
       "must": [
         {
           "match": {
-            "files.protocol_json.protocols.content.dissociation_method.text": "10x_v2"
+            "files.protocol_json.protocols.content.dissociation_method.text": "10x sequencing"
           }
         },
         {
           "match": {
-            "files.protocol_json.protocols.content.library_construction_approach.text": "10x_v2"
+            "files.protocol_json.protocols.content.library_construction_approach.text": "10x sequencing"
           }
         },
         {
