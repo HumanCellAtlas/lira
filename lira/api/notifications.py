@@ -42,8 +42,9 @@ def post(body):
 
     # Prepare labels
     labels_from_notification = body.get('labels')
+    attachments_from_notification = body.get('attachments')
     cromwell_labels = lira_utils.compose_labels(wdl_config.workflow_name, wdl_config.workflow_version, uuid, version,
-                                                labels_from_notification)
+                                                labels_from_notification, attachments_from_notification)
     cromwell_labels_file = json.dumps(cromwell_labels)
 
     logger.debug("Added labels {labels} to workflow".format(labels=cromwell_labels_file))

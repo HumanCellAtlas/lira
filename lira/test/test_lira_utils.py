@@ -59,8 +59,17 @@ class TestUtils(unittest.TestCase):
         cls.workflow_version = 'v0.0.1'
         cls.bundle_uuid = 'foo-bar-id'
         cls.bundle_version = '2018-01-01T10:10:10.384Z'
-        cls.extra_labels = {'Comment': 'Test'}
-
+        cls.extra_label_1 = {'Comment1': 'Test1'}
+        cls.extra_label_2 = {'Comment2': 'Test2'}
+        cls.extra_label_3 = {'Comment3': 'Test3'}
+        cls.invalid_extra_label = None
+        cls.attachments = {
+            'submitter_id': 'None',
+            'sample_id': [
+              'b1829a9d-6678-493b-bf98-01520f9bad52'
+            ],
+            'project_shortname': 'Glioblastoma_medium_1000_cells'
+        }
         # Change to test directory, as tests may have been invoked from another dir
         dir = os.path.abspath(os.path.dirname(__file__))
         os.chdir(dir)
@@ -370,25 +379,59 @@ class TestUtils(unittest.TestCase):
     def test_compose_labels_no_extra_labels(self):
         """Test if compose_labels can correctly compose labels without extra labels."""
         expected_labels = {
-            "workflow-name": 'smartseq2workflow',
-            "workflow-version": 'v0-0-1',
-            "bundle-uuid": 'foo-bar-id',
-            "bundle-version": '2018-01-01t10-10-10-384z'
+            'workflow-name': 'smartseq2workflow',
+            'workflow-version': 'v0-0-1',
+            'bundle-uuid': 'foo-bar-id',
+            'bundle-version': '2018-01-01t10-10-10-384z',
         }
         self.assertEqual(lira_utils.compose_labels(
             self.workflow_name, self.workflow_version, self.bundle_uuid, self.bundle_version), expected_labels)
 
-    def test_compose_labels_with_extra_labels(self):
-        """Test if compose_labels can correctly compose labels with extra labels."""
+    def test_compose_labels_with_one_extra_label(self):
+        """Test if compose_labels can correctly compose labels with one extra label."""
         expected_labels = {
-            "workflow-name": 'smartseq2workflow',
-            "workflow-version": 'v0-0-1',
-            "bundle-uuid": 'foo-bar-id',
-            "bundle-version": '2018-01-01t10-10-10-384z',
-            "comment": 'test'
+            'workflow-name': 'smartseq2workflow',
+            'workflow-version': 'v0-0-1',
+            'bundle-uuid': 'foo-bar-id',
+            'bundle-version': '2018-01-01t10-10-10-384z',
+            'comment1': 'test1',
         }
         self.assertEqual(lira_utils.compose_labels(self.workflow_name, self.workflow_version, self.bundle_uuid,
-                                                   self.bundle_version, self.extra_labels), expected_labels)
+                                                   self.bundle_version, self.extra_label_1), expected_labels)
+
+    def test_compose_labels_with_multiple_extra_labels(self):
+        """Test if compose_labels can correctly compose labels with multiple extra labels."""
+        expected_labels = {
+            'workflow-name': 'smartseq2workflow',
+            'workflow-version': 'v0-0-1',
+            'bundle-uuid': 'foo-bar-id',
+            'bundle-version': '2018-01-01t10-10-10-384z',
+            'comment1': 'test1',
+            'comment2': 'test2',
+            'comment3': 'test3',
+        }
+        self.assertEqual(lira_utils.compose_labels(self.workflow_name, self.workflow_version, self.bundle_uuid,
+                                                   self.bundle_version, self.extra_label_1, self.extra_label_2,
+                                                   self.extra_label_3, self.invalid_extra_label), expected_labels)
+
+    def test_compose_labels_with_labels_and_attachments(self):
+        """Test if compose_labels can correctly compose labels with extra labels and attachments."""
+        expected_labels = {
+            'workflow-name': 'smartseq2workflow',
+            'workflow-version': 'v0-0-1',
+            'bundle-uuid': 'foo-bar-id',
+            'bundle-version': '2018-01-01t10-10-10-384z',
+            'comment1': 'test1',
+            'comment2': 'test2',
+            'comment3': 'test3',
+            'submitter-id': 'none',
+            'sample-id': 'first-b1829a9d-6678-493b-bf98-01520f9bad52',
+            'project-shortname': 'glioblastoma-medium-1000-cells'
+        }
+        self.assertEqual(lira_utils.compose_labels(self.workflow_name, self.workflow_version, self.bundle_uuid,
+                                                   self.bundle_version, self.extra_label_1, self.extra_label_2,
+                                                   self.extra_label_3, self.invalid_extra_label,
+                                                   self.attachments), expected_labels)
 
 
 if __name__ == '__main__':

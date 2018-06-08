@@ -224,15 +224,17 @@ def legalize_cromwell_labels(label):
      deprecated right away. This function will convert integers to strings, all Upper letters to lower letters,
      replace all '_' to '-', replace all '.' to '-', and replace all ':' to '-'.
 
-    :param str label: A string of key/value of labels need to be legalized.
+    :param str|list label: A string or a list of strings of key/value of labels need to be legalized.
 
     :return str: A converted, uglified but legal version of label.
     """
+    if isinstance(label, list):
+        label = 'first-{}'.format(label[0])  # Only pick the first element in a list as a workaround here
     return label.lower().replace('_', '-').replace('.', '-').replace(':', '-')
 
 
-def compose_labels(workflow_name, workflow_version, bundle_uuid, bundle_version, extra_labels=None):
-    """Create Cromwell labels object containing pre-defined labels and possible extra labels.
+def compose_labels(workflow_name, workflow_version, bundle_uuid, bundle_version, *extra_labels):
+    """Create Cromwell labels object containing pre-defined labels and potential extra labels.
 
     The pre-defined workflow labels are: workflow_name, workflow_version, bundle_uuid, bundle_version.
      This function also accepts dictionary as extra labels.
@@ -241,7 +243,7 @@ def compose_labels(workflow_name, workflow_version, bundle_uuid, bundle_version,
     :param str workflow_version: Version of the workflow.
     :param str bundle_uuid: Uuid of the bundle.
     :param str bundle_version: Version of the bundle.
-    :param dict extra_labels: A dictionary of extra labels.
+    :param extra_labels: A series of extra labels.
 
     :return dict: A dictionary of composed workflow labels.
     """
@@ -251,9 +253,10 @@ def compose_labels(workflow_name, workflow_version, bundle_uuid, bundle_version,
         "bundle-uuid": legalize_cromwell_labels(bundle_uuid),
         "bundle-version": legalize_cromwell_labels(bundle_version)
     }
-    if isinstance(extra_labels, dict):
-        extra_labels = {legalize_cromwell_labels(k): legalize_cromwell_labels(v) for k, v in extra_labels.items()}
-        workflow_labels.update(extra_labels)
+    for extra_label in extra_labels:
+        if isinstance(extra_label, dict):
+            extra_label = {legalize_cromwell_labels(k): legalize_cromwell_labels(v) for k, v in extra_label.items()}
+            workflow_labels.update(extra_label)
 
     return workflow_labels
 
