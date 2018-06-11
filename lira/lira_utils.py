@@ -281,8 +281,7 @@ def compose_labels(workflow_name, workflow_version, bundle_uuid, bundle_version,
         if isinstance(extra_label, dict):
             extra_label = {legalize_cromwell_labels(k): legalize_cromwell_labels(v) for k, v in extra_label.items()}
             workflow_labels.update(extra_label)
-
-    return
+    return workflow_labels
 
 
 def noop_lru_cache(maxsize=None, typed=False):
