@@ -25,6 +25,7 @@
     {{ else }}
       "notification_token": "{{$listenerSecret.Data.notification_token}}",
     {{ end }}
+      "max_cromwell_retries": 0,
       "submit_wdl": "{{ env "PIPELINE_TOOLS_PREFIX" }}/adapter_pipelines/{{ env "SUBMIT_WDL_DIR" }}submit.wdl",
       "wdls": [
         {

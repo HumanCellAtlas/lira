@@ -211,6 +211,17 @@ class TestStartupVerification(unittest.TestCase):
         config = lira_config.LiraConfig(test_config)
         self.assertEqual(config.collection_name, 'fake-collection-name')
 
+    def test_max_cromwell_retries_defaults_to_zero(self):
+        test_config = deepcopy(self.correct_test_config)
+        config = lira_config.LiraConfig(test_config)
+        self.assertEqual(config.max_cromwell_retries, 0)
+
+    def test_max_cromwell_retries_can_be_set(self):
+        test_config = deepcopy(self.correct_test_config)
+        test_config['max_cromwell_retries'] = 12
+        config = lira_config.LiraConfig(test_config)
+        self.assertEqual(config.max_cromwell_retries, 12)
+
     def test_config_duplicate_wdl_raises_value_error(self):
 
         def add_duplicate_wdl_definition():

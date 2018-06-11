@@ -213,6 +213,8 @@ class LiraConfig(Config):
         # If a notification's Date header is too old, we will refuse to accept it, configured by stale_notification_timeout.
         config_object['stale_notification_timeout'] = config_object.get('stale_notification_timeout', 0)
 
+        config_object['max_cromwell_retries'] = config_object.get('max_cromwell_retries', 0)
+
         Config.__init__(self, config_object, *args, **kwargs)
 
     @property
