@@ -253,8 +253,8 @@ class LiraConfig(Config):
             self.MAX_CONTENT_LENGTH,
             self.wdls,
             self.version,
-            dss_url,
-            ingest_url)
+            self.dss_url,
+            self.ingest_url)
 
     def __repr__(self):
         s = 'LiraConfig(environment: {0},' \
@@ -274,8 +274,8 @@ class LiraConfig(Config):
             self.MAX_CONTENT_LENGTH,
             self.wdls,
             self.version,
-            dss_url,
-            ingest_url)
+            self.dss_url,
+            self.ingest_url)
 
 
 class MaxLevelFilter(object):
