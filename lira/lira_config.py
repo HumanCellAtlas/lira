@@ -9,15 +9,16 @@ from . import lira_utils
 class Config(object):
 
     def __init__(self, config_dictionary, flask_config_values=None):
-        """abstract class that defines some useful configuration checks for Lira 
+        """Abstract class that defines some useful configuration checks for Lira
 
         This object takes a dictionary of values and verifies them against expected_keys.
-         It additionally accepts values from a flask config object, which it merges
-         with the config_dictionary without doing additional checks.
+        It additionally accepts values from a flask config object, which it merges
+        with the config_dictionary without doing additional checks.
 
-        :param dict config_dictionary: configuration values to be verified
-        :param flask_config_values: flask.config.Config configuration values, for example
-          those generated from a connexion App
+        Args:
+            config_dictionary (dict): Configuration values to be verified
+            flask_config_values (flask.config.Config): flask.config.Config configuration values, for example
+                those generated from a connexion App
         """
         self.config_dictionary = config_dictionary
 
@@ -32,7 +33,7 @@ class Config(object):
 
     @property
     def required_fields(self):
-        """abstract property, must be defined by subclasses"""
+        """Abstract property, must be defined by subclasses"""
         raise NotImplementedError
 
     def _verify_fields(self):
@@ -58,7 +59,7 @@ class Config(object):
         return not self.__eq__(other)
 
     def __str__(self):
-        """recursively collapse a config object into a hashable string"""
+        """Recursively collapse a config object into a hashable string"""
         result = ''
         for v in self.required_fields:
             field_value = getattr(self, v)
@@ -84,7 +85,7 @@ class Config(object):
 
 
 class WdlConfig(Config):
-    """subclass of Config to check WDL configurations"""
+    """Subclass of Config to check WDL configurations"""
 
     @property
     def required_fields(self):
@@ -133,7 +134,7 @@ class WdlConfig(Config):
 
 
 class LiraConfig(Config):
-    """subclass of Config representing Lira configuration"""
+    """Subclass of Config representing Lira configuration"""
 
     def __init__(self, config_object, *args, **kwargs):
         # Setting default values that can be overridden
