@@ -239,20 +239,26 @@ def parse_github_resource_url(url):
 def legalize_cromwell_labels(label):
     """Legalize invalid labels so that they can be accepted by Cromwell.
 
-    Note: This is a very temporary solution, once Cromwell is more permissive on labels, this function should be
-    deprecated right away. This function will convert integers to strings, all Upper letters to lower letters,
-    replace all '_' to '-', replace all '.' to '-', and replace all ':' to '-'.
+    Note: Cromwell v32 and later versions are permissive and accepting all sort of valid JSON strings, but with a
+    length limitation of 255. This function will subset the first 255 characters for too long string values.
 
     Args:
-        label (str | list): A string or a list of strings of key/value of labels need to be legalized.
+        label (str | list): A string or a list of a string of key/value of labels need to be legalized.
 
     Returns:
-        str: A converted, uglified but legal version of label.
+        str: A string of label with no more than 255 characters.
+
+    Raises:
+        ValueError: This will happen if the value of the label is a list, and the length of it is not equal to 1.
 
     """
+    cromwell_label_maximum_length = 255
+
     if isinstance(label, list):
-        label = 'first-{}'.format(label[0])  # Only pick the first element in a list as a workaround here
-    return label.lower().replace('_', '-').replace('.', '-').replace(':', '-')
+        if len(label) != 1:
+            raise ValueError('{} should contain exactly one element!'.format(label))
+        label = label[0]
+    return label[:cromwell_label_maximum_length]
 
 
 def compose_labels(workflow_name, workflow_version, bundle_uuid, bundle_version, *extra_labels):
