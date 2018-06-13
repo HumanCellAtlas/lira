@@ -6,5 +6,9 @@
   "submitter_id": {
     "type": "jmespath",
     "expression": "files.project_json.hca_ingest.submitter_id"
+  },
+  "sample_id": {
+    "type": "jmespath",
+    "expression": "files.biomaterial_json.biomaterials[?ends_with(content.describedBy, 'cell_suspension')].hca_ingest.document_id | [0]"
   }
 }
