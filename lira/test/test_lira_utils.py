@@ -64,6 +64,8 @@ class TestUtils(unittest.TestCase):
         cls.extra_label_3 = {'Comment3': 'Test3'}
         cls.invalid_extra_label = None
         cls.invalid_long_label = {'Long': 's'*300}
+        cls.list_label = {'list_label': ['test']}
+        cls.invalid_list_label = {'list_label': ['test', 'test2']}
         cls.attachments = {
             'submitter_id': 'None',
             'sample_id': [
@@ -411,6 +413,23 @@ class TestUtils(unittest.TestCase):
         }
         self.assertEqual(lira_utils.compose_labels(self.workflow_name, self.workflow_version, self.bundle_uuid,
                                                    self.bundle_version, self.invalid_long_label), expected_labels)
+
+    def test_compose_labels_with_one_extra_list_label(self):
+        """Test if compose_labels can correctly compose labels with one list as a label."""
+        expected_labels = {
+            'workflow-name': 'SmartSeq2Workflow',
+            'workflow-version': 'v0.0.1',
+            'bundle-uuid': 'foo-bar-id',
+            'bundle-version': '2018-01-01T10:10:10.384Z',
+            'list_label': 'test'
+        }
+        self.assertEqual(lira_utils.compose_labels(self.workflow_name, self.workflow_version, self.bundle_uuid,
+                                                   self.bundle_version, self.list_label), expected_labels)
+
+    def test_compose_labels_with_invalid_list_label_raises_error(self):
+        """Test if compose_labels can correctly compose labels with one list as a label."""
+        self.assertRaises(ValueError, lira_utils.compose_labels, self.workflow_name, self.workflow_version,
+                          self.bundle_uuid, self.bundle_version, self.invalid_list_label)
 
     def test_compose_labels_with_multiple_extra_labels(self):
         """Test if compose_labels can correctly compose labels with multiple extra labels."""
