@@ -244,7 +244,7 @@ def legalize_cromwell_labels(label):
     length limitation of 255. This function will subset the first 255 characters for too long string values.
 
     Args:
-        label (str | list): A string or a list of a string of key/value of labels need to be legalized.
+        label (str | list | None): A string or a list of a string of key/value of labels need to be legalized.
 
     Returns:
         str: A string of label with no more than 255 characters.
@@ -259,7 +259,7 @@ def legalize_cromwell_labels(label):
         if len(label) != 1:
             raise ValueError('{} should contain exactly one element!'.format(label))
         label = label[0]
-    return label[:cromwell_label_maximum_length]
+    return str(label)[:cromwell_label_maximum_length]
 
 
 def compose_labels(workflow_name, workflow_version, bundle_uuid, bundle_version, *extra_labels):

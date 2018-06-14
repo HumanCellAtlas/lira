@@ -62,7 +62,7 @@
    "transaction_id": "9d0eb75c-d950-4e62-b685-4f20c8569410",
    "subscription_id": "222",
    "attachments": {
-      "submitter_id": "None",
+      "submitter_id": null,
       "sample_id": [
          "b1829a9d-6678-493b-bf98-01520f9bad52"
       ],
