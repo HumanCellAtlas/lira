@@ -67,7 +67,7 @@ class TestUtils(unittest.TestCase):
         cls.list_label = {'list_label': ['test']}
         cls.invalid_list_label = {'list_label': ['test', 'test2']}
         cls.attachments = {
-            'submitter_id': 'None',
+            'submitter_id': None,
             'sample_id': [
               'b1829a9d-6678-493b-bf98-01520f9bad52'
             ],
