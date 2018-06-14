@@ -17,12 +17,17 @@ logger = logging.getLogger('lira.{module_path}'.format(module_path=__name__))
 
 
 def response_with_server_header(body, status):
-    """Add information of server to header.We are doing this to overwrite the default flask Server header. The
-     default header is a security risk because it provides too much information about server internals.
+    """Add information of server to header.
 
-    :param obj body: HTTP response body content that is JSON-serializable.
-    :param int status: HTTP response status code.
-    :return flask.wrappers.Response response: HTTP response with information of server in header.
+    We are doing this to overwrite the default flask Server header. The default header is a security risk because
+    it provides too much information about server internals.
+
+    Args:
+        body (obj): HTTP response body content that is JSON-serializable.
+        status (status): HTTP response status code.
+
+    Returns:
+        response (flask.wrappers.Response response): HTTP response with information of server in header.
     """
     response = make_response(json.dumps(body, indent=2) + '\n', status)
     response.headers['Server'] = 'Secondary Analysis Service'
@@ -34,8 +39,8 @@ def is_authenticated(request, config):
     """Check if message is authentic.
 
     Args:
-        request: The request object
-        config (LiraConfig): Lira's configuration
+        request: The request object.
+        config (LiraConfig): Lira's configuration.
 
     Returns:
         True if message verifiably came from storage service, else False.
@@ -47,13 +52,13 @@ def is_authenticated(request, config):
 
 
 def _is_authenticated_hmac(request, hmac_key, stale_notification_timeout=0):
-    """Check if message is authentic
+    """Check if message is authentic.
 
     Args:
-        request: the request object
-        hmac_key (bytes): the hmac key
-        stale_notification_timeout (int): timeout beyond which we refuse to accept the message,
-    even if everything else checks out
+        request: The request object.
+        hmac_key (bytes): The hmac key.
+        stale_notification_timeout (int): Timeout beyond which we refuse to accept the message,
+            even if everything else checks out.
 
     Returns:
         True if message is verifiably from the storage service, False otherwise
@@ -89,11 +94,11 @@ def _check_date(date_header, stale_notification_timeout):
     """Verify that there is a date header and the message isn't too old.
 
     Args:
-        date_header (str): timestamp indicating date/time message was sent
-        stale_notification_timeout (int): message age in seconds beyond which we refuse to accept it
+        date_header (str): Timestamp indicating date/time message was sent.
+        stale_notification_timeout (int): Message age in seconds beyond which we refuse to accept it.
 
     Raises:
-        AssertionError if there is no date header or the message is too old
+        AssertionError: If there is no date header or the message is too old.
     """
     if not date_header:
         raise AssertionError('No date header')
@@ -104,14 +109,14 @@ def _check_date(date_header, stale_notification_timeout):
 
 
 def _calculate_digest(request):
-    """Calculate the digest of the request body and make a string of the type
-    expected by the requests-http-signature library.
+    """Calculate the digest of the request body and make a string of the type expected by the
+    requests-http-signature library.
 
     Args:
-        request: the request object
+        request: The request object.
 
     Returns:
-        (str) containing digest
+        digest_string (str): A string of digest.
     """
     raw_digest = hashlib.sha256(request.get_data()).digest()
     digest_string = "SHA-256=" + base64.b64encode(raw_digest).decode()
@@ -119,16 +124,27 @@ def _calculate_digest(request):
 
 
 def _is_authenticated_query_param(params, token):
+    """Check if message is authentic.
+
+    Args:
+        params (dict): A dict of the HTTP request parameters.
+        token (str): The predefined security token.
+
+    Returns:
+        bool: True if the auth param matches the token, False if not.
+    """
     return params.get('auth') == token
 
 
 def extract_uuid_version_subscription_id(msg):
     """Extract uuid, version, subscription_id from message.
 
-    :param dict msg: A dictionary of message contains bundle information.
-    :return str uuid: uuid of the bundle.
-    :return str version: version of the bundle.
-    :return str subscription_id: subscription id of the bundle.
+    Args:
+        msg (dict): A dictionary of message contains bundle information.
+
+    Returns:
+        tuple: A tuple of (uuid, version, subscription_id). uuid is a string of the UUID of the bundle. version is a
+            string of the version of the bundle. subscription_id is a string of the subscription id.
     """
     uuid = msg["match"]["bundle_uuid"]
     version = msg["match"]["bundle_version"]
@@ -146,7 +162,7 @@ def compose_inputs(workflow_name, uuid, version, lira_config):
         lira_config (LiraConfig): Lira configuration
 
     Returns:
-        A dictionary of workflow inputs.
+        dict: A dictionary of workflow inputs.
     """
     return {
         workflow_name + '.bundle_uuid': uuid,
@@ -163,11 +179,11 @@ def compose_caas_options(cromwell_options_file, lira_config):
     """ Append options for using Cromwell-as-a-service to the default options.json file in the wdl config.
 
     Args:
-        cromwell_options_file (str): Contents of the options.json file in the wdl config
-        lira_config (LiraConfig): Lira configuration
+        cromwell_options_file (str): Contents of the options.json file in the wdl config.
+        lira_config (LiraConfig): Lira configuration.
 
     Returns:
-        A dictionary of workflow outputs.
+        dict: A dictionary of workflow outputs.
     """
     options_file = cromwell_options_file
     if isinstance(options_file, bytes):
@@ -188,15 +204,18 @@ def parse_github_resource_url(url):
     """Parse a URL which describes a resource file on Github.
 
     A valid URL here means either a valid url to a file on Github, either in raw format or not. For example,
-     both https://github.com/HumanCellAtlas/lira/blob/master/README.md and
-     https://raw.githubusercontent.com/HumanCellAtlas/lira/master/README.md are valid github resource URL here.
+    both https://github.com/HumanCellAtlas/lira/blob/master/README.md and
+    https://raw.githubusercontent.com/HumanCellAtlas/lira/master/README.md are valid github resource URL here.
 
-    :param str url: A valid URL which describes a resource file on Github.
+    Args:
+        url (str): A valid URL which describes a resource file on Github.
 
-    :return collections.namedtuple: A namedtuple with information about: URI scheme, netloc,
-     owner(either User or Organization), repo, version(either git tags or branch name), path, file.
+    Returns:
+        collections.namedtuple: A namedtuple with information about: URI scheme, netloc,
+            owner(either User or Organization), repo, version(either git tags or branch name), path, file.
 
-    :raises ValueError: Raise a ValueError when the input URL is invalid.
+    Raises:
+        ValueError: Raise a ValueError if the input URL is invalid.
     """
     if url.startswith('git@') or url.endswith('.git'):
         raise ValueError('{} is not a valid url to a resource file on Github.'.format(url))
@@ -221,30 +240,43 @@ def parse_github_resource_url(url):
 def legalize_cromwell_labels(label):
     """Legalize invalid labels so that they can be accepted by Cromwell.
 
-    Note: This is a very temporary solution, once Cromwell is more permissive on labels, this function should be
-     deprecated right away. This function will convert integers to strings, all Upper letters to lower letters,
-     replace all '_' to '-', replace all '.' to '-', and replace all ':' to '-'.
+    Note: Cromwell v32 and later versions are permissive and accepting all sort of valid JSON strings, but with a
+    length limitation of 255. This function will subset the first 255 characters for too long string values.
 
-    :param str label: A string of key/value of labels need to be legalized.
+    Args:
+        label (str | list): A string or a list of a string of key/value of labels need to be legalized.
 
-    :return str: A converted, uglified but legal version of label.
+    Returns:
+        str: A string of label with no more than 255 characters.
+
+    Raises:
+        ValueError: This will happen if the value of the label is a list, and the length of it is not equal to 1.
+
     """
-    return label.lower().replace('_', '-').replace('.', '-').replace(':', '-')
+    cromwell_label_maximum_length = 255
+
+    if isinstance(label, list):
+        if len(label) != 1:
+            raise ValueError('{} should contain exactly one element!'.format(label))
+        label = label[0]
+    return label[:cromwell_label_maximum_length]
 
 
-def compose_labels(workflow_name, workflow_version, bundle_uuid, bundle_version, extra_labels=None):
-    """Create Cromwell labels object containing pre-defined labels and possible extra labels.
+def compose_labels(workflow_name, workflow_version, bundle_uuid, bundle_version, *extra_labels):
+    """Create Cromwell labels object containing pre-defined labels and potential extra labels.
 
     The pre-defined workflow labels are: workflow_name, workflow_version, bundle_uuid, bundle_version.
-     This function also accepts dictionary as extra labels.
+    This function also accepts dictionary as extra labels.
 
-    :param str workflow_name: The name of the workflow.
-    :param str workflow_version: Version of the workflow.
-    :param str bundle_uuid: Uuid of the bundle.
-    :param str bundle_version: Version of the bundle.
-    :param dict extra_labels: A dictionary of extra labels.
+    Args:
+        workflow_name (str): The name of the workflow.
+        workflow_version (str): version of the workflow.
+        bundle_uuid (str): uuid of the bundle.
+        bundle_version (str): version of the bundle.
+        *extra_labels: Variable length extra label list.
 
-    :return dict: A dictionary of composed workflow labels.
+    Returns:
+        workflow_labels (dict): A dictionary of the composed workflow labels.
     """
     workflow_labels = {
         "workflow-name": legalize_cromwell_labels(workflow_name),
@@ -252,10 +284,10 @@ def compose_labels(workflow_name, workflow_version, bundle_uuid, bundle_version,
         "bundle-uuid": legalize_cromwell_labels(bundle_uuid),
         "bundle-version": legalize_cromwell_labels(bundle_version)
     }
-    if isinstance(extra_labels, dict):
-        extra_labels = {legalize_cromwell_labels(k): legalize_cromwell_labels(v) for k, v in extra_labels.items()}
-        workflow_labels.update(extra_labels)
-
+    for extra_label in extra_labels:
+        if isinstance(extra_label, dict):
+            extra_label = {legalize_cromwell_labels(k): legalize_cromwell_labels(v) for k, v in extra_label.items()}
+            workflow_labels.update(extra_label)
     return workflow_labels
 
 
@@ -284,7 +316,8 @@ def noop_lru_cache(maxsize=None, typed=False):
 def create_prepare_submission_function(cache_wdls):
     """Returns decorated prepare_submission function. Decorator is determined as follows:
     Python 2: Always decorate with noop_lru_cache, since functools.lru_cache is not available in 2.
-    Python 3: Use functools.lru_cache if cache_wdls is true, otherwise use noop_lru_cache."""
+    Python 3: Use functools.lru_cache if cache_wdls is true, otherwise use noop_lru_cache.
+    """
 
     # Use noop_lru_cache unless cache_wdls is true and functools.lru_cache is available
     lru_cache = noop_lru_cache

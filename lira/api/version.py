@@ -5,7 +5,7 @@ from lira import lira_utils
 
 
 def get_version():
-    """Gather and return Lira's and all its dependencies' versions."""
+    """Collect and return Lira's and all its dependencies' versions."""
     logger = logging.getLogger("{module_path}".format(module_path=__name__))
     logger.debug("Version request received")
 

@@ -1,9 +1,74 @@
 {
-  "transaction_id": "eed1414b-4e70-45a3-b6d1-7ec19ce5b666",
-  "subscription_id": 222,
-  "match": {
-    "bundle_uuid": "46cf0282-ac03-4c57-9274-c8e1bdd2aed7",
-    "bundle_version": "2017-08-08T174816.194077Z"
-  }
+   "es_query": {
+      "query": {
+         "bool": {
+            "must": [
+               {
+                  "match": {
+                     "files.process_json.processes.content.library_construction_approach":"Smart-seq2"
+                  }
+               },
+               {
+                  "match": {
+                     "files.process_json.processes.content.paired_ends":"true"
+                  }
+               },
+               {
+                  "match": {
+                     "files.biomaterial_json.biomaterials.content.biomaterial_core.ncbi_taxon_id":9606
+                  }
+               }
+            ],
+            "should": [
+               {
+                  "match": {
+                     "files.process_json.processes.content.biomaterial_collection.dissociation_process.dissociation_method":"FACS"
+                  }
+               },
+               {
+                  "match": {
+                     "files.process_json.processes.content.biomaterial_collection.dissociation_process.dissociation_method":"mouth pipette"
+                  }
+               }
+            ],
+            "must_not": [
+               {
+                  "match": {
+                     "files.process_json.processes.content.process_type.text":"analysis"
+                  }
+               },
+               {
+                  "range": {
+                     "files.biomaterial_json.biomaterials.content.biomaterial_core.ncbi_taxon_id":{
+                        "lt":9606
+                     }
+                  }
+               },
+               {
+                  "range": {
+                     "files.biomaterial_json.biomaterials.content.biomaterial_core.ncbi_taxon_id":{
+                        "gt":9606
+                     }
+                  }
+               }
+            ]
+         }
+      }
+   },
+   "match": {
+      "bundle_uuid": "c86309f6-e5b7-4698-abb6-b81644573bff",
+      "bundle_version": "2018-06-04T225830.079725Z"
+   },
+   "transaction_id": "9d0eb75c-d950-4e62-b685-4f20c8569410",
+   "subscription_id": "222",
+   "attachments": {
+      "submitter_id": "None",
+      "sample_id": [
+         "b1829a9d-6678-493b-bf98-01520f9bad52"
+      ],
+      "project_shortname": "Glioblastoma_medium_1000_cells"
+   },
+   "labels": {
+      "comment": "test"
+   }
 }
-
