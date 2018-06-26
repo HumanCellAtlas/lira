@@ -21,7 +21,7 @@
       "must_not": [
         {
           "match": {
-            "files.protocol_json.protocols.content.protocol_type.text": "analysis"
+            "files.process_json.processes.content.protocol_type.text": "analysis"
           }
         },
         {
