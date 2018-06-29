@@ -123,15 +123,9 @@ definitions:
   VersionResponse:
     type: object
     properties:
-      launch_time:
-        type: string
-      lira_version:
-        type: string
-      cromwell_tools_version:
-        type: string
-      submit_wdl_version:
-        type: string
-      run_mode:
-        type: string
+      settings_info:
+        type: object
+      version_info:
+        type: object
       workflow_info:
         type: object

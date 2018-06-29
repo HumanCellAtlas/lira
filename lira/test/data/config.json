@@ -2,9 +2,10 @@
   "version": "v0.1.0",
   "env": "dev",
   "cromwell_url": "https://cromwell.mint-dev.broadinstitute.org/api/workflows/v1",
-  "cromwell_password": "test",
   "cromwell_user": "test",
+  "cromwell_password": "test",
   "use_caas": false,
+  "collection_name": "lira-test-workflows",
   "notification_token": "test",
   "MAX_CONTENT_LENGTH": 10000,
   "dss_url": "https://dss.dev.data.humancellatlas.org/v1",
@@ -34,7 +35,7 @@
       "wdl_static_inputs_link": "https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/v0.1.5/adapter_pipelines/smart_seq2/adapter_example_static_demo.json",
       "wdl_link": "https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/v0.1.5/adapter_pipelines/smart_seq2/adapter.wdl",
       "workflow_name": "AdapterSs2RsemSingleSample",
-      "workflow_version": "smartseq2_v0.2.0"
+      "workflow_version": "smartseq2_v1.0.0"
     }
   ]
 }
