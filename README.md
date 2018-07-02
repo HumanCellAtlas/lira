@@ -1,6 +1,6 @@
 # Lira
 
-| Slack Channel | Container | Linux-Python2.7 |
+| Slack Channel | Container | Linux-Python |
 |:-------:|:---------:|:---------:|
 | [![](https://img.shields.io/badge/slack-%23secondary--analysis-5BBC66.svg)](https://humancellatlas.slack.com/messages/secondary-analysis/) | [![Docker Repository on Quay](https://quay.io/repository/humancellatlas/secondary-analysis-lira/status "Docker Repository on Quay")](https://quay.io/repository/humancellatlas/secondary-analysis-lira) | [![Build Status](https://travis-ci.org/HumanCellAtlas/lira.svg?branch=master)](https://travis-ci.org/HumanCellAtlas/lira) |
 
