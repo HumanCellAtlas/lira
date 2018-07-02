@@ -36,7 +36,6 @@ def get_version():
         'launch_time': current_app.launch_time,
         'max_cromwell_retries': lira_config.get('max_cromwell_retries'),
         'run_mode': 'dry_run' if lira_config.get('dry_run') else 'live_run',
-        'stale_notification_timeout': lira_config.get('stale_notification_timeout'),
         'use_caas': lira_config.get('use_caas')
     }
 

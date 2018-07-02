@@ -46,7 +46,6 @@ class TestGetVersion(unittest.TestCase):
         self.assertEqual(json_response.get('settings_info').get('data_store_url'), 'https://dss.dev.data.humancellatlas.org/v1')
         self.assertEqual(json_response.get('settings_info').get('cromwell_url'), 'https://cromwell.mint-dev.broadinstitute.org/api/workflows/v1')
         self.assertEqual(json_response.get('settings_info').get('max_cromwell_retries'), 0)
-        self.assertEqual(json_response.get('settings_info').get('stale_notification_timeout'), 0)
         self.assertEqual(json.dumps(json_response.get('settings_info').get('use_caas')), 'false')
 
     def test_get_version_can_fetch_correct_version_info(self):
