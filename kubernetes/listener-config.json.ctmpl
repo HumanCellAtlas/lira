@@ -19,6 +19,11 @@
       "use_caas": {{ env "USE_CAAS" | parseBool }},
       "env": "{{$environment}}",
       "dss_url": "https://dss.{{ if eq $environment "test" }}integration{{ else }}{{$environment}}{{ end }}.data.humancellatlas.org/v1",
+      {{ if eq $environment "prod" }}
+        "schema_url": "https://schema.humancellatlas.org/",
+      {{ else }}
+        "schema_url": "http://schema.{{ if eq $environment "test" }}integration{{ else }}{{$environment}}{{ end }}.data.humancellatlas.org/",
+      {{ end }}
       "ingest_url": "http://api.ingest.{{ if eq $environment "test" }}integration{{ else }}{{$environment}}{{ end }}.data.humancellatlas.org/",
     {{ if env "USE_HMAC" | parseBool }}
       "hmac_key": "{{$hmac_keys.Data.current_key}}",
