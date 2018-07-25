@@ -229,7 +229,8 @@ class LiraConfig(Config):
             'wdls',
             'version',
             'dss_url',
-            'ingest_url'
+            'ingest_url',
+            'schema_url'
         }
 
     @staticmethod
@@ -256,7 +257,9 @@ class LiraConfig(Config):
             self.wdls,
             self.version,
             self.dss_url,
-            self.ingest_url)
+            self.ingest_url,
+            self.schema_url
+        )
 
     def __repr__(self):
         s = 'LiraConfig(environment: {0},' \
@@ -267,7 +270,8 @@ class LiraConfig(Config):
             ' wdls: {5},' \
             ' lira_version: {6}' \
             ' dss_url: {7}' \
-            ' ingest_url: {8})'
+            ' ingest_url: {8}' \
+            ' schema_url: {9}'
         return s.format(
             self.env,
             self.submit_wdl,
@@ -277,7 +281,9 @@ class LiraConfig(Config):
             self.wdls,
             self.version,
             self.dss_url,
-            self.ingest_url)
+            self.ingest_url,
+            self.schema_url
+        )
 
 
 class MaxLevelFilter(object):

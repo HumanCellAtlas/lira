@@ -170,6 +170,7 @@ def compose_inputs(workflow_name, uuid, version, lira_config):
         workflow_name + '.runtime_environment': lira_config.env,
         workflow_name + '.dss_url': lira_config.dss_url,
         workflow_name + '.submit_url': lira_config.ingest_url,
+        workflow_name + '.schema_url': lira_config.schema_url,
         workflow_name + '.use_caas': lira_config.use_caas,
         workflow_name + '.max_cromwell_retries': lira_config.max_cromwell_retries
     }

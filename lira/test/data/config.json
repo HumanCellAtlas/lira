@@ -10,6 +10,7 @@
   "MAX_CONTENT_LENGTH": 10000,
   "dss_url": "https://dss.dev.data.humancellatlas.org/v1",
   "ingest_url": "http://api.ingest.dev.data.humancellatlas.org/",
+  "schema_url": "https://schema.humancellatlas.org",
   "submit_wdl": "https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/v0.1.5/adapter_pipelines/submit.wdl",
   "wdls": [
     {
