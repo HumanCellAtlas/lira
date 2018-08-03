@@ -10,7 +10,7 @@ def get_workflows(cromwell_url, query_dict, caas_key):
     return workflows
 
 
-def abort_workflows(cromwell_url, workflows, caas_key, dry_run=True):
+def abort_workflows(cromwell_url, workflows, caas_key, dry_run=False):
     auth, headers = cromwell_tools._get_auth_credentials(caas_key=caas_key)
     logging.info('Aborting {} workflows in {}'.format(len(workflows), cromwell_url))
     for workflow in workflows:
@@ -28,10 +28,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--cromwell_url')
     parser.add_argument('--caas_key')
-    parser.add_argument('--dry_run', default=True)
+    parser.add_argument('--dry_run', default='false')
     args = parser.parse_args()
     query_dict = {
         'status': ['On Hold', 'Running']
     }
+    dry_run = True if args.dry_run.lower() == 'true' else False
     target_workflows = get_workflows(args.cromwell_url, query_dict, args.caas_key)
-    abort_workflows(args.cromwell_url, target_workflows, args.caas_key, dry_run=args.dry_run)
+    abort_workflows(args.cromwell_url, target_workflows, args.caas_key, dry_run=dry_run)
