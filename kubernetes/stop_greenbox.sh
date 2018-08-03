@@ -43,4 +43,4 @@ docker run -i --rm -e VAULT_TOKEN=$(cat $VAULT_TOKEN_FILE) broadinstitute/dsde-t
         secret/dsde/mint/$VAULT_ENV/listener/caas-${VAULT_ENV}-key.json > $CAAS_KEY_FILE
 
 # Abort all on-hold and running workflows
- python -m abort_workflows --cromwell_url ${CROMWELL_URL} --caas_key ${CAAS_KEY_FILE}
+python -m abort_workflows --cromwell_url ${CROMWELL_URL} --caas_key ${CAAS_KEY_FILE}
