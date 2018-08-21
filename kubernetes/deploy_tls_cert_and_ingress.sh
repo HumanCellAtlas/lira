@@ -3,6 +3,7 @@
 # Variables
 LIRA_ENVIRONMENT=${LIRA_ENVIRONMENT:-"dev"} # other valid envs: test, staging, prod
 GCLOUD_PROJECT=${GCLOUD_PROJECT:-"broad-dsde-mint-dev"} # other envs - broad-dsde-mint-test, broad-dsde-mint-staging, hca-dcp-pipelines-prod
+GENERATE_CERTS="false"
 
 GLOBAL_IP_NAME=${GLOBAL_IP_NAME:-"lira"}
 KUBERNETES_NAMESPACE=${KUBERNETES_NAMESPACE:-"green-100-us-central1-ns"}
@@ -17,14 +18,10 @@ VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"${HOME}/.vault-token"}
 INGRESS_NAME=${INGRESS_NAME:-"lira-ingress"}
 SERVICE_NAME=${SERVICE_NAME:-"lira-service"}
 
-#if [ ${LIRA_ENVIRONMENT} == "test" ];
-#then
-#    ENV="integration"
-#else
-#    ENV="${LIRA_ENVIRONMENT}"
-#fi
-
-#echo "ENV: ${ENV}"
+if [ ${GENERATE_CERTS} == "true" ];
+then
+    ./get_certs.sh
+fi
 
 echo "Rendering TLS cert"
 docker run -i --rm -e LIRA_ENVIRONMENT="${LIRA_ENVIRONMENT}" \
