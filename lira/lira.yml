@@ -9,7 +9,7 @@ schemes:
 produces:
   - application/json
 tags:
-- name: Listener
+- name: Lira
   externalDocs:
     description: Find out more about the Lira service
     url: 'https://github.com/HumanCellAtlas/lira/wiki'
@@ -57,7 +57,7 @@ paths:
   /notifications:
     post:
       tags:
-      - Listener
+      - Lira
       summary: Send notifications
       description: |
         Notify green about bundles to process

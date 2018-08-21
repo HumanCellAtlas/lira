@@ -1,0 +1,52 @@
+{{with $ENVIRONMENT := env "LIRA_ENVIRONMENT"}}
+{{with $liraSecret := vault (printf "secret/dsde/mint/%s/lira/lira_secret" $ENVIRONMENT)}}
+{{with $hmac_keys := vault (printf "secret/dsde/mint/%s/lira/hmac_keys" $ENVIRONMENT)}}
+{
+    "cromwell_url": "{{env "CROMWELL_URL"}}",
+{{ if env "USE_CAAS" | parseBool }}
+    "collection_name": "{{ env "COLLECTION_NAME" }}",
+    "google_project": "{{ env "GCLOUD_PROJECT" }}",
+    "gcs_root": "{{ env "GCS_ROOT" }}",
+{{ else }}
+{{ with $cromwellSecrets := vault (printf "secret/dsde/mint/%s/common/htpasswd" $ENVIRONMENT) }}
+    "cromwell_password": "{{$cromwellSecrets.Data.cromwell_password}}",
+    "cromwell_user": "{{$cromwellSecrets.Data.cromwell_user}}",
+{{ end }}
+{{ end }}
+    "version": "{{ env "LIRA_VERSION" }}",
+    "MAX_CONTENT_LENGTH": 10000,
+    "use_caas": {{ env "USE_CAAS" | parseBool }},
+    "env": "{{ $ENVIRONMENT }}",
+    "dss_url": "{{ env "DSS_URL" }}",
+    "ingest_url": "{{ env "INGEST_URL" }}",
+{{ if env "USE_HMAC" | parseBool }}
+    "hmac_key": "{{ $hmac_keys.Data.current_key }}",
+{{ else }}
+    "notification_token": "{{ $liraSecret.Data.notification_token }}",
+{{ end }}
+    "max_cromwell_retries": "{{ env "MAX_CROMWELL_RETRIES" }}",
+    "submit_wdl": "{{ env "SUBMIT_WDL" }}",
+    "wdls": [
+        {
+            "analysis_wdls": {{ env "TENX_ANALYSIS_WDLS" }},
+            "options_link": "{{ env "TENX_OPTIONS_LINK" }}",
+            "subscription_id": "{{ env "TENX_SUBSCRIPTION_ID" }}",
+            "wdl_static_inputs_link": "{{ env "TENX_WDL_STATIC_INPUTS_LINK" }}",
+            "wdl_link": "{{ env "TENX_WDL_LINK" }}",
+            "workflow_name": "{{ env "TENX_WORKFLOW_NAME" }}",
+            "workflow_version": "{{ env "TENX_VERSION" }}"
+        },
+        {
+            "analysis_wdls": {{ env "SS2_ANALYSIS_WDLS" }},
+            "options_link": "{{ env "SS2_OPTIONS_LINK" }}",
+            "subscription_id": "{{ env "SS2_SUBSCRIPTION_ID" }}",
+            "wdl_static_inputs_link": "{{ env "SS2_WDL_STATIC_INPUTS_LINK" }}",
+            "wdl_link": "{{ env "SS2_WDL_LINK" }}",
+            "workflow_name": "{{ env "SS2_WORKFLOW_NAME" }}",
+            "workflow_version": "{{ env "SS2_VERSION" }}"
+        }
+    ]
+}
+{{end}}
+{{end}}
+{{end}}

@@ -1,4 +1,6 @@
+#!/usr/bin/env bash
+
 dss_url=test
 green_url=test
 key_file=test
-listener_secret=test
+lira_secret=test

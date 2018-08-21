@@ -68,4 +68,5 @@ if __name__ == '__main__':
         args.hmac_key,
         args.additional_metadata
     )
+
     make_request(js, args.dss_url, args.key_file)

@@ -1,1 +1,14 @@
 *.pyc
+*.crt
+*.key
+*.bak
+*key.json
+lira-config.json
+lira-deployment.yaml
+lira-ingress.yaml
+lira-service.yaml
+firecloud-tools/*
+firecloud-tools
+kubernetes/vault-edit
+scripts/hmac_keys
+.DS_Store

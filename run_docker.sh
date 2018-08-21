@@ -37,7 +37,7 @@ if [ $caas_key ]; then
         --publish $port:$port \
         -v $config:$mounted_config:ro \
         -v $caas_key:$mounted_caas_key:ro \
-        -e listener_config=$mounted_config \
+        -e lira_config=$mounted_config \
         -e caas_key=$mounted_caas_key \
         lira:$tag \
         $port
@@ -46,7 +46,7 @@ else
         --name lira \
         --publish $port:$port \
         -v $config:$mounted_config:ro \
-        -e listener_config=$mounted_config \
+        -e lira_config=$mounted_config \
         lira:$tag \
         $port
 fi

@@ -18,7 +18,7 @@ class TestGetVersion(unittest.TestCase):
         # Change to test directory, as tests may have been invoked from another dir
         dir = os.path.abspath(os.path.dirname(__file__))
         os.chdir(dir)
-        env = mock.patch.dict('os.environ', {'listener_config': 'data/config.json'})
+        env = mock.patch.dict('os.environ', {'lira_config': 'data/config.json'})
         with env:
             # Import lira here to get the config from os.environ correctly
             from lira import lira as test_lira

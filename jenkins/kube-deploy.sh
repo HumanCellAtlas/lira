@@ -24,12 +24,12 @@ VAULT_TOKEN_FILE=${VAULT_TOKEN_FILE:-"/etc/vault-token-dsde"}
 GOOGLE_PROJECT=${GOOGLE_PROJECT:-"broad-dsde-mint-${ENV}"}
 
 # kubernetes yaml to deploy
-KUBE_YAML="listener-deployment.yaml"
+KUBE_YAML="lira-deployment.yaml"
 
 # namespace
 KUBE_NAMESPACE=${KUBE_NAMESPACE:-"default"}
 
-KUBE_CLUSTER=${KUBE_CLUSTER:-"listener"}
+KUBE_CLUSTER=${KUBE_CLUSTER:-"lira"}
 
 # set up temp dir to isolate gcloud commands
 build_tmp="${WORKSPACE}/${BUILD_TAG}"
@@ -38,7 +38,7 @@ mkdir ${build_tmp}
 export CLOUDSDK_CONFIG="${build_tmp}"
 
 errorout() {
-  echo "Error occurred - exitting"
+  echo "Error occurred - exiting"
   exit 1
 }
 
@@ -104,14 +104,15 @@ context="gke_${GOOGLE_PROJECT}_${ZONE}_${KUBE_CLUSTER}"
 # should check if yaml needs rendering
 
 # Render template for deployment
-docker run -i --rm  ${DOCKER_OPTS} \
+docker run -i \
+           --rm  ${DOCKER_OPTS} \
            -e LIRA_CONFIG=${LIRA_CONFIG} \
            -e DOCKER_TAG=${DOCKER_TAG} \
            -e ENV=${ENV} \
            -e USE_CAAS=${USE_CAAS} \
            -v ${VAULT_TOKEN_FILE}:/root/.vault-token \
-           -v ${PWD}/kubernetes:/working broadinstitute/dsde-toolbox:k8s \
-           /usr/local/bin/render-ctmpl.sh \
+           -v ${PWD}/kubernetes:/working broadinstitute/dsde-toolbox:ra_rendering \
+           /usr/local/bin/render-ctmpls.sh \
            /working/${KUBE_YAML}.ctmpl
 
 # kube  commands

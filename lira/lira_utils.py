@@ -1,4 +1,4 @@
-"""This module contains utility functions and classes of listener.
+"""This module contains utility functions and classes of lira.
 """
 import json
 import logging
