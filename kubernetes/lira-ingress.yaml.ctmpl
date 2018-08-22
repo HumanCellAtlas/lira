@@ -8,7 +8,7 @@ metadata:
   generation: 3
 spec:
   tls:
-    - secretName: {{ env "TLS_SECRET_1_NAME" }}
+    - secretName: {{ env "TLS_SECRET_NAME" }}
   backend:
     serviceName: {{ env "SERVICE_NAME" }}
     servicePort: 8080
