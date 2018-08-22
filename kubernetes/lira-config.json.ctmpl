@@ -18,6 +18,7 @@
     "use_caas": {{ env "USE_CAAS" | parseBool }},
     "env": "{{ $ENVIRONMENT }}",
     "dss_url": "{{ env "DSS_URL" }}",
+    "schema_url": "{{ env "SCHEMA_URL" }}",
     "ingest_url": "{{ env "INGEST_URL" }}",
 {{ if env "USE_HMAC" | parseBool }}
     "hmac_key": "{{ $hmac_keys.Data.current_key }}",

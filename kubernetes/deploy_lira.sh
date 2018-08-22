@@ -53,6 +53,14 @@ fi
 
 CAAS_KEY_PATH="secret/dsde/mint/${LIRA_ENVIRONMENT}/${SERVICE}/${CAAS_ENVIRONMENT}-key.json"
 DSS_URL="https://dss.${ENV}.data.humancellatlas.org/v1"
+
+if [ ${LIRA_ENVIRONMENT} == "prod" ]
+then
+    SCHEMA_URL="https://schema.humancellatlas.org/"
+else
+    SCHEMA_URL="https://schema.${ENV}.humancellatlas.org/"
+fi
+
 GCS_ROOT="gs://${GCLOUD_PROJECT}-cromwell-execution/caas-cromwell-executions"
 INGEST_URL="http://api.ingest.${ENV}.data.humancellatlas.org/"
 
@@ -103,6 +111,7 @@ docker run -i --rm \
               -e GCS_ROOT="${GCS_ROOT}" \
               -e LIRA_VERSION="${LIRA_VERSION}" \
               -e DSS_URL="${DSS_URL}" \
+              -e SCHEMA_URL="${SCHEMA_URL}" \
               -e INGEST_URL="${INGEST_URL}" \
               -e USE_HMAC="${USE_HMAC}" \
               -e SUBMIT_WDL="${SUBMIT_WDL}" \
