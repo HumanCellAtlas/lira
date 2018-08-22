@@ -1,0 +1,46 @@
+stages:
+  - dev
+  - integration
+  - staging
+  - prod
+
+dev:
+  stage: dev
+  script:
+    -
+
+integration:
+  stage: integration
+  script:
+    - npm cache clean
+    - rm -rf node-modules
+    - npm install
+run_tests:
+  stage: tests
+  script:
+    - npm test
+
+staging:
+  stage: deploy
+  script:
+    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/text-giving-staging.git
+    - git push heroku master
+    - echo "Deployed to staging server"
+  environment:
+  name: staging
+  url: https://text-giving-staging.herokuapp.com/
+  only:
+    - master
+
+prod:
+  stage: deploy
+  script:
+    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/text-giving.git
+    - git push heroku master
+    - echo "Deployed to production server"
+  environment:
+  name: production
+  url: https://text-giving.herokuapp.com/
+  when: manual
+  only:
+    - master
