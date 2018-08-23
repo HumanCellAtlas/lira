@@ -38,6 +38,8 @@ COLLECTION_NAME=${COLLECTION_NAME:-"lira-${LIRA_ENVIRONMENT}-workflows"}
 # Derived Variables
 CAAS_KEY_FILE="${CAAS_ENVIRONMENT}-key.json"
 
+# Jumping through some hoops due to mismatch of names between our environments and the environments used by the other
+# teams within the HCA - this sets up the correct name for the DSS URL and the INGEST URL
 if [ ${LIRA_ENVIRONMENT} == "test" ];
 then
     ENV="integration"
@@ -52,17 +54,20 @@ else
 fi
 
 CAAS_KEY_PATH="secret/dsde/mint/${LIRA_ENVIRONMENT}/${SERVICE}/${CAAS_ENVIRONMENT}-key.json"
-DSS_URL="https://dss.${ENV}.data.humancellatlas.org/v1"
 
 if [ ${LIRA_ENVIRONMENT} == "prod" ]
 then
+    DSS_URL="https://dss.data.humancellatlas.org/v1"
     SCHEMA_URL="https://schema.humancellatlas.org/"
+    INGEST_URL="http://api.ingest.data.humancellatlas.org/"
 else
+    DSS_URL="https://dss.${ENV}.data.humancellatlas.org/v1"
     SCHEMA_URL="https://schema.${ENV}.humancellatlas.org/"
+    INGEST_URL="http://api.ingest.${ENV}.data.humancellatlas.org/"
 fi
 
 GCS_ROOT="gs://${GCLOUD_PROJECT}-cromwell-execution/caas-cromwell-executions"
-INGEST_URL="http://api.ingest.${ENV}.data.humancellatlas.org/"
+
 
 #SUBMIT_WDL="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/${SUBMIT_WDL_DIR}submit.wdl"
 SUBMIT_WDL="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/submit.wdl"

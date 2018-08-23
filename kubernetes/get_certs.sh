@@ -32,7 +32,6 @@ AWS_SECRET_ACCESS_KEY="$(docker run -i \
 echo "Making the temp directory for certs"
 
 mktemp -d "certs"
-#mkdir certs
 
 echo "Running docker"
 

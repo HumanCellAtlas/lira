@@ -5,7 +5,6 @@ metadata:
   annotations:
     kubernetes.io/ingress.global-static-ip-name: {{ env "GLOBAL_IP_NAME" }}
     kubernetes.io/ingress.class: "gce"
-  generation: 3
 spec:
   tls:
     - secretName: {{ env "TLS_SECRET_NAME" }}

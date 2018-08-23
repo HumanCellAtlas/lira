@@ -1,4 +1,10 @@
 ##!/usr/bin/env python
+
+# This script was originally created in https://github.com/broadinstitute/firecloud-tools/tree/master/scripts/register_
+# service_account. The primary reason that this was copied into this repo is because there was no reason to need the
+# entire firecloud-tools repository for this one script. In addition, the use of the print statement in the original
+# script did not work for the python 3 setup which was being used for the deployment
+
 from argparse import ArgumentParser
 from oauth2client.service_account import ServiceAccountCredentials
 from firecloud import api as firecloud_api
