@@ -17,7 +17,10 @@ then
 fi
 
 # Derived variables
-if [ ${LIRA_ENVIRONMENT} == "int" ];
+if [ ${LIRA_ENVIRONMENT} == "test" ];
+then
+    ENV="integration"
+elif [ ${LIRA_ENVIRONMENT} == "dev" ];
 then
     ENV="integration"
 else
