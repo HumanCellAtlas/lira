@@ -1,0 +1,11 @@
+{
+  "project_shortname": {
+    "type": "jmespath",
+    "expression": "files.project_json[].project_core.project_short_name | [0]"
+  },
+  "sample_id": {
+    "type": "jmespath",
+    "expression": "files.links_json[].links[?input_type=='biomaterial' && protocols[?protocol_type=='sequencing_protocol']].inputs[][]"
+
+  }
+}
