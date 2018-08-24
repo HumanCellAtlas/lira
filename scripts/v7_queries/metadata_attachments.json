@@ -5,7 +5,7 @@
   },
   "sample_id": {
     "type": "jmespath",
-    "expression": "files.links_json[].links[?input_type=='biomaterial' && protocols[?protocol_type=='sequencing_protocol']].inputs[][] | [0]"
+    "expression": "files.links_json[].links[?input_type=='biomaterial' && protocols[?protocol_type=='sequencing_protocol']].inputs[][]"
 
-}
+  }
 }
