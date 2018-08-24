@@ -30,13 +30,9 @@ if [ ${LIRA_ENVIRONMENT} == "prod" ]
 then
     DSS_URL="https://dss.data.humancellatlas.org/v1"
     GREEN_URL="https://pipelines.data.humancellatlas.org/notifications"
-    INGEST_URL="http://api.ingest.data.humancellatlas.org/"
-    SCHEMA_URL="https://schema.humancellatlas.org/"
 else
     DSS_URL="https://dss.${ENV}.data.humancellatlas.org/v1"
     GREEN_URL="https://pipelines.${ENV}.data.humancellatlas.org/notifications"
-    INGEST_URL="http://api.ingest.${ENV}.data.humancellatlas.org/"
-    SCHEMA_URL="https://schema.${ENV}.humancellatlas.org/"
 fi
 
 BLUEBOX_SUBSCRIPTION_KEY="bluebox-subscription-manager-${LIRA_ENVIRONMENT}-key.json"
