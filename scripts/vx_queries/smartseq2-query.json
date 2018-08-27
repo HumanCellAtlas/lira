@@ -10,7 +10,7 @@
         },
         {
           "match": {
-            "files.sequencing_protocol_json.paired_ends": true
+            "files.sequencing_protocol_json.paired_end": true
           }
         },
         {
