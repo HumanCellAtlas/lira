@@ -91,7 +91,8 @@ SS2_ANALYSIS_WDLS="[
                 \"${SS2_PREFIX}/pipelines/smartseq2_single_sample/SmartSeq2SingleSample.wdl\",
                 \"${SS2_PREFIX}/library/tasks/HISAT2.wdl\",
                 \"${SS2_PREFIX}/library/tasks/Picard.wdl\",
-                \"${SS2_PREFIX}/library/tasks/RSEM.wdl\"
+                \"${SS2_PREFIX}/library/tasks/RSEM.wdl\",
+                \"${SS2_PREFIX}/library/tasks/GroupMetricsOutputs.wdl\"
             ]"
 SS2_OPTIONS_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/ss2_single_sample/options.json"
 SS2_WDL_STATIC_INPUTS_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/ss2_single_sample/adapter_example_static.json"
