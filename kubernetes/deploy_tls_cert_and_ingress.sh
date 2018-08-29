@@ -3,7 +3,7 @@
 # Variables
 LIRA_ENVIRONMENT=${LIRA_ENVIRONMENT:-"dev"} # other valid envs: test, staging, prod
 GCLOUD_PROJECT=${GCLOUD_PROJECT:-"broad-dsde-mint-dev"} # other envs - broad-dsde-mint-test, broad-dsde-mint-staging, hca-dcp-pipelines-prod
-GENERATE_CERTS=${GENERATE_CERTS:-"false"}
+GENERATE_CERTS=${GENERATE_CERTS:-"true"}
 
 GLOBAL_IP_NAME=${GLOBAL_IP_NAME:-"lira"}
 KUBERNETES_NAMESPACE=${KUBERNETES_NAMESPACE:-"green-100-us-central1-ns"}
