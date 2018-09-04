@@ -33,7 +33,7 @@ VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"${HOME}/.vault-token"}
 # Cromwell URL - usually will be caas, but can be set to local environment
 CROMWELL_URL=${CROMWELL_URL:-"https://cromwell.${CAAS_ENVIRONMENT}.broadinstitute.org/api/workflows/v1"}
 
-COLLECTION_NAME=${COLLECTION_NAME:-"lira-${LIRA_ENVIRONMENT}-workflows"}
+COLLECTION_NAME=${COLLECTION_NAME:-"lira-${LIRA_ENVIRONMENT}"}
 
 # Derived Variables
 CAAS_KEY_FILE="${CAAS_ENVIRONMENT}-key.json"
