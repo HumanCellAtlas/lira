@@ -7,7 +7,7 @@ KUBERNETES_CLUSTER=${KUBERNETES_CLUSTER:-"green-100-us-central1"}
 KUBERNETES_ZONE=${KUBERNETES_ZONE:-"us-central1-a"}
 LIRA_ENVIRONMENT=${LIRA_ENVIRONMENT:-"dev"}
 CAAS_ENVIRONMENT=${CAAS_ENVIRONMENT:-"caas-prod"}
-VAULT_TOKEN_PATH=`cat /etc/.vault-token`
+VAULT_TOKEN_PATH=`cat /etc/.vault-token-dsde`
 
 APPLICATION_NAME="lira"
 SERVICE_NAME="lira-service"
