@@ -5,22 +5,21 @@ LIRA_ENVIRONMENT=${LIRA_ENVIRONMENT:-"dev"} # other valid envs: test, staging, p
 GCLOUD_PROJECT=${GCLOUD_PROJECT:-"broad-dsde-mint-dev"} # other envs - broad-dsde-mint-test, broad-dsde-mint-staging, hca-dcp-pipelines-prod
 GENERATE_CERTS=${GENERATE_CERTS:-"true"}
 
-GLOBAL_IP_NAME=${GLOBAL_IP_NAME:-"lira"}
+
 KUBERNETES_NAMESPACE=${KUBERNETES_NAMESPACE:-"green-100-us-central1-ns"}
 KUBERNETES_CLUSTER=${KUBERNETES_CLUSTER:-"green-100-us-central1"}
 KUBERNETES_ZONE=${KUBERNETES_ZONE:-"us-central1-a"}
-
-TLS_FULL_CHAIN_DIR=${TLS_FULL_CHAIN_DIR:-"lira-ssl-certificate.crt"}
-TLS_PRIVATE_KEY_DIR=${TLS_PRIVATE_KEY_DIR:-"lira-ssl-certificate.key"}
-TLS_SECRET_NAME=${TLS_SECRET_NAME:-"hca-tls-secret"-$(date '+%Y-%m-%d-%H-%M-%S')}
-INGRESS_NAME=${INGRESS_NAME:-"lira-ingress"}
-SERVICE_NAME=${SERVICE_NAME:-"lira-service"}
 
 CAAS_ENVIRONMENT=${CAAS_ENVIRONMENT:-"caas-prod"}
 VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"/etc/vault-token-dsde"}
 
 APPLICATION_NAME="lira"
+GLOBAL_IP_NAME="lira"
+INGRESS_NAME="lira-ingress"
 SERVICE_NAME="lira-service"
+TLS_FULL_CHAIN_DIR="lira-ssl-certificate.crt"
+TLS_PRIVATE_KEY_DIR="lira-ssl-certificate.key"
+TLS_SECRET_NAME="hca-tls-secret"-$(date '+%Y-%m-%d-%H-%M-%S')
 
 CAAS_KEY_PATH="secret/dsde/mint/${LIRA_ENVIRONMENT}/${APPLICATION_NAME}/${CAAS_ENVIRONMENT}-key.json"
 CAAS_KEY_FILE="${CAAS_ENVIRONMENT}-key.json"
