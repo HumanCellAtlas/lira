@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-LIRA_ENVIRONMENT=${LIRA_ENVIRONMENT:-"dev"} # other valid envs: test, staging, prod
+LIRA_ENVIRONMENT=${LIRA_ENVIRONMENT:-""} # other valid envs: test, staging, prod
 
 if [ ${LIRA_ENVIRONMENT} == "test" ];
 then
@@ -9,9 +9,9 @@ else
     ENV="${LIRA_ENVIRONMENT}"
 fi
 
-SERVICE=${SERVICE:-"lira"}
+SERVICE="lira"
 DOMAIN="pipelines.${ENV}.data.humancellatlas.org"
-VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"${HOME}/.vault-token"}
+VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"/etc/vault-token-dsde"}
 
 echo "Getting AWS Users credentials from Vault"
 
