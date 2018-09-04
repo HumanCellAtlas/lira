@@ -1,39 +1,47 @@
 #!/usr/bin/env bash
 
 # Variables
-LIRA_ENVIRONMENT=${LIRA_ENVIRONMENT:-"dev"} # other valid envs: test, staging, prod
+LIRA_ENVIRONMENT=${LIRA_ENVIRONMENT:-""} # other valid envs: test, staging, prod
 GCLOUD_PROJECT=${GCLOUD_PROJECT:-"broad-dsde-mint-dev"} # other envs - broad-dsde-mint-test, broad-dsde-mint-staging, hca-dcp-pipelines-prod
 
 CAAS_ENVIRONMENT=${CAAS_ENVIRONMENT:-"caas-prod"}
 KUBERNETES_CLUSTER=${KUBERNETES_CLUSTER:-"green-100-us-central1"}
 KUBERNETES_NAMESPACE=${KUBERNETES_NAMESPACE:-"green-100-us-central1-ns"}
 KUBERNETES_ZONE=${KUBERNETES_ZONE:-"us-central1-a"}
-LIRA_CONFIG_FILE=${LIRA_CONFIG_FILE:-"lira-config.json"}
-LIRA_CONFIG_SECRET_NAME=${LIRA_CONFIG_SECRET_NAME:-"lira-config-$(date '+%Y-%m-%d-%H-%M-%S')"}
-LIRA_DEPLOYMENT_YAML=${LIRA_DEPLOYMENT_YAML:-"lira-deployment.yaml"}
+
+LIRA_CONFIG_FILE="lira-config.json"
+LIRA_CONFIG_SECRET_NAME="lira-config-$(date '+%Y-%m-%d-%H-%M-%S')"
+LIRA_DEPLOYMENT_YAML="lira-deployment.yaml"
+
 LIRA_DOCKER_TAG=${LIRA_DOCKER_TAG:-"ra_update_to_caas_prod"}
 LIRA_DOCKER_IMAGE="quay.io/humancellatlas/secondary-analysis-lira:${LIRA_DOCKER_TAG}"
 LIRA_VERSION=${LIRA_VERSION:-"${LIRA_DOCKER_TAG}"}
-PIPELINE_TOOLS_PREFIX=${PIPELINE_TOOLS_PREFIX:-"https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/v0.23.0"}
-SERVICE=${SERVICE:-"lira"}
+
+PIPELINE_TOOLS_VERSION=${PIPELINE_TOOLS_VERSION:-""}
+PIPELINE_TOOLS_PREFIX="https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/${PIPELINE_TOOLS_VERSION}"
+
+SERVICE="lira"
 MAX_CROMWELL_RETRIES=${MAX_CROMWELL_RETRIES:-"1"}
 
 SS2_SUBSCRIPTION_ID=${SS2_SUBSCRIPTION_ID:-"placeholder_ss2_subscription_id"}
 SS2_VERSION=${SS2_VERSION:-"smartseq2_v1.0.0"}
-SS2_PREFIX=${SS2_PREFIX:-"https://raw.githubusercontent.com/HumanCellAtlas/skylab/smartseq2_v1.0.0"}
+SS2_PREFIX="https://raw.githubusercontent.com/HumanCellAtlas/skylab/${SS2_VERSION}"
 
 TENX_SUBSCRIPTION_ID=${TENX_SUBSCRIPTION_ID:-"placeholder_10x_subscription_id"}
 TENX_VERSION=${TENX_VERSION:-"10x_v0.1.0"}
-TENX_PREFIX=${TENX_PREFIX:-"https://raw.githubusercontent.com/HumanCellAtlas/skylab/10x_v0.1.0"}
+TENX_PREFIX="https://raw.githubusercontent.com/HumanCellAtlas/skylab/${TENX_VERSION}"
 
 USE_CAAS=${USE_CAAS:-"true"}
 USE_HMAC=${USE_HMAC:-"true"}
 VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"/etc/vault-token-dsde"}
 
 # Cromwell URL - usually will be caas, but can be set to local environment
-CROMWELL_URL=${CROMWELL_URL:-"https://cromwell.${CAAS_ENVIRONMENT}.broadinstitute.org/api/workflows/v1"}
+CROMWELL_URL="https://cromwell.${CAAS_ENVIRONMENT}.broadinstitute.org/api/workflows/v1"
 
 COLLECTION_NAME=${COLLECTION_NAME:-"lira-${LIRA_ENVIRONMENT}"}
+
+
+
 
 # Derived Variables
 CAAS_KEY_FILE="${CAAS_ENVIRONMENT}-key.json"
