@@ -5,12 +5,14 @@ GCLOUD_PROJECT=${GCLOUD_PROJECT:-"broad-dsde-mint-dev"} # other envs - broad-dsd
 KUBERNETES_NAMESPACE=${KUBERNETES_NAMESPACE:-"green-100-us-central1-ns"}
 KUBERNETES_CLUSTER=${KUBERNETES_CLUSTER:-"green-100-us-central1"}
 KUBERNETES_ZONE=${KUBERNETES_ZONE:-"us-central1-a"}
-VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"${HOME}/.vault-token"}
+LIRA_ENVIRONMENT=${LIRA_ENVIRONMENT:-"dev"}
+CAAS_ENVIRONMENT=${CAAS_ENVIRONMENT:-"caas-prod"}
+VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"/etc/.vault-token"}
 
 APPLICATION_NAME="lira"
 SERVICE_NAME="lira-service"
 
-CAAS_KEY_PATH="secret/dsde/mint/${LIRA_ENVIRONMENT}/${SERVICE}/${CAAS_ENVIRONMENT}-key.json"
+CAAS_KEY_PATH="secret/dsde/mint/${LIRA_ENVIRONMENT}/${SERVICE_NAME}/${CAAS_ENVIRONMENT}-key.json"
 
 echo "Retrieving service account key"
 docker run -i --rm \
