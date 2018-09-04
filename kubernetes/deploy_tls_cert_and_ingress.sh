@@ -13,9 +13,26 @@ KUBERNETES_ZONE=${KUBERNETES_ZONE:-"us-central1-a"}
 TLS_FULL_CHAIN_DIR=${TLS_FULL_CHAIN_DIR:-"lira-ssl-certificate.crt"}
 TLS_PRIVATE_KEY_DIR=${TLS_PRIVATE_KEY_DIR:-"lira-ssl-certificate.key"}
 TLS_SECRET_NAME=${TLS_SECRET_NAME:-"hca-tls-secret"-$(date '+%Y-%m-%d-%H-%M-%S')}
-VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"${HOME}/.vault-token"}
 INGRESS_NAME=${INGRESS_NAME:-"lira-ingress"}
 SERVICE_NAME=${SERVICE_NAME:-"lira-service"}
+
+CAAS_ENVIRONMENT=${CAAS_ENVIRONMENT:-"caas-prod"}
+VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"/etc/vault-token-dsde"}
+
+APPLICATION_NAME="lira"
+SERVICE_NAME="lira-service"
+
+CAAS_KEY_PATH="secret/dsde/mint/${LIRA_ENVIRONMENT}/${APPLICATION_NAME}/${CAAS_ENVIRONMENT}-key.json"
+CAAS_KEY_FILE="${CAAS_ENVIRONMENT}-key.json"
+
+echo "Retrieving service account key"
+docker run -i --rm \
+               -v "${VAULT_TOKEN_PATH}":/root/.vault-token \
+               -v "${PWD}":/working broadinstitute/dsde-toolbox:ra_rendering \
+               vault read -format=json "${CAAS_KEY_PATH}" | jq .data > "${CAAS_KEY_FILE}"
+
+echo "Authenticating with the service account"
+gcloud auth activate-service-account --key-file "${CAAS_KEY_FILE}"
 
 if [ ${GENERATE_CERTS} == "true" ];
 then

@@ -28,7 +28,7 @@ TENX_PREFIX=${TENX_PREFIX:-"https://raw.githubusercontent.com/HumanCellAtlas/sky
 
 USE_CAAS=${USE_CAAS:-"true"}
 USE_HMAC=${USE_HMAC:-"true"}
-VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"${HOME}/.vault-token"}
+VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"/etc/vault-token-dsde"}
 
 # Cromwell URL - usually will be caas, but can be set to local environment
 CROMWELL_URL=${CROMWELL_URL:-"https://cromwell.${CAAS_ENVIRONMENT}.broadinstitute.org/api/workflows/v1"}
@@ -104,7 +104,8 @@ docker run -i --rm \
                -v "${PWD}":/working broadinstitute/dsde-toolbox:ra_rendering \
                vault read -format=json "${CAAS_KEY_PATH}" | jq .data > "${CAAS_KEY_FILE}"
 
-
+echo "Authenticating with the service account"
+gcloud auth activate-service-account --key-file "${CAAS_KEY_FILE}"
 
 echo "Rendering lira config file"
 docker run -i --rm \

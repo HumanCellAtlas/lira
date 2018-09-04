@@ -7,7 +7,7 @@ KUBERNETES_CLUSTER=${KUBERNETES_CLUSTER:-"green-100-us-central1"}
 KUBERNETES_ZONE=${KUBERNETES_ZONE:-"us-central1-a"}
 LIRA_ENVIRONMENT=${LIRA_ENVIRONMENT:-"dev"}
 CAAS_ENVIRONMENT=${CAAS_ENVIRONMENT:-"caas-prod"}
-VAULT_TOKEN_PATH="/etc/vault-token-dsde"
+VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"/etc/vault-token-dsde"}
 
 APPLICATION_NAME="lira"
 SERVICE_NAME="lira-service"
@@ -22,7 +22,7 @@ docker run -i --rm \
                vault read -format=json "${CAAS_KEY_PATH}" | jq .data > "${CAAS_KEY_FILE}"
 
 echo "Authenticating with the service account"
-gcloud auth activate-service-account --key-file caas-prod-key.json
+gcloud auth activate-service-account --key-file "${CAAS_KEY_FILE}"
 
 
 echo "Getting kubernetes context"
