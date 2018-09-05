@@ -30,7 +30,7 @@ fi
 SAM_URL=${SAM_URL:-"https://sam.dsde-${SAM_ENVIRONMENT}.broadinstitute.org"}
 
 # Derived variables
-WORKFLOW_COLLECTION_ID="lira-${LIRA_ENVIRONMENT}-workflow"
+WORKFLOW_COLLECTION_ID="lira-${LIRA_ENVIRONMENT}"
 SVC_ACCOUNT_NAME="${CAAS_ENVIRONMENT}-account-for-${LIRA_ENVIRONMENT}"
 SVC_ACCOUNT_EMAIL="${SVC_ACCOUNT_NAME}@${GCLOUD_PROJECT}.iam.gserviceaccount.com"
 SVC_ACCOUNT_KEY="${CAAS_ENVIRONMENT}-key.json"

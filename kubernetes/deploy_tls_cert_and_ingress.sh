@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Variables
-LIRA_ENVIRONMENT=${LIRA_ENVIRONMENT:-"dev"} # other valid envs: test, staging, prod
+LIRA_ENVIRONMENT=${LIRA_ENVIRONMENT:-""} # other valid envs: test, staging, prod
 GCLOUD_PROJECT=${GCLOUD_PROJECT:-"broad-dsde-mint-dev"} # other envs - broad-dsde-mint-test, broad-dsde-mint-staging, hca-dcp-pipelines-prod
 GENERATE_CERTS=${GENERATE_CERTS:-"true"}
 
@@ -21,8 +21,8 @@ TLS_FULL_CHAIN_DIR="lira-ssl-certificate.crt"
 TLS_PRIVATE_KEY_DIR="lira-ssl-certificate.key"
 TLS_SECRET_NAME="hca-tls-secret"-$(date '+%Y-%m-%d-%H-%M-%S')
 
-CAAS_KEY_PATH="secret/dsde/mint/${LIRA_ENVIRONMENT}/${APPLICATION_NAME}/${CAAS_ENVIRONMENT}-key.json"
 CAAS_KEY_FILE="${CAAS_ENVIRONMENT}-key.json"
+CAAS_KEY_PATH="secret/dsde/mint/${LIRA_ENVIRONMENT}/${APPLICATION_NAME}/${CAAS_KEY_FILE}"
 
 echo "Retrieving service account key"
 docker run -i --rm \

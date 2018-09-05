@@ -13,7 +13,7 @@ LIRA_CONFIG_FILE="lira-config.json"
 LIRA_CONFIG_SECRET_NAME="lira-config-$(date '+%Y-%m-%d-%H-%M-%S')"
 LIRA_DEPLOYMENT_YAML="lira-deployment.yaml"
 
-LIRA_DOCKER_TAG=${LIRA_DOCKER_TAG:-"ra_update_to_caas_prod"}
+LIRA_DOCKER_TAG=${LIRA_DOCKER_TAG:-""}
 LIRA_DOCKER_IMAGE="quay.io/humancellatlas/secondary-analysis-lira:${LIRA_DOCKER_TAG}"
 LIRA_VERSION=${LIRA_VERSION:-"${LIRA_DOCKER_TAG}"}
 
@@ -39,9 +39,6 @@ VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"/etc/vault-token-dsde"}
 CROMWELL_URL="https://cromwell.${CAAS_ENVIRONMENT}.broadinstitute.org/api/workflows/v1"
 
 COLLECTION_NAME=${COLLECTION_NAME:-"lira-${LIRA_ENVIRONMENT}"}
-
-
-
 
 # Derived Variables
 CAAS_KEY_FILE="${CAAS_ENVIRONMENT}-key.json"

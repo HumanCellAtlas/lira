@@ -12,8 +12,8 @@ VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"/etc/vault-token-dsde"}
 APPLICATION_NAME="lira"
 SERVICE_NAME="lira-service"
 
-CAAS_KEY_PATH="secret/dsde/mint/${LIRA_ENVIRONMENT}/${APPLICATION_NAME}/${CAAS_ENVIRONMENT}-key.json"
 CAAS_KEY_FILE="${CAAS_ENVIRONMENT}-key.json"
+CAAS_KEY_PATH="secret/dsde/mint/${LIRA_ENVIRONMENT}/${APPLICATION_NAME}/${CAAS_KEY_FILE}"
 
 echo "Retrieving service account key"
 docker run -i --rm \
