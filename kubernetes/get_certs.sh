@@ -35,14 +35,16 @@ mktemp -d "certs"
 
 echo "Running docker"
 
+docker build -t certbot .
+
 docker run \
     -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
     -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
-    -v ${PWD}/certs:/working \
-    humancellatlas/secondary-analysis:0.0.1 \
+    -v "${PWD}/certs":/working \
+    -v "${PWD}/certbot-route53.sh":/working/certbot-route53.sh \
+    certbot:latest \
     bash -c \
     "cd /working && \
-     cp /certs/certbot-route53/certbot-route53.sh . && \
      bash certbot-route53.sh --agree-tos \
                              --manual-public-ip-logging-ok \
                              --email mintteam@broadinstitute.org \

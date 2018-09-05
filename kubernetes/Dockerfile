@@ -14,13 +14,10 @@ RUN apt-get update && \
     vim \
     git \
     curl \
-    certbot
+    certbot && \
+    pip3 install --upgrade pip && \
+    mkdir /certs
 
-RUN mkdir /certs
 WORKDIR /certs
 
-RUN pip3 install awscli --upgrade && \
-    git clone https://github.com/jed/certbot-route53.git && \
-    cd certbot-route53 && \
-    git checkout 71cf925340a42c875fa3c5255537d7fa2ec1d81b && \
-    chmod u+x certbot-route53.sh
+RUN pip3 install awscli --upgrade
