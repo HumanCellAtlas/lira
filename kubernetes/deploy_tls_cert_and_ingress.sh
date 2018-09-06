@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # Variables
-LIRA_ENVIRONMENT=${LIRA_ENVIRONMENT:-""} # other valid envs: test, staging, prod
-GCLOUD_PROJECT=${GCLOUD_PROJECT:-"broad-dsde-mint-dev"} # other envs - broad-dsde-mint-test, broad-dsde-mint-staging, hca-dcp-pipelines-prod
+LIRA_ENVIRONMENT=${LIRA_ENVIRONMENT:-""} # all valid envs: dev, test, integration, staging, prod
+GCLOUD_PROJECT=${GCLOUD_PROJECT:-"broad-dsde-mint-dev"} # all valid envs - broad-dsde-mint-dev, broad-dsde-mint-test, broad-dsde-mint-integration, broad-dsde-mint-staging, hca-dcp-pipelines-prod
 
 CAAS_ENVIRONMENT=${CAAS_ENVIRONMENT:-"caas-prod"}
 KUBERNETES_NAMESPACE=${KUBERNETES_NAMESPACE:-"green-100-us-central1-ns"}
