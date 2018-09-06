@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ env "INGRESS_NAME" }}
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: {{ env "GLOBAL_IP_NAME" }}
+    kubernetes.io/ingress.class: "gce"
+spec:
+  tls:
+    - secretName: {{ env "TLS_SECRET_NAME" }}
+  backend:
+    serviceName: {{ env "SERVICE_NAME" }}
+    servicePort: 8080

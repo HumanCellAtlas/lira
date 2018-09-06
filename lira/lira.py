@@ -22,7 +22,7 @@ args, _ = parser.parse_known_args()
 
 app = connexion.App(__name__)
 
-config_path = os.environ['listener_config']
+config_path = os.environ['lira_config']
 with open(config_path) as f:
     config = lira_config.LiraConfig(json.load(f), app.app.config)
 

@@ -19,16 +19,16 @@
 # pubsub.googleapis.com/projects/<logs_project_id>/topics/<topic_name>
 # logs_project_id and topic_name can be obtained from the DCP logging system administrator.
 
-sink_name=$1
-destination=$2
+SINK_NAME=${SINK_NAME:-""}
+DESTINATION=${DESTINATION:-""}
 
 error=0
-if [ -z $sink_name ]; then
+if [ -z "${SINK_NAME}" ]; then
   printf "\nYou must provide a sink name\n"
   error=1
 fi
-if [ -z $destination ]; then
-  printf "\nYou must provide a destination\n"
+if [ -z "${DESTINATION}" ]; then
+  printf "\nYou must provide a DESTINATION\n"
   error=1
 fi
 if [ $error -eq 1 ]; then
@@ -37,10 +37,9 @@ if [ $error -eq 1 ]; then
 fi
 
 printf "\nCreating log sink\n"
-gcloud -q logging sinks create $sink_name $destination
+gcloud -q logging sinks create "${SINK_NAME}" "${DESTINATION}"
 
 printf "\nGetting email address associated with sink:\n"
-log_email=$(gcloud logging sinks describe $sink_name | grep writerIdentity | sed 's/writerIdentity:\ serviceAccount:\(.*\)/\1/g')
+LOG_EMAIL=$(gcloud logging sinks describe "${SINK_NAME}" | grep writerIdentity | sed 's/writerIdentity:\ serviceAccount:\(.*\)/\1/g')
 
-printf "$log_email"
-printf "\n\nYou should send the above email address to an administrator of DCP central logging for registration.\n\n"
+printf "Please register this email address: %s with an Administrator of DCP central logging.\n" "${LOG_EMAIL}"

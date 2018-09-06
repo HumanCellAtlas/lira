@@ -24,6 +24,8 @@ def register_service_account(json_credentials, workflow_collection_id, firecloud
     logging.info('Create group in firecloud')
     firecloud_groups_url = "{}/api/groups/{}".format(firecloud_api_url, firecloud_group_name)
     response = requests.post(firecloud_groups_url, headers=headers)
+    print(response)
+
     group_info = response.json()
     group_email = group_info['membersGroup']['groupEmail']
 
