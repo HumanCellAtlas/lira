@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
 # Variables
-GCLOUD_PROJECT=${GCLOUD_PROJECT:-"broad-dsde-mint-dev"} # other envs - broad-dsde-mint-test, broad-dsde-mint-staging, hca-dcp-pipelines-prod
+LIRA_ENVIRONMENT=${LIRA_ENVIRONMENT:-""} # all valid envs: dev, test, integration, staging, prod
+GCLOUD_PROJECT=${GCLOUD_PROJECT:-"broad-dsde-mint-dev"} # all valid envs - broad-dsde-mint-dev, broad-dsde-mint-test, broad-dsde-mint-integration, broad-dsde-mint-staging, hca-dcp-pipelines-prod
+
+CAAS_ENVIRONMENT=${CAAS_ENVIRONMENT:-"caas-prod"}
 KUBERNETES_NAMESPACE=${KUBERNETES_NAMESPACE:-"green-100-us-central1-ns"}
 KUBERNETES_CLUSTER=${KUBERNETES_CLUSTER:-"green-100-us-central1"}
 KUBERNETES_ZONE=${KUBERNETES_ZONE:-"us-central1-a"}
-LIRA_ENVIRONMENT=${LIRA_ENVIRONMENT:-""}
-CAAS_ENVIRONMENT=${CAAS_ENVIRONMENT:-"caas-prod"}
 VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"/etc/vault-token-dsde"}
 
 APPLICATION_NAME="lira"

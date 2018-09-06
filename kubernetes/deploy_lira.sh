@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 
 # Variables
-LIRA_ENVIRONMENT=${LIRA_ENVIRONMENT:-""} # other valid envs: test, staging, prod
-GCLOUD_PROJECT=${GCLOUD_PROJECT:-"broad-dsde-mint-dev"} # other envs - broad-dsde-mint-test, broad-dsde-mint-staging, hca-dcp-pipelines-prod
+LIRA_ENVIRONMENT=${LIRA_ENVIRONMENT:-""} # all valid envs: dev, test, integration, staging, prod
+GCLOUD_PROJECT=${GCLOUD_PROJECT:-"broad-dsde-mint-dev"} # all valid envs - broad-dsde-mint-dev, broad-dsde-mint-test, broad-dsde-mint-integration, broad-dsde-mint-staging, hca-dcp-pipelines-prod
 
 CAAS_ENVIRONMENT=${CAAS_ENVIRONMENT:-"caas-prod"}
 KUBERNETES_CLUSTER=${KUBERNETES_CLUSTER:-"green-100-us-central1"}
 KUBERNETES_NAMESPACE=${KUBERNETES_NAMESPACE:-"green-100-us-central1-ns"}
 KUBERNETES_ZONE=${KUBERNETES_ZONE:-"us-central1-a"}
+VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"/etc/vault-token-dsde"}
 
 LIRA_CONFIG_FILE="lira-config.json"
 LIRA_CONFIG_SECRET_NAME="lira-config-$(date '+%Y-%m-%d-%H-%M-%S')"
@@ -20,7 +21,7 @@ LIRA_VERSION=${LIRA_VERSION:-"${LIRA_DOCKER_TAG}"}
 PIPELINE_TOOLS_VERSION=${PIPELINE_TOOLS_VERSION:-""}
 PIPELINE_TOOLS_PREFIX="https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/${PIPELINE_TOOLS_VERSION}"
 
-SERVICE="lira"
+APPLICATION_NAME="lira"
 MAX_CROMWELL_RETRIES=${MAX_CROMWELL_RETRIES:-"1"}
 
 SS2_SUBSCRIPTION_ID=${SS2_SUBSCRIPTION_ID:-"placeholder_ss2_subscription_id"}
@@ -33,7 +34,6 @@ TENX_PREFIX="https://raw.githubusercontent.com/HumanCellAtlas/skylab/${TENX_VERS
 
 USE_CAAS=${USE_CAAS:-"true"}
 USE_HMAC=${USE_HMAC:-"true"}
-VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"/etc/vault-token-dsde"}
 
 # Cromwell URL - usually will be caas, but can be set to local environment
 CROMWELL_URL="https://cromwell.${CAAS_ENVIRONMENT}.broadinstitute.org/api/workflows/v1"
@@ -41,7 +41,6 @@ CROMWELL_URL="https://cromwell.${CAAS_ENVIRONMENT}.broadinstitute.org/api/workfl
 COLLECTION_NAME=${COLLECTION_NAME:-"lira-${LIRA_ENVIRONMENT}"}
 
 # Derived Variables
-CAAS_KEY_FILE="${CAAS_ENVIRONMENT}-key.json"
 
 # Jumping through some hoops due to mismatch of names between our environments and the environments used by the other
 # teams within the HCA - this sets up the correct name for the DSS URL and the INGEST URL
@@ -58,7 +57,8 @@ else
     ENV="${LIRA_ENVIRONMENT}"
 fi
 
-CAAS_KEY_PATH="secret/dsde/mint/${LIRA_ENVIRONMENT}/${SERVICE}/${CAAS_ENVIRONMENT}-key.json"
+CAAS_KEY_FILE="${CAAS_ENVIRONMENT}-key.json"
+CAAS_KEY_PATH="secret/dsde/mint/${LIRA_ENVIRONMENT}/${APPLICATION_NAME}/${CAAS_KEY_FILE}"
 
 if [ ${LIRA_ENVIRONMENT} == "prod" ]
 then
@@ -98,7 +98,6 @@ TENX_WORKFLOW_NAME="Adapter10xCount"
 
 DEPLOYMENT_NAME=${DEPLOYMENT_NAME:-"lira"}
 NUMBER_OF_REPLICAS=${NUMBER_OF_REPLICAS:-"3"}
-APPLICATION_NAME=${APPLICATION_NAME:-"lira"}
 CONTAINER_NAME=${CONTAINER_NAME:-"lira"}
 
 echo "Retrieving caas service account key"
