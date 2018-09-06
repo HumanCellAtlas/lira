@@ -75,7 +75,7 @@ fi
 
 GCS_ROOT="gs://${GCLOUD_PROJECT}-cromwell-execution/caas-cromwell-executions"
 
-if [ -z "${SUBMIT_WDL_DIR+x}" ];
+if [ -n "${SUBMIT_WDL_DIR}" ];
 then
     SUBMIT_WDL="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/${SUBMIT_WDL_DIR}/submit.wdl"
 else
