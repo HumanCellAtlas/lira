@@ -21,6 +21,8 @@ LIRA_VERSION=${LIRA_VERSION:-"${LIRA_DOCKER_TAG}"}
 PIPELINE_TOOLS_VERSION=${PIPELINE_TOOLS_VERSION:-""}
 PIPELINE_TOOLS_PREFIX="https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/${PIPELINE_TOOLS_VERSION}"
 
+SUBMIT_WDL_DIR=${SUBMIT_WDL_DIR:-""}
+
 APPLICATION_NAME="lira"
 MAX_CROMWELL_RETRIES=${MAX_CROMWELL_RETRIES:-"1"}
 
@@ -73,7 +75,12 @@ fi
 
 GCS_ROOT="gs://${GCLOUD_PROJECT}-cromwell-execution/caas-cromwell-executions"
 
-SUBMIT_WDL="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/submit.wdl"
+if [ -n "${SUBMIT_WDL_DIR}" ];
+then
+    SUBMIT_WDL="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/${SUBMIT_WDL_DIR}/submit.wdl"
+else
+    SUBMIT_WDL="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/submit.wdl"
+fi
 
 # Smart Seq 2 Variables
 SS2_ANALYSIS_WDLS="[
