@@ -4,17 +4,16 @@
 # (https://github.com/HumanCellAtlas/data-store/blob/master/environment#L63) to include the
 # bluebox-subscription-manager@<GCLOUD_PROJECT>.iam.gserviceaccount.com service account
 
-
 # Variables
-LIRA_ENVIRONMENT=${LIRA_ENVIRONMENT:-"dev"}
+LIRA_ENVIRONMENT=${LIRA_ENVIRONMENT:-""}
 GCLOUD_PROJECT=${GCLOUD_PROJECT:-"broad-dsde-mint-${LIRA_ENVIRONMENT}"}
-SERVICE=${SERVICE:-"lira"}
-VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"${HOME}/.vault-token"}
-
-if [ ${GCLOUD_PROJECT} == "prod" ];
+if [ ${LIRA_ENVIRONMENT} == "prod" ];
 then
     GCLOUD_PROJECT="hca-dcp-pipelines-prod"
 fi
+
+SERVICE="lira"
+VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"${HOME}/.vault-token"}
 
 # Derived variables
 if [ ${LIRA_ENVIRONMENT} == "test" ];
@@ -26,8 +25,6 @@ then
 else
     ENV="${LIRA_ENVIRONMENT}"
 fi
-
-
 
 if [ ${LIRA_ENVIRONMENT} == "prod" ]
 then

@@ -7,11 +7,11 @@
 
 # Parameters
 
-# sink_name
+# SINK_NAME
 # An arbitrary identifier that serves to uniquely identify
 # a logging export sink within a Google Cloud Project (there could be several in a project).
 
-# destination
+# DESTINATION
 # This tells Google where to send the logs.
 # Several kinds of destinations are supported by Google, but for integration with
 # DCP centralized logging, this must point to the Pub/Sub topic that the central
@@ -22,16 +22,16 @@
 SINK_NAME=${SINK_NAME:-""}
 DESTINATION=${DESTINATION:-""}
 
-error=0
+ERROR=0
 if [ -z "${SINK_NAME}" ]; then
   printf "\nYou must provide a sink name\n"
-  error=1
+  ERROR=1
 fi
 if [ -z "${DESTINATION}" ]; then
   printf "\nYou must provide a DESTINATION\n"
-  error=1
+  ERROR=1
 fi
-if [ $error -eq 1 ]; then
+if [ "${ERROR}" -eq 1 ]; then
   printf "\nUsage: bash create-logging-sink.sh SINK_NAME DESTINATION\n\n"
   exit 1
 fi
