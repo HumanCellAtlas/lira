@@ -70,6 +70,11 @@ gcloud beta projects add-iam-policy-binding \
             --member="serviceAccount:${SVC_ACCOUNT_EMAIL}" \
             --role 'roles/storage.objectAdmin'
 
+gcloud beta projects add-iam-policy-binding \
+            ${GCLOUD_PROJECT} \
+            --member="serviceAccount:${SVC_ACCOUNT_EMAIL}" \
+            --role 'roles/container.admin'
+
 # create keys for the service account
 gcloud iam service-accounts keys create "${SVC_ACCOUNT_KEY}" \
             --iam-account="${SVC_ACCOUNT_EMAIL}" \
