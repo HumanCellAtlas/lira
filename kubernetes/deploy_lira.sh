@@ -2,7 +2,11 @@
 
 # Variables
 LIRA_ENVIRONMENT=${LIRA_ENVIRONMENT:-""} # all valid envs: dev, test, integration, staging, prod
-GCLOUD_PROJECT=${GCLOUD_PROJECT:-"broad-dsde-mint-dev"} # all valid envs - broad-dsde-mint-dev, broad-dsde-mint-test, broad-dsde-mint-integration, broad-dsde-mint-staging, hca-dcp-pipelines-prod
+GCLOUD_PROJECT=${GCLOUD_PROJECT:-"broad-dsde-mint-${LIRA_ENVIRONMENT}"} # all valid envs - broad-dsde-mint-dev, broad-dsde-mint-test, broad-dsde-mint-integration, broad-dsde-mint-staging, hca-dcp-pipelines-prod
+if [ ${LIRA_ENVIRONMENT} == "prod" ];
+then
+    GCLOUD_PROJECT="hca-dcp-pipelines-prod"
+fi
 
 CAAS_ENVIRONMENT=${CAAS_ENVIRONMENT:-"caas-prod"}
 KUBERNETES_CLUSTER=${KUBERNETES_CLUSTER:-"green-100-us-central1"}
@@ -20,6 +24,8 @@ LIRA_VERSION=${LIRA_VERSION:-"${LIRA_DOCKER_TAG}"}
 
 PIPELINE_TOOLS_VERSION=${PIPELINE_TOOLS_VERSION:-""}
 PIPELINE_TOOLS_PREFIX="https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/${PIPELINE_TOOLS_VERSION}"
+
+SUBMIT_WDL_DIR=${SUBMIT_WDL_DIR:-""}
 
 APPLICATION_NAME="lira"
 MAX_CROMWELL_RETRIES=${MAX_CROMWELL_RETRIES:-"1"}
@@ -73,7 +79,12 @@ fi
 
 GCS_ROOT="gs://${GCLOUD_PROJECT}-cromwell-execution/caas-cromwell-executions"
 
-SUBMIT_WDL="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/submit.wdl"
+if [ -n "${SUBMIT_WDL_DIR}" ];
+then
+    SUBMIT_WDL="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/${SUBMIT_WDL_DIR}/submit.wdl"
+else
+    SUBMIT_WDL="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/submit.wdl"
+fi
 
 # Smart Seq 2 Variables
 SS2_ANALYSIS_WDLS="[
