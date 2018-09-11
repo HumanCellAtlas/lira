@@ -16,6 +16,7 @@
     "version": "{{ env "LIRA_VERSION" }}",
     "MAX_CONTENT_LENGTH": 10000,
     "use_caas": {{ env "USE_CAAS" | parseBool }},
+    "submit_and_hold": {{ env "SUBMIT_AND_HOLD" | parseBool }}
     "env": "{{ $ENVIRONMENT }}",
     "dss_url": "{{ env "DSS_URL" }}",
     "schema_url": "{{ env "SCHEMA_URL" }}",
