@@ -2,7 +2,6 @@
 # This script creates service accounts in the specified gcloud project
 # It then registers it in both FireCloud and SAM for use with Cromwell-as-a-Service (CaaS).
 
-set -ex
 
 # Variables
 LIRA_ENVIRONMENT=${LIRA_ENVIRONMENT:-""}
