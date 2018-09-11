@@ -16,7 +16,6 @@ VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"/etc/vault-token-dsde"}
 
 GENERATE_CERTS=${GENERATE_CERTS:-"true"}
 
-APPLICATION_NAME="lira"
 GLOBAL_IP_NAME="lira"
 INGRESS_NAME="lira-ingress"
 SERVICE_NAME="lira-service"
@@ -25,7 +24,7 @@ TLS_PRIVATE_KEY_DIR="lira-ssl-certificate.key"
 TLS_SECRET_NAME="hca-tls-secret"-$(date '+%Y-%m-%d-%H-%M-%S')
 
 CAAS_KEY_FILE="${CAAS_ENVIRONMENT}-key.json"
-CAAS_KEY_PATH="secret/dsde/mint/${LIRA_ENVIRONMENT}/${APPLICATION_NAME}/${CAAS_KEY_FILE}"
+CAAS_KEY_PATH="secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/${CAAS_KEY_FILE}"
 
 echo "Retrieving service account key"
 docker run -i --rm \
