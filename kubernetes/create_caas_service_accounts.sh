@@ -29,6 +29,9 @@ fi
 if [ "${LIRA_ENVIRONMENT}" == "integration" ]
 then
     ENV="int"
+elif [ "${LIRA_ENVIRONMENT}" == "prod" ]
+then
+    ENV="hca-prod"
 else
     ENV="${LIRA_ENVIRONMENT}"
 fi
