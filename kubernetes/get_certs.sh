@@ -9,7 +9,7 @@ else
     ENV="${LIRA_ENVIRONMENT}"
 fi
 
-if [ "${ENV}" == "prod" ]
+if [ "${ENV}" == "prod" ];
 then
     DOMAIN="pipelines.data.humancellatlas.org"
 else
