@@ -18,9 +18,8 @@ LIRA_CONFIG_FILE="lira-config.json"
 LIRA_CONFIG_SECRET_NAME="lira-config-$(date '+%Y-%m-%d-%H-%M-%S')"
 LIRA_DEPLOYMENT_YAML="lira-deployment.yaml"
 
-LIRA_DOCKER_TAG=${LIRA_DOCKER_TAG:-""}
-LIRA_DOCKER_IMAGE="quay.io/humancellatlas/secondary-analysis-lira:${LIRA_DOCKER_TAG}"
-LIRA_VERSION=${LIRA_VERSION:-"${LIRA_DOCKER_TAG}"}
+LIRA_VERSION=${LIRA_VERSION:-""}
+LIRA_DOCKER_IMAGE="quay.io/humancellatlas/secondary-analysis-lira:${LIRA_VERSION}"
 
 PIPELINE_TOOLS_VERSION=${PIPELINE_TOOLS_VERSION:-""}
 PIPELINE_TOOLS_PREFIX="https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/${PIPELINE_TOOLS_VERSION}"
