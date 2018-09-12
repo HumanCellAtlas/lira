@@ -2,7 +2,6 @@
 # This script creates service accounts in the specified gcloud project
 # It then registers it in both FireCloud and SAM for use with Cromwell-as-a-Service (CaaS).
 
-
 # Variables
 LIRA_ENVIRONMENT=${LIRA_ENVIRONMENT:-""}
 GCLOUD_PROJECT=${GCLOUD_PROJECT:-"broad-dsde-mint-${LIRA_ENVIRONMENT}"}
@@ -25,9 +24,12 @@ then
     FIRECLOUD_API_URL="https://api.firecloud.org"
 fi
 
-if [ "${LIRA_ENVIRONMENT}" == "integration" ]
+if [ "${LIRA_ENVIRONMENT}" == "integration" ];
 then
     ENV="int"
+elif [ "${LIRA_ENVIRONMENT}" == "prod" ];
+then
+    ENV="hca-prod"
 else
     ENV="${LIRA_ENVIRONMENT}"
 fi
@@ -40,6 +42,7 @@ SVC_ACCOUNT_NAME="${CAAS_ENVIRONMENT}-account-for-${ENV}"
 SVC_ACCOUNT_EMAIL="${SVC_ACCOUNT_NAME}@${GCLOUD_PROJECT}.iam.gserviceaccount.com"
 SVC_ACCOUNT_KEY="${CAAS_ENVIRONMENT}-key.json"
 SVC_ACCOUNT_VAULT_KEY_PATH="secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/${SVC_ACCOUNT_KEY}"
+
 
 #Set gcloud project
 gcloud config set project ${GCLOUD_PROJECT}
