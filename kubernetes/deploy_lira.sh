@@ -18,9 +18,8 @@ LIRA_CONFIG_FILE="lira-config.json"
 LIRA_CONFIG_SECRET_NAME="lira-config-$(date '+%Y-%m-%d-%H-%M-%S')"
 LIRA_DEPLOYMENT_YAML="lira-deployment.yaml"
 
-LIRA_DOCKER_TAG=${LIRA_DOCKER_TAG:-""}
-LIRA_DOCKER_IMAGE="quay.io/humancellatlas/secondary-analysis-lira:${LIRA_DOCKER_TAG}"
-LIRA_VERSION=${LIRA_VERSION:-"${LIRA_DOCKER_TAG}"}
+LIRA_VERSION=${LIRA_VERSION:-""}
+LIRA_DOCKER_IMAGE="quay.io/humancellatlas/secondary-analysis-lira:${LIRA_VERSION}"
 
 PIPELINE_TOOLS_VERSION=${PIPELINE_TOOLS_VERSION:-""}
 PIPELINE_TOOLS_PREFIX="https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/${PIPELINE_TOOLS_VERSION}"
@@ -39,6 +38,7 @@ TENX_VERSION=${TENX_VERSION:-"10x_v0.1.0"}
 TENX_PREFIX="https://raw.githubusercontent.com/HumanCellAtlas/skylab/${TENX_VERSION}"
 
 USE_CAAS=${USE_CAAS:-"true"}
+SUBMIT_AND_HOLD=${SUBMIT_AND_HOLD:-"true"}
 USE_HMAC=${USE_HMAC:-"true"}
 
 # Cromwell URL - usually will be caas, but can be set to local environment
@@ -125,6 +125,7 @@ docker run -i --rm \
               -e LIRA_ENVIRONMENT="${LIRA_ENVIRONMENT}" \
               -e CROMWELL_URL="${CROMWELL_URL}" \
               -e USE_CAAS="${USE_CAAS}" \
+              -e SUBMIT_AND_HOLD="${SUBMIT_AND_HOLD}" \
               -e COLLECTION_NAME="${COLLECTION_NAME}" \
               -e GCLOUD_PROJECT="${GCLOUD_PROJECT}" \
               -e GCS_ROOT="${GCS_ROOT}" \
@@ -181,6 +182,7 @@ docker run -i --rm -e LIRA_CONFIG="${LIRA_CONFIG_SECRET_NAME}" \
                    -e CONTAINER_NAME="${CONTAINER_NAME}" \
                    -e LIRA_DOCKER_IMAGE="${LIRA_DOCKER_IMAGE}" \
                    -e USE_CAAS="${USE_CAAS}" \
+                   -e SUBMIT_AND_HOLD="${SUBMIT_AND_HOLD}" \
                    -v "${VAULT_TOKEN_PATH}":/root/.vault-token \
                    -v "${PWD}":/working broadinstitute/dsde-toolbox:ra_rendering \
                    /usr/local/bin/render-ctmpls.sh \

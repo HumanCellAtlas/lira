@@ -9,8 +9,13 @@ else
     ENV="${LIRA_ENVIRONMENT}"
 fi
 
-SERVICE="lira"
-DOMAIN="pipelines.${ENV}.data.humancellatlas.org"
+if [ "${ENV}" == "prod" ];
+then
+    DOMAIN="pipelines.data.humancellatlas.org"
+else
+    DOMAIN="pipelines.${ENV}.data.humancellatlas.org"
+fi
+
 VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"/etc/vault-token-dsde"}
 
 echo "Getting AWS Users credentials from Vault"
@@ -20,14 +25,14 @@ AWS_ACCESS_KEY_ID="$(docker run -i \
                                 -v "${VAULT_TOKEN_PATH}":/root/.vault-token \
                                 -v "${PWD}":/working \
                                 broadinstitute/dsde-toolbox:ra_rendering \
-                                vault read -field="aws_access_key" secret/dsde/mint/${LIRA_ENVIRONMENT}/${SERVICE}/aws_cert_user)"
+                                vault read -field="aws_access_key" secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/aws_cert_user)"
 
 AWS_SECRET_ACCESS_KEY="$(docker run -i \
                                     --rm \
                                     -v "${VAULT_TOKEN_PATH}":/root/.vault-token \
                                     -v "${PWD}":/working \
                                     broadinstitute/dsde-toolbox:ra_rendering \
-                                    vault read -field="aws_secret_key" secret/dsde/mint/${LIRA_ENVIRONMENT}/${SERVICE}/aws_cert_user)"
+                                    vault read -field="aws_secret_key" secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/aws_cert_user)"
 
 echo "Making the temp directory for certs"
 
@@ -63,7 +68,7 @@ docker run -i \
            -v "${VAULT_TOKEN_PATH}":/root/.vault-token \
            -v "${PWD}":/working \
            broadinstitute/dsde-toolbox:ra_rendering \
-           vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/${SERVICE}/fullchain.pem value=@"${FULLCHAIN_VAULT_DIR}"
+           vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/fullchain.pem value=@"${FULLCHAIN_VAULT_DIR}"
 
 echo "Writing privkey to vault at ${PRIVKEY_VAULT_DIR}"
 
@@ -72,7 +77,7 @@ docker run -i \
            -v "${VAULT_TOKEN_PATH}":/root/.vault-token \
            -v "${PWD}":/working \
            broadinstitute/dsde-toolbox:ra_rendering \
-           vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/${SERVICE}/privkey.pem value=@"${PRIVKEY_VAULT_DIR}"
+           vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/privkey.pem value=@"${PRIVKEY_VAULT_DIR}"
 
 echo "Writing chain to vault at ${CHAIN_VAULT_DIR}"
 
@@ -81,7 +86,7 @@ docker run -i \
            -v "${VAULT_TOKEN_PATH}":/root/.vault-token \
            -v "${PWD}":/working \
            broadinstitute/dsde-toolbox:ra_rendering \
-           vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/${SERVICE}/chain.pem value=@"${CHAIN_VAULT_DIR}"
+           vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/chain.pem value=@"${CHAIN_VAULT_DIR}"
 
 echo "Writing cert to vault at ${CERT_VAULT_DIR}"
 
@@ -90,6 +95,6 @@ docker run -i \
            -v "${VAULT_TOKEN_PATH}":/root/.vault-token \
            -v "${PWD}":/working \
            broadinstitute/dsde-toolbox:ra_rendering \
-           vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/${SERVICE}/cert.pem value=@"${CERT_VAULT_DIR}"
+           vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/cert.pem value=@"${CERT_VAULT_DIR}"
 
 rm -rf certs
