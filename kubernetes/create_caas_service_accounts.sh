@@ -25,9 +25,12 @@ then
     FIRECLOUD_API_URL="https://api.firecloud.org"
 fi
 
-if [ "${LIRA_ENVIRONMENT}" == "integration" ]
+if [ "${LIRA_ENVIRONMENT}" == "integration" ];
 then
     ENV="int"
+elif [ "${LIRA_ENVIRONMENT}" == "prod" ];
+then
+    ENV="hca-prod"
 else
     ENV="${LIRA_ENVIRONMENT}"
 fi

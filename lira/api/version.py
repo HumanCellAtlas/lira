@@ -30,12 +30,14 @@ def get_version():
     }
 
     settings_info = {
+        'cache_wdls': lira_config.cache_wdls,
         'cromwell_url': lira_config.get('cromwell_url'),
         'data_store_url': lira_config.get('dss_url'),
         'ingest_url': lira_config.get('ingest_url'),
         'launch_time': current_app.launch_time,
         'max_cromwell_retries': lira_config.get('max_cromwell_retries'),
         'run_mode': 'dry_run' if lira_config.get('dry_run') else 'live_run',
+        'submit_and_hold_workflows': lira_config.submit_and_hold,
         'use_caas': lira_config.get('use_caas')
     }
 
