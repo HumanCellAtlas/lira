@@ -16,8 +16,6 @@ FIRECLOUD_ENVIRONMENT=${FIRECLOUD_ENVIRONMENT:-"prod"}
 
 VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"${HOME}/.vault-token"}
 
-SERVICE="lira"
-
 FIRECLOUD_USER_GROUP_NAME=${FIRECLOUD_USER_GROUP_NAME:-"mint-${LIRA_ENVIRONMENT}-write-access"}
 FIRECLOUD_API_URL=${FIRECLOUD_API_URL:-"https://firecloud-orchestration.dsde-${FIRECLOUD_ENVIRONMENT}.broadinstitute.org"}
 
@@ -26,10 +24,10 @@ then
     FIRECLOUD_API_URL="https://api.firecloud.org"
 fi
 
-if [ "${LIRA_ENVIRONMENT}" == "integration" ]
+if [ "${LIRA_ENVIRONMENT}" == "integration" ];
 then
     ENV="int"
-elif [ "${LIRA_ENVIRONMENT}" == "prod" ]
+elif [ "${LIRA_ENVIRONMENT}" == "prod" ];
 then
     ENV="hca-prod"
 else
@@ -43,7 +41,8 @@ WORKFLOW_COLLECTION_ID="lira-${LIRA_ENVIRONMENT}"
 SVC_ACCOUNT_NAME="${CAAS_ENVIRONMENT}-account-for-${ENV}"
 SVC_ACCOUNT_EMAIL="${SVC_ACCOUNT_NAME}@${GCLOUD_PROJECT}.iam.gserviceaccount.com"
 SVC_ACCOUNT_KEY="${CAAS_ENVIRONMENT}-key.json"
-SVC_ACCOUNT_VAULT_KEY_PATH="secret/dsde/mint/${LIRA_ENVIRONMENT}/${SERVICE}/${SVC_ACCOUNT_KEY}"
+SVC_ACCOUNT_VAULT_KEY_PATH="secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/${SVC_ACCOUNT_KEY}"
+
 
 #Set gcloud project
 gcloud config set project ${GCLOUD_PROJECT}
