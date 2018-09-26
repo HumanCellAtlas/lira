@@ -29,10 +29,10 @@ fi
 if [ ${LIRA_ENVIRONMENT} == "prod" ]
 then
     DSS_URL="https://dss.data.humancellatlas.org/v1"
-    GREEN_URL="https://pipelines.data.humancellatlas.org/notifications"
+    LIRA_URL="https://pipelines.data.humancellatlas.org/notifications"
 else
     DSS_URL="https://dss.${ENV}.data.humancellatlas.org/v1"
-    GREEN_URL="https://pipelines.${ENV}.data.humancellatlas.org/notifications"
+    LIRA_URL="https://pipelines.${ENV}.data.humancellatlas.org/notifications"
 fi
 
 BLUEBOX_SUBSCRIPTION_KEY="bluebox-subscription-manager-${LIRA_ENVIRONMENT}-key.json"
@@ -77,9 +77,27 @@ SMART_SEQ_2_QUERY=${SMART_SEQ_2_QUERY:-"v6_queries/smartseq2-query.json"}
 TENX_QUERY=${TENX_QUERY:-"v6_queries/10x-query.json"}
 
 #echo "Creating ss2 subscription"
-SS2_SUBSCRIPTION_ID=$(bash subscription-create.sh ${DSS_URL} ${GREEN_URL} ${BLUEBOX_KEY_PATH} ${LIRA_SECRET} ${SMART_SEQ_2_QUERY} ${HMAC_KEY_FILE} ${ADDITIONAL_METADATA} ) # | jq '.[]')
+SS2_SUBSCRIPTION_ID=$(python3 subscribe.py create --dss_url="${DSS_URL}" \
+                            --key_file="${BLUEBOX_KEY_PATH}" \
+                            --google_project="${GCLOUD_PROJECT}" \
+                            --replica="gcp" \
+                            --callback_base_url="${LIRA_URL}" \
+                            --query_json="${SMART_SEQ_2_QUERY}" \
+                            --hmac_key_id="${HMAC_KEY_FILE}" \
+                            --hmac_key="${LIRA_SECRET}" \
+                            --additional_metadata="${ADDITIONAL_METADATA}")
+
 echo "${SS2_SUBSCRIPTION_ID}"
 
 #echo "Creating 10x subscription"
-TENX_SUBSCRIPTION_ID=$(bash subscription-create.sh "${DSS_URL}" "${GREEN_URL}" "${BLUEBOX_KEY_PATH}" "${LIRA_SECRET}" ${TENX_QUERY} ${HMAC_KEY_FILE} ${ADDITIONAL_METADATA} ) # | jq '.[]')
+TENX_SUBSCRIPTION_ID=$(python3 subscribe.py create --dss_url="${DSS_URL}" \
+                            --key_file="${BLUEBOX_KEY_PATH}" \
+                            --google_project="${GCLOUD_PROJECT}" \
+                            --replica="gcp" \
+                            --callback_base_url="${LIRA_URL}" \
+                            --query_json="${TENX_QUERY}" \
+                            --hmac_key_id="${HMAC_KEY_FILE}" \
+                            --hmac_key="${LIRA_SECRET}" \
+                            --additional_metadata="${ADDITIONAL_METADATA}")
+
 echo "${TENX_SUBSCRIPTION_ID}"
