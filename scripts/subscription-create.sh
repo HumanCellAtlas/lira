@@ -2,11 +2,11 @@
 
 # Usage: bash subscription-create.sh config.sh query_json [additional_metadata]
 
-config_script=$1
+script_config=$1
 query_json=$2
 additional_metadata=$3
 
-source $config_script
+source $script_config
 
 if [ -n "$hmac_key_id" ]; then
   auth_args="--hmac_key_id=$hmac_key_id --hmac_key=$lira_secret"

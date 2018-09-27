@@ -61,6 +61,7 @@ docker run -it --rm \
                @/working/"${BLUEBOX_SUBSCRIPTION_KEY}"
 
 # Get the lira secret from vault
+# Note: This value is not used in this script for now. This script only supports making subscriptions with HMAC method
 LIRA_SECRET=$(docker run -it --rm -v ${VAULT_TOKEN_PATH}:/root/.vault-token broadinstitute/dsde-toolbox:ra_rendering vault read -field=notification_token secret/dsde/mint/${ENV}/lira/lira_secret)
 
 BLUEBOX_KEY_PATH=${PWD}/${BLUEBOX_SUBSCRIPTION_KEY}
@@ -83,8 +84,8 @@ SS2_SUBSCRIPTION_ID=$(python3 subscribe.py create --dss_url="${DSS_URL}" \
                             --replica="gcp" \
                             --callback_base_url="${LIRA_URL}" \
                             --query_json="${SMART_SEQ_2_QUERY}" \
-                            --hmac_key_id="${HMAC_KEY_FILE}" \
-                            --hmac_key="${LIRA_SECRET}" \
+                            --hmac_key_id="$(cat ${HMAC_KEY_FILE} | jq .data | jq 'keys[]')" \
+                            --hmac_key="$(cat ${HMAC_KEY_FILE} | jq .data | jq 'values[]')" \
                             --additional_metadata="${ADDITIONAL_METADATA}")
 
 echo "${SS2_SUBSCRIPTION_ID}"
@@ -96,8 +97,8 @@ TENX_SUBSCRIPTION_ID=$(python3 subscribe.py create --dss_url="${DSS_URL}" \
                             --replica="gcp" \
                             --callback_base_url="${LIRA_URL}" \
                             --query_json="${TENX_QUERY}" \
-                            --hmac_key_id="${HMAC_KEY_FILE}" \
-                            --hmac_key="${LIRA_SECRET}" \
+                            --hmac_key_id="$(cat ${HMAC_KEY_FILE} | jq .data | jq 'keys[]')" \
+                            --hmac_key="$(cat ${HMAC_KEY_FILE} | jq .data | jq 'values[]')" \
                             --additional_metadata="${ADDITIONAL_METADATA}")
 
 echo "${TENX_SUBSCRIPTION_ID}"
