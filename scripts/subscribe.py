@@ -52,7 +52,7 @@ def create_subscription(args):
     response.raise_for_status()
 
     print('Successfully created a subscription!')
-    print(response.json())
+    print(json.dumps(response.json(), indent=4))
 
 
 def _prep_json(callback_base_url, query_json_file, query_param_token, hmac_key_id, hmac_key, attachments_file):
@@ -91,7 +91,7 @@ def get_subscriptions(args):
                             params={'replica': args['replica']},
                             headers=args['headers'])
     response.raise_for_status()
-    print(response.json())
+    print(json.dumps(response.json(), indent=4))
 
 
 def delete_subscription(args):
@@ -108,7 +108,7 @@ def delete_subscription(args):
     response.raise_for_status()
 
     print('Successfully deleted the subscription.')
-    print(response.json())
+    print(json.dumps(response.json(), indent=4))
 
 
 def parser(arguments):
