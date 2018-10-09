@@ -34,7 +34,7 @@ SS2_VERSION=${SS2_VERSION:-"smartseq2_v1.0.0"}
 SS2_PREFIX="https://raw.githubusercontent.com/HumanCellAtlas/skylab/${SS2_VERSION}"
 
 TENX_SUBSCRIPTION_ID=${TENX_SUBSCRIPTION_ID:-"placeholder_10x_subscription_id"}
-TENX_VERSION=${TENX_VERSION:-"10x_v0.1.0"}
+TENX_VERSION=${TENX_VERSION:-"cellranger_v1.0.0"}
 TENX_PREFIX="https://raw.githubusercontent.com/HumanCellAtlas/skylab/${TENX_VERSION}"
 
 USE_CAAS=${USE_CAAS:-"true"}
