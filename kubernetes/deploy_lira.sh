@@ -101,11 +101,11 @@ SS2_WORKFLOW_NAME="AdapterSmartSeq2SingleCell"
 
 # TenX Variables
 TENX_ANALYSIS_WDLS="[
-                \"${TENX_PREFIX}/pipelines/10x/count/count.wdl\"
+                \"${TENX_PREFIX}/pipelines/cellranger/cellranger.wdl\"
             ]"
-TENX_OPTIONS_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/10x/options.json"
-TENX_WDL_STATIC_INPUTS_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/10x/adapter_example_static.json"
-TENX_WDL_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/10x/adapter.wdl"
+TENX_OPTIONS_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/cellranger/options.json"
+TENX_WDL_STATIC_INPUTS_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/cellranger/adapter_example_static.json"
+TENX_WDL_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/cellranger/adapter.wdl"
 TENX_WORKFLOW_NAME="Adapter10xCount"
 
 DEPLOYMENT_NAME=${DEPLOYMENT_NAME:-"lira"}
