@@ -34,7 +34,7 @@ SS2_VERSION=${SS2_VERSION:-"smartseq2_v1.0.0"}
 SS2_PREFIX="https://raw.githubusercontent.com/HumanCellAtlas/skylab/${SS2_VERSION}"
 
 TENX_SUBSCRIPTION_ID=${TENX_SUBSCRIPTION_ID:-"placeholder_10x_subscription_id"}
-TENX_VERSION=${TENX_VERSION:-"10x_v0.1.0"}
+TENX_VERSION=${TENX_VERSION:-"cellranger_v1.0.0"}
 TENX_PREFIX="https://raw.githubusercontent.com/HumanCellAtlas/skylab/${TENX_VERSION}"
 
 USE_CAAS=${USE_CAAS:-"true"}
@@ -102,11 +102,11 @@ SS2_WORKFLOW_NAME="AdapterSmartSeq2SingleCell"
 
 # TenX Variables
 TENX_ANALYSIS_WDLS="[
-                \"${TENX_PREFIX}/pipelines/10x/count/count.wdl\"
+                \"${TENX_PREFIX}/pipelines/cellranger/cellranger.wdl\"
             ]"
-TENX_OPTIONS_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/10x/options.json"
-TENX_WDL_STATIC_INPUTS_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/10x/adapter_example_static.json"
-TENX_WDL_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/10x/adapter.wdl"
+TENX_OPTIONS_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/cellranger/options.json"
+TENX_WDL_STATIC_INPUTS_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/cellranger/adapter_example_static.json"
+TENX_WDL_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/cellranger/adapter.wdl"
 TENX_WORKFLOW_NAME="Adapter10xCount"
 
 DEPLOYMENT_NAME=${DEPLOYMENT_NAME:-"lira"}
