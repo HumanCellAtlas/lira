@@ -4,7 +4,7 @@
       "must": [
         {
           "match": {
-            "files.library_preparation_protocol_json.library_construction_approach.text": "Smart-seq2"
+            "files.library_preparation_protocol_json.library_construction_approach.ontology": "EFO:0008931"
 
           }
         },
@@ -22,7 +22,7 @@
       "should": [
         {
           "match": {
-            "files.dissociation_protocol_json.dissociation_method.text": "fluorescence-activated cell sorting"
+            "files.dissociation_protocol_json.dissociation_method.ontology": "EFO:0009108"
           }
         },
         {
