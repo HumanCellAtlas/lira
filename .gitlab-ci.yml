@@ -1,7 +1,19 @@
 stages:
   - dev
+  - test
+  - staging
 
 dev:
   stage: dev
   script:
-    - echo "Hello World!"
+    - echo "Hello World Dev!"
+
+test:
+  stage: test
+  script:
+    - echo "Hello World Test!"
+
+staging:
+  stage: staging
+  script:
+    - echo "Hello World Staging!"
