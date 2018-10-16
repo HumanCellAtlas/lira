@@ -4,3 +4,4 @@ stages:
 dev:
   stage: dev
   script:
+    - echo "Hello World!"
