@@ -1,0 +1,110 @@
+#!/usr/bin/env bash
+{{with $ENVIRONMENT := env "LIRA_ENVIRONMENT"}}
+{{ if eq $ENVIRONMENT "dev" }}
+    LIRA_VERSION="v0.14.0"
+
+    CAAS_ENVIRONMENT="caas-prod"
+
+    PIPELINE_TOOLS_VERSION="v0.36.0"
+
+    KUBERNETES_CLUSTER="green-100-us-central1"
+    KUBERNETES_NAMESPACE="green-100-us-central1-ns"
+    KUBERNETES_ZONE="us-central1-a"
+    NUMBER_OF_REPLICAS="3"
+
+    MAX_CROMWELL_RETRIES=1
+
+    SS2_SUBSCRIPTION_ID="placeholder_ss2_subscription_id"
+    SS2_VERSION="smartseq2_v2.1.0"
+
+    TENX_SUBSCRIPTION_ID="placeholder_10x_subscription_id"
+    TENX_VERSION="cellranger_v1.0.0"
+
+    USE_CAAS=true
+    USE_HMAC=true
+
+    SUBMIT_WDL_DIR=""
+    SUBMIT_AND_HOLD=true
+{{end}}
+
+{{ if eq $ENVIRONMENT "test"}}
+    LIRA_VERSION="v0.14.0"
+
+    CAAS_ENVIRONMENT="caas-prod"
+
+    PIPELINE_TOOLS_VERSION="v0.36.0"
+
+    KUBERNETES_CLUSTER="green-100-us-central1"
+    KUBERNETES_NAMESPACE="green-100-us-central1-ns"
+    KUBERNETES_ZONE="us-central1-a"
+    NUMBER_OF_REPLICAS="3"
+
+    MAX_CROMWELL_RETRIES=1
+
+    SS2_SUBSCRIPTION_ID="40f8586e-1a6d-4e40-a8f5-028de3f628e1"
+    SS2_VERSION="smartseq2_v2.1.0"
+
+    TENX_SUBSCRIPTION_ID="513a39a6-eb65-450b-ba5f-ce50f56c42d4"
+    TENX_VERSION="cellranger_v1.0.0"
+
+    USE_CAAS=true
+    USE_HMAC=true
+
+    SUBMIT_WDL_DIR=""
+    SUBMIT_AND_HOLD=true
+{{end}}
+
+{{ if eq $ENVIRONMENT "staging" }}
+    LIRA_VERSION="v0.14.0"
+
+    CAAS_ENVIRONMENT="caas-prod"
+
+    PIPELINE_TOOLS_VERSION="v0.36.0"
+
+    KUBERNETES_CLUSTER="green-100-us-central1"
+    KUBERNETES_NAMESPACE="green-100-us-central1-ns"
+    KUBERNETES_ZONE="us-central1-a"
+    NUMBER_OF_REPLICAS="3"
+
+    MAX_CROMWELL_RETRIES=1
+
+    SS2_SUBSCRIPTION_ID="fde592d7-ebb9-4121-ad4a-0e000874cc3b"
+    SS2_VERSION="smartseq2_v2.1.0"
+
+    TENX_SUBSCRIPTION_ID="7484e05b-344a-48fa-989e-de4e6ae9bef7"
+    TENX_VERSION="cellranger_v1.0.0"
+
+    USE_CAAS=true
+    USE_HMAC=true
+
+    SUBMIT_WDL_DIR=""
+    SUBMIT_AND_HOLD=true
+{{end}}
+
+{{ if eq $ENVIRONMENT "prod" }}
+    LIRA_VERSION="v0.13.2"
+
+    CAAS_ENVIRONMENT="caas-prod"
+
+    PIPELINE_TOOLS_VERSION="v0.34.0"
+
+    KUBERNETES_CLUSTER="green-100-us-central1"
+    KUBERNETES_NAMESPACE="green-100-us-central1-ns"
+    KUBERNETES_ZONE="us-central1-a"
+    NUMBER_OF_REPLICAS="3"
+
+    MAX_CROMWELL_RETRIES=1
+
+    SS2_SUBSCRIPTION_ID="placeholder_ss2_subscription_id"
+    SS2_VERSION="smartseq2_v1.0.0"
+
+    TENX_SUBSCRIPTION_ID="placeholder_10x_subscription_id"
+    TENX_VERSION="10x_v0.1.0"
+
+    USE_CAAS=true
+    USE_HMAC=true
+
+    SUBMIT_WDL_DIR=""
+    SUBMIT_AND_HOLD=true
+{{end}}
+{{end}}

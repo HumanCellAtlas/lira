@@ -12,3 +12,5 @@ firecloud-tools
 kubernetes/vault-edit
 scripts/hmac_keys
 .DS_Store
+scripts/bluebox-subscription-manager-key-staging.json
+*dynamic_config.sh

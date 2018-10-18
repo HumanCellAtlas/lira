@@ -2,18 +2,29 @@ stages:
   - dev
   - test
   - staging
+  - prod
 
 dev:
   stage: dev
   script:
-    - echo "Hello World Dev!"
+    - ENVIRONMENT=dev
+    - bash kubernetes/test_deploy_config.sh
 
 test:
   stage: test
   script:
-    - echo "Hello World Test!"
+    - ENVIRONMENT=test
+    - bash kubernetes/test_deploy_config.sh
 
 staging:
   stage: staging
   script:
-    - echo "Hello World Staging!"
+    - ENVIRONMENT=staging
+    - bash kubernetes/test_deploy_config.sh
+
+prod:
+  stage: prod
+  script:
+    - ENVIRONMENT=prod
+    - bash kubernetes/test_deploy_config.sh
+    
