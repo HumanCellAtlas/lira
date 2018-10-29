@@ -11,6 +11,8 @@ echo "${PATH}"
 echo "PRINTING PWD"
 pwd
 
+sleep 600
+
 echo "Rendering deployment configuration file"
 docker run -i --rm \
               -e LIRA_ENVIRONMENT="${LIRA_ENVIRONMENT}" \
