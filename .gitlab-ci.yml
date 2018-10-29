@@ -1,4 +1,4 @@
-image: broadinstitute/dsde-toolbox
+image: rhiananthony/dsde-toolbox:gitlab-runner-11.4.2
 
 stages:
   - dev
