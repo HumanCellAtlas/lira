@@ -1,8 +1,5 @@
 stages:
   - dev
-  - test
-  - staging
-  - prod
 
 dev:
   tags:
@@ -12,21 +9,4 @@ dev:
     - ENVIRONMENT=dev
     - bash kubernetes/deploy_lira.sh
 
-test:
-  stage: test
-  script:
-    - ENVIRONMENT=test
-    - echo "HELLO WORLD from test!"
-
-staging:
-  stage: staging
-  script:
-    - ENVIRONMENT=staging
-    - echo "HELLO WORLD from staging!"
-
-prod:
-  stage: prod
-  script:
-    - ENVIRONMENT=prod
-    - echo "HELLO WORLD from prod!"
     
