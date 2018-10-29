@@ -5,6 +5,8 @@ stages:
   - prod
 
 dev:
+  tags:
+    - green
   stage: dev
   script:
     - ENVIRONMENT=dev
