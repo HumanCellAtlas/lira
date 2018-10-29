@@ -11,7 +11,7 @@ echo "${PATH}"
 echo "PRINTING PWD"
 pwd
 
-sleep 600
+#sleep 600
 
 echo "Rendering deployment configuration file"
 sh /usr/local/bin/render-ctmpls.sh -k /working/config.sh.ctmpl
