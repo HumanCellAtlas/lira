@@ -8,7 +8,7 @@ dev:
   stage: dev
   script:
     - ENVIRONMENT=dev
-    - bash kubernetes/test_deploy_config.sh
+    - bash kubernetes/deploy_lira.sh
 
 test:
   stage: test
