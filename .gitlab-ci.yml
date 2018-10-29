@@ -1,19 +1,29 @@
+stages:
+  - dev
+  - test
+  - staging
+  - prod
+
 dev:
+  stage: dev
   script:
     - ENVIRONMENT=dev
     - bash kubernetes/deploy_lira.sh
 
 test:
+  stage: test
   script:
     - ENVIRONMENT=test
     - bash kubernetes/test_deploy_config.sh
 
 staging:
+  stage: staging
   script:
     - ENVIRONMENT=staging
     - bash kubernetes/test_deploy_config.sh
 
 prod:
+  stage: prod
   script:
     - ENVIRONMENT=prod
     - bash kubernetes/test_deploy_config.sh
