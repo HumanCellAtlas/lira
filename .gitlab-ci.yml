@@ -14,17 +14,17 @@ test:
   stage: test
   script:
     - ENVIRONMENT=test
-    - bash kubernetes/test_deploy_config.sh
+    - echo "HELLO WORLD from test!"
 
 staging:
   stage: staging
   script:
     - ENVIRONMENT=staging
-    - bash kubernetes/test_deploy_config.sh
+    - echo "HELLO WORLD from staging!"
 
 prod:
   stage: prod
   script:
     - ENVIRONMENT=prod
-    - bash kubernetes/test_deploy_config.sh
+    - echo "HELLO WORLD from prod!"
     
