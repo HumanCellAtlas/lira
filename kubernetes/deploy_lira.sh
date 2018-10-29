@@ -2,6 +2,15 @@
 
 VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"/etc/vault-token-dsde"}
 
+echo "Rendering deployment configuration file"
+docker run -i --rm \
+              -e LIRA_ENVIRONMENT="${LIRA_ENVIRONMENT}" \
+              -v "${VAULT_TOKEN_PATH}":/root/.vault-token \
+              -v "${PWD}":/working \
+              broadinstitute/dsde-toolbox:ra_rendering \
+              /usr/local/bin/render-ctmpls.sh \
+              -k /working/config.sh.ctmpl
+
 # Import the variables from the config files
 source config.sh
 
