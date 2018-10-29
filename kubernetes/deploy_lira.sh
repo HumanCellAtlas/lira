@@ -2,6 +2,15 @@
 
 VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"/etc/vault-token-dsde"}
 
+echo "PRINTING ENVIRONMENT VARIABLES"
+env
+
+echo "PRINTING PATH"
+echo "${PATH}"
+
+echo "PRINTING PWD"
+pwd
+
 echo "Rendering deployment configuration file"
 docker run -i --rm \
               -e LIRA_ENVIRONMENT="${LIRA_ENVIRONMENT}" \
