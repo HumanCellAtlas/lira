@@ -3,7 +3,7 @@
 VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"/etc/vault-token-dsde"}
 
 # Import the variables from the config files
-source static_config.sh
+source config.sh
 
 echo "Retrieving caas service account key"
 docker run -i --rm \

@@ -1,0 +1,172 @@
+#!/usr/bin/env bash
+{{with $ENVIRONMENT := env "LIRA_ENVIRONMENT"}}
+{{ if eq $ENVIRONMENT "dev" }}
+    LIRA_VERSION="v0.14.0"
+
+    PIPELINE_TOOLS_VERSION="v0.36.0"
+
+    NUMBER_OF_REPLICAS="3"
+
+    MAX_CROMWELL_RETRIES=1
+
+    SS2_SUBSCRIPTION_ID="placeholder_ss2_subscription_id"
+    SS2_VERSION="smartseq2_v2.1.0"
+
+    TENX_SUBSCRIPTION_ID="placeholder_10x_subscription_id"
+    TENX_VERSION="cellranger_v1.0.0"
+
+    GCLOUD_PROJECT="broad-dsde-mint-${LIRA_ENVIRONMENT}" # all valid envs - broad-dsde-mint-dev, broad-dsde-mint-test, broad-dsde-mint-integration, broad-dsde-mint-staging, hca-dcp-pipelines-prod
+
+    DSS_URL="https://dss.integration.data.humancellatlas.org/v1"
+    SCHEMA_URL="http://schema.integration.data.humancellatlas.org/"
+    INGEST_URL="http://api.ingest.integration.data.humancellatlas.org/"
+{{end}}
+
+{{ if eq $ENVIRONMENT "test"}}
+    LIRA_VERSION="v0.14.0"
+
+    PIPELINE_TOOLS_VERSION="v0.36.0"
+
+    NUMBER_OF_REPLICAS="3"
+
+    SS2_SUBSCRIPTION_ID="40f8586e-1a6d-4e40-a8f5-028de3f628e1"
+    SS2_VERSION="smartseq2_v2.1.0"
+
+    TENX_SUBSCRIPTION_ID="513a39a6-eb65-450b-ba5f-ce50f56c42d4"
+    TENX_VERSION="cellranger_v1.0.0"
+
+    GCLOUD_PROJECT="broad-dsde-mint-${LIRA_ENVIRONMENT}"
+
+    DSS_URL="https://dss.integration.data.humancellatlas.org/v1"
+    SCHEMA_URL="http://schema.integration.data.humancellatlas.org/"
+    INGEST_URL="http://api.ingest.integration.data.humancellatlas.org/"
+
+{{end}}
+
+{{ if eq $ENVIRONMENT "integration"}}
+    LIRA_VERSION="v0.14.0"
+
+    PIPELINE_TOOLS_VERSION="v0.36.0"
+
+    NUMBER_OF_REPLICAS="3"
+
+    SS2_SUBSCRIPTION_ID="40f8586e-1a6d-4e40-a8f5-028de3f628e1"
+    SS2_VERSION="smartseq2_v2.1.0"
+
+    TENX_SUBSCRIPTION_ID="513a39a6-eb65-450b-ba5f-ce50f56c42d4"
+    TENX_VERSION="cellranger_v1.0.0"
+
+    GCLOUD_PROJECT="broad-dsde-mint-${LIRA_ENVIRONMENT}"
+
+    DSS_URL="https://dss.integration.data.humancellatlas.org/v1"
+    SCHEMA_URL="http://schema.integration.data.humancellatlas.org/"
+    INGEST_URL="http://api.ingest.integration.data.humancellatlas.org/"
+
+{{end}}
+
+{{ if eq $ENVIRONMENT "staging" }}
+    LIRA_VERSION="v0.14.0"
+
+    PIPELINE_TOOLS_VERSION="v0.36.0"
+
+    NUMBER_OF_REPLICAS="3"
+
+    SS2_SUBSCRIPTION_ID="fde592d7-ebb9-4121-ad4a-0e000874cc3b"
+    SS2_VERSION="smartseq2_v2.1.0"
+
+    TENX_SUBSCRIPTION_ID="7484e05b-344a-48fa-989e-de4e6ae9bef7"
+    TENX_VERSION="cellranger_v1.0.0"
+
+    GCLOUD_PROJECT="broad-dsde-mint-${LIRA_ENVIRONMENT}"
+
+    DSS_URL="https://dss.staging.data.humancellatlas.org/v1"
+    SCHEMA_URL="http://schema.staging.data.humancellatlas.org/"
+    INGEST_URL="http://api.ingest.staging.data.humancellatlas.org/"
+{{end}}
+
+{{ if eq $ENVIRONMENT "prod" }}
+    LIRA_VERSION="v0.13.2"
+
+    PIPELINE_TOOLS_VERSION="v0.34.0"
+
+    NUMBER_OF_REPLICAS="3"
+
+    SS2_SUBSCRIPTION_ID="placeholder_ss2_subscription_id"
+    SS2_VERSION="smartseq2_v1.0.0"
+
+    TENX_SUBSCRIPTION_ID="placeholder_10x_subscription_id"
+    TENX_VERSION="10x_v0.1.0"
+
+    GCLOUD_PROJECT="hca-dcp-pipelines-prod"
+
+    DSS_URL="https://dss.data.humancellatlas.org/v1"
+    SCHEMA_URL="https://schema.humancellatlas.org/"
+    INGEST_URL="http://api.ingest.data.humancellatlas.org/"
+
+{{end}}
+
+    USE_CAAS=true
+    USE_HMAC=true
+
+    SUBMIT_WDL_DIR=""
+    SUBMIT_AND_HOLD=true
+
+    APPLICATION_NAME="lira"
+    DEPLOYMENT_NAME="lira"
+    CONTAINER_NAME="lira"
+
+    # Cromwell Variables
+    CAAS_ENVIRONMENT="caas-prod"
+    CROMWELL_URL="https://cromwell.${CAAS_ENVIRONMENT}.broadinstitute.org/api/workflows/v1"
+    MAX_CROMWELL_RETRIES=1
+    CAAS_KEY_FILE="${CAAS_ENVIRONMENT}-key.json"
+    CAAS_KEY_PATH="secret/dsde/mint/${LIRA_ENVIRONMENT}/${APPLICATION_NAME}/${CAAS_KEY_FILE}"
+
+    # Kuberenetes Variables
+    KUBERNETES_CLUSTER="green-100-us-central1"
+    KUBERNETES_NAMESPACE="green-100-us-central1-ns"
+    KUBERNETES_ZONE="us-central1-a"
+
+    # Lira Variables
+    LIRA_CONFIG_FILE="lira-config.json"
+    LIRA_CONFIG_SECRET_NAME="lira-config-$(date '+%Y-%m-%d-%H-%M-%S')"
+    LIRA_DEPLOYMENT_YAML="lira-deployment.yaml"
+    LIRA_DOCKER_IMAGE="quay.io/humancellatlas/secondary-analysis-lira:${LIRA_VERSION}"
+    COLLECTION_NAME="lira-${LIRA_ENVIRONMENT}"
+    GCS_ROOT="gs://${GCLOUD_PROJECT}-cromwell-execution/caas-cromwell-executions"
+
+    # Pipeline tools
+    PIPELINE_TOOLS_PREFIX="https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/${PIPELINE_TOOLS_VERSION}"
+
+    if [ -n "${SUBMIT_WDL_DIR}" ];
+    then
+        SUBMIT_WDL="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/${SUBMIT_WDL_DIR}/submit.wdl"
+    else
+        SUBMIT_WDL="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/submit.wdl"
+    fi
+
+    # Smart Seq 2 Variables
+    SS2_PREFIX="https://raw.githubusercontent.com/HumanCellAtlas/skylab/${SS2_VERSION}"
+    SS2_ANALYSIS_WDLS="[
+                    \"${SS2_PREFIX}/pipelines/smartseq2_single_sample/SmartSeq2SingleSample.wdl\",
+                    \"${SS2_PREFIX}/library/tasks/HISAT2.wdl\",
+                    \"${SS2_PREFIX}/library/tasks/Picard.wdl\",
+                    \"${SS2_PREFIX}/library/tasks/RSEM.wdl\",
+                    \"${SS2_PREFIX}/library/tasks/GroupMetricsOutputs.wdl\",
+                    \"${SS2_PREFIX}/library/tasks/ZarrUtils.wdl\"
+                ]"
+    SS2_OPTIONS_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/ss2_single_sample/options.json"
+    SS2_WDL_STATIC_INPUTS_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/ss2_single_sample/adapter_example_static.json"
+    SS2_WDL_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/ss2_single_sample/adapter.wdl"
+    SS2_WORKFLOW_NAME="AdapterSmartSeq2SingleCell"
+
+    # TenX Variables
+    TENX_PREFIX="https://raw.githubusercontent.com/HumanCellAtlas/skylab/${TENX_VERSION}"
+    TENX_ANALYSIS_WDLS="[
+                    \"${TENX_PREFIX}/pipelines/cellranger/cellranger.wdl\"
+                ]"
+    TENX_OPTIONS_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/cellranger/options.json"
+    TENX_WDL_STATIC_INPUTS_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/cellranger/adapter_example_static.json"
+    TENX_WDL_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/cellranger/adapter.wdl"
+    TENX_WORKFLOW_NAME="Adapter10xCount"
+{{end}}
