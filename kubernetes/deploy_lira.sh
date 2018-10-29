@@ -14,13 +14,15 @@ pwd
 #sleep 600
 
 echo "Rendering deployment configuration file"
-docker run -i --rm \
-              -e LIRA_ENVIRONMENT="${LIRA_ENVIRONMENT}" \
-              -v "${VAULT_TOKEN_PATH}":/root/.vault-token \
-              -v "${PWD}":/working \
-              broadinstitute/dsde-toolbox:ra_rendering \
-              /usr/local/bin/render-ctmpls.sh \
-              -k /working/config.sh.ctmpl
+sh /usr/local/bin/render-ctmpls.sh -k /working/config.sh.ctmpl
+
+#docker run -i --rm \
+#              -e LIRA_ENVIRONMENT="${LIRA_ENVIRONMENT}" \
+#              -v "${VAULT_TOKEN_PATH}":/root/.vault-token \
+#              -v "${PWD}":/working \
+#              broadinstitute/dsde-toolbox:ra_rendering \
+#              /usr/local/bin/render-ctmpls.sh \
+#              -k /working/config.sh.ctmpl
 
 # Import the variables from the config files
 source config.sh
