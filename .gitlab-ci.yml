@@ -1,4 +1,4 @@
-image: docker pull google/cloud-sdk
+image: broadinstitute/dsde-toolbox
 
 stages:
   - dev
