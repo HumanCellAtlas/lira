@@ -11,7 +11,7 @@ echo "${PATH}"
 echo "PRINTING PWD"
 pwd
 
-#sleep 600
+sleep 600
 
 echo "Rendering deployment configuration file"
 sh /usr/local/bin/render-ctmpls.sh -k /working/config.sh.ctmpl
@@ -26,6 +26,8 @@ sh /usr/local/bin/render-ctmpls.sh -k /working/config.sh.ctmpl
 
 # Import the variables from the config files
 source config.sh
+
+env
 
 echo "Retrieving caas service account key"
 docker run -i --rm \
