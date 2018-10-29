@@ -1,3 +1,5 @@
+image: docker pull google/cloud-sdk
+
 stages:
   - dev
 
