@@ -14,7 +14,8 @@ pwd
 #sleep 600
 
 echo "Rendering deployment configuration file"
-sh /usr/local/bin/render-ctmpls.sh -k /working/config.sh.ctmpl
+export WORK_DIR=$(pwd)
+sh /usr/local/bin/render-ctmpls.sh -k kubernetes/config.sh.ctmpl
 
 #docker run -i --rm \
 #              -e LIRA_ENVIRONMENT="${LIRA_ENVIRONMENT}" \
@@ -41,7 +42,7 @@ echo "Authenticating with the service account"
 gcloud auth activate-service-account --key-file "${CAAS_KEY_FILE}"
 
 echo "Rendering lira config file"
-sh /usr/local/bin/render-ctmpls.sh -k /working/"${LIRA_CONFIG_FILE}".ctmpl
+sh /usr/local/bin/render-ctmpls.sh -k kubernetes/"${LIRA_CONFIG_FILE}".ctmpl
 
 #docker run -i --rm \
 #              -e LIRA_ENVIRONMENT="${LIRA_ENVIRONMENT}" \
@@ -97,7 +98,7 @@ else
 fi
 
 echo "Generating Lira deployment file"
-sh /usr/local/bin/render-ctmpls.sh -k /working/"${LIRA_DEPLOYMENT_YAML}".ctmpl
+sh /usr/local/bin/render-ctmpls.sh -k kubernetes/"${LIRA_DEPLOYMENT_YAML}".ctmpl
 
 #docker run -i --rm -e LIRA_CONFIG="${LIRA_CONFIG_SECRET_NAME}" \
 #                   -e DEPLOYMENT_NAME="${DEPLOYMENT_NAME}" \
