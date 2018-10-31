@@ -8,7 +8,7 @@ dev:
     - green
   stage: dev
   script:
-    - LIRA_ENVIRONMENT=dev
+    - export LIRA_ENVIRONMENT=dev
     - bash kubernetes/deploy_lira.sh
 
     
