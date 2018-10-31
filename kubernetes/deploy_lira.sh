@@ -5,17 +5,17 @@ VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"/etc/vault-token-dsde"}
 echo "PRINTING ENVIRONMENT VARIABLES"
 env
 
-echo "PRINTING PATH"
-echo "${PATH}"
+#echo "PRINTING PATH"
+#echo "${PATH}"
+#
+#echo "PRINTING PWD"
+#pwd
 
-echo "PRINTING PWD"
-pwd
-
-#sleep 600
+cd kubernetes
 
 echo "Rendering deployment configuration file"
 export WORK_DIR=$(pwd)
-sh /usr/local/bin/render-ctmpls.sh -k kubernetes/config.sh.ctmpl
+sh /usr/local/bin/render-ctmpls.sh -k config.sh.ctmpl
 
 #docker run -i --rm \
 #              -e LIRA_ENVIRONMENT="${LIRA_ENVIRONMENT}" \
@@ -28,10 +28,15 @@ sh /usr/local/bin/render-ctmpls.sh -k kubernetes/config.sh.ctmpl
 # Import the variables from the config files
 source config.sh
 
+echo "VAULT_TOKEN_PATH: ${VAULT_TOKEN_PATH}"
+
 echo "LIRA_VERSION: ${LIRA_VERSION}"
 
 echo "Retrieving caas service account key"
 vault read -format=json "${CAAS_KEY_PATH}" | jq .data > "${CAAS_KEY_FILE}"
+
+docker run -d --name gitlab-runner --restart always   -v /srv/gitlab-runner/config:/etc/gitlab-runner  -v /etc/vault-token-mint-read:/root/.vault-token -v /var/run/docker.sock:/var/run/docker.sock rhiananthony/dsde-toolbox:gitlab-runner-11.4.4
+
 
 #docker run -i --rm \
 #               -v "${VAULT_TOKEN_PATH}":/root/.vault-token \
@@ -42,7 +47,7 @@ echo "Authenticating with the service account"
 gcloud auth activate-service-account --key-file "${CAAS_KEY_FILE}"
 
 echo "Rendering lira config file"
-sh /usr/local/bin/render-ctmpls.sh -k kubernetes/"${LIRA_CONFIG_FILE}".ctmpl
+sh /usr/local/bin/render-ctmpls.sh -k "${LIRA_CONFIG_FILE}".ctmpl
 
 #docker run -i --rm \
 #              -e LIRA_ENVIRONMENT="${LIRA_ENVIRONMENT}" \
@@ -98,7 +103,7 @@ else
 fi
 
 echo "Generating Lira deployment file"
-sh /usr/local/bin/render-ctmpls.sh -k kubernetes/"${LIRA_DEPLOYMENT_YAML}".ctmpl
+sh /usr/local/bin/render-ctmpls.sh -k "${LIRA_DEPLOYMENT_YAML}".ctmpl
 
 #docker run -i --rm -e LIRA_CONFIG="${LIRA_CONFIG_SECRET_NAME}" \
 #                   -e DEPLOYMENT_NAME="${DEPLOYMENT_NAME}" \
