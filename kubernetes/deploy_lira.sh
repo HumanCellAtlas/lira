@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VAULT_TOKEN_PATH=${VAULT_TOKEN_PATH:-"/root/.vault-token"}
+VAULT_TOKEN_PATH="/root/.vault-token"
 
 #echo "PRINTING ENVIRONMENT VARIABLES"
 #env
