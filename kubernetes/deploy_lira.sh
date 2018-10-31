@@ -35,7 +35,12 @@ echo "LIRA_VERSION: ${LIRA_VERSION}"
 echo "Retrieving caas service account key"
 vault read -format=json "${CAAS_KEY_PATH}" | jq .data > "${CAAS_KEY_FILE}"
 
-docker run -d --name gitlab-runner --restart always   -v /srv/gitlab-runner/config:/etc/gitlab-runner  -v /etc/vault-token-mint-read:/root/.vault-token -v /var/run/docker.sock:/var/run/docker.sock rhiananthony/dsde-toolbox:gitlab-runner-11.4.4
+docker run -d --name gitlab-runner \
+              --restart always   \
+              -v /srv/gitlab-runner/config:/etc/gitlab-runner  \
+              -v /etc/vault-token-mint-read:/root/.vault-token \
+              -v /var/run/docker.sock:/var/run/docker.sock \
+              rhiananthony/dsde-toolbox:gitlab-runner-11.4.4
 
 
 #docker run -i --rm \
