@@ -29,6 +29,10 @@ sh /usr/local/bin/render-ctmpls.sh -k config.sh.ctmpl
 # Import the variables from the config files
 source config.sh
 
+echo "************************************************************************************"
+env
+echo "************************************************************************************"
+
 echo "VAULT_TOKEN_PATH: ${VAULT_TOKEN_PATH}"
 
 echo "LIRA_VERSION: ${LIRA_VERSION}"
