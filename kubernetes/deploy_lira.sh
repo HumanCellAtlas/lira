@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 export VAULT_TOKEN_PATH="/root/.vault-token"
+export VAULT_TOKEN=$(cat ${VAULT_TOKEN_PATH})
 
 #echo "PRINTING ENVIRONMENT VARIABLES"
 #env
