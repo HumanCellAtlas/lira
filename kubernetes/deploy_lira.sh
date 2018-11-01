@@ -34,6 +34,7 @@ echo "VAULT_TOKEN_PATH: ${VAULT_TOKEN_PATH}"
 echo "LIRA_VERSION: ${LIRA_VERSION}"
 
 echo "Retrieving caas service account key"
+echo "vault read -format=json ${CAAS_KEY_PATH} | jq .data > ${CAAS_KEY_FILE}"
 vault read -format=json "${CAAS_KEY_PATH}" | jq .data > "${CAAS_KEY_FILE}"
 
 #docker run -i --rm \
