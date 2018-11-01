@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/google-cloud-sdk/bin
+
 export VAULT_TOKEN_PATH="/gitlab-runner/.vault-token"
 export VAULT_TOKEN="$(cat ${VAULT_TOKEN_PATH})"
-PATH=${PATH}:/usr/local/google-cloud-sdk/bin
+
 
 #echo "PRINTING ENVIRONMENT VARIABLES"
 #env

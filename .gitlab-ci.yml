@@ -3,7 +3,7 @@ image: rhiananthony/dsde-toolbox:gitlab-runner-11.4.4
 stages:
   - dev
 
-dev:
+deploy_lira:
   tags:
     - green
   stage: dev
@@ -11,4 +11,18 @@ dev:
     - export LIRA_ENVIRONMENT=dev
     - bash kubernetes/deploy_lira.sh
 
-    
+deploy_tls_and_ingress:
+  tags:
+    - green
+  stage: dev
+  script:
+    - export LIRA_ENVIRONMENT=dev
+    - echo "bash kubernetes/deploy_tls_cert_and_ingress.sh"
+
+deploy_service:
+  tags:
+    - green
+  stage: dev
+  script:
+    - export LIRA_ENVIRONMENT=dev
+    - echo "bash kubernetes/deploy_lira_service.sh"
