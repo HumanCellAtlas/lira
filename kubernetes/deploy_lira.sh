@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
+whoami
 export VAULT_TOKEN_PATH="/root/.vault-token"
-export VAULT_TOKEN=$(cat ${VAULT_TOKEN_PATH})
+export VAULT_TOKEN="$(cat ${VAULT_TOKEN_PATH})"
 
 #echo "PRINTING ENVIRONMENT VARIABLES"
 #env
