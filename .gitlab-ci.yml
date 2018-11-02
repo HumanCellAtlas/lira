@@ -9,4 +9,4 @@ deploy_lira:
   stage: dev
   script:
     - export LIRA_ENVIRONMENT=dev
-    - bash deploy/config_files/gitlab/deploy_lira.sh
+    - bash deploy/gitlab/deploy_lira.sh
