@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 {{with $ENVIRONMENT := env "LIRA_ENVIRONMENT"}}
 {{ if eq $ENVIRONMENT "dev" }}
-    export LIRA_VERSION="v0.14.0"
+    export LIRA_VERSION="v0.14.1"
 
     export PIPELINE_TOOLS_VERSION="v0.36.0"
 
@@ -23,7 +23,7 @@
 {{end}}
 
 {{ if eq $ENVIRONMENT "test"}}
-    export LIRA_VERSION="v0.14.0"
+    export LIRA_VERSION="v0.14.1"
 
     export PIPELINE_TOOLS_VERSION="v0.36.0"
 
@@ -44,7 +44,7 @@
 {{end}}
 
 {{ if eq $ENVIRONMENT "integration"}}
-    export LIRA_VERSION="v0.14.0"
+    export LIRA_VERSION="v0.14.1"
 
     export PIPELINE_TOOLS_VERSION="v0.36.0"
 
@@ -65,7 +65,7 @@
 {{end}}
 
 {{ if eq $ENVIRONMENT "staging" }}
-    export LIRA_VERSION="v0.14.0"
+    export LIRA_VERSION="v0.14.1"
 
     export PIPELINE_TOOLS_VERSION="v0.36.0"
 
@@ -85,7 +85,7 @@
 {{end}}
 
 {{ if eq $ENVIRONMENT "prod" }}
-    export LIRA_VERSION="v0.13.2"
+    export LIRA_VERSION="v0.14.1"
 
     export PIPELINE_TOOLS_VERSION="v0.34.0"
 

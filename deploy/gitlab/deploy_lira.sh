@@ -26,10 +26,8 @@ gcloud container clusters get-credentials "${KUBERNETES_CLUSTER}" \
                  --zone "${KUBERNETES_ZONE}" \
                  --project "${GCLOUD_PROJECT}"
 
+# KUBERNETES SERVICE DEPLOYMENT
 
-
-
-# Generate and apply the the lira service file
 echo "Generating service file"
 sh /usr/local/bin/render-ctmpls.sh -k "${CONFIG_DIR}/lira-service.yaml.ctmpl"
 
@@ -38,10 +36,8 @@ kubectl apply -f ${CONFIG_DIR}/lira-service.yaml \
               --record \
               --namespace="${KUBERNETES_NAMESPACE}"
 
+# TLS CERT GENERATION AND KUBERNETES INGRESS
 
-
-
-# Generate and apply the tls cert and ingress files
 if [ ${GENERATE_CERTS} == "true" ];
 then
     ../../kubernetes/get_certs.sh
@@ -68,10 +64,8 @@ kubectl apply -f ${CONFIG_DIR}/lira-ingress.yaml \
               --record \
               --namespace="${KUBERNETES_NAMESPACE}"
 
+# LIRA APPLICATION DEPLOYMENT
 
-
-
-# Generate and apply the lira deployment
 echo "Rendering lira config file"
 sh /usr/local/bin/render-ctmpls.sh -k "${CONFIG_DIR}/${LIRA_CONFIG_FILE}.ctmpl"
 
