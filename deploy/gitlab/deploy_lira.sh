@@ -13,7 +13,7 @@ echo "Rendering deployment configuration file"
 sh /usr/local/bin/render-ctmpls.sh -k ${CONFIG_DIR}/config.sh.ctmpl
 
 # Import the variables from the config files
-source config.sh
+source ${CONFIG_DIR}/config.sh
 
 echo "Retrieving caas service account key"
 vault read -format=json "${CAAS_KEY_PATH}" | jq .data > "${CONFIG_DIR}/${CAAS_KEY_FILE}"
