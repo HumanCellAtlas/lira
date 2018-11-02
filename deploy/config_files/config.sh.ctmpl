@@ -114,6 +114,9 @@
     export APPLICATION_NAME="lira"
     export DEPLOYMENT_NAME="lira"
     export CONTAINER_NAME="lira"
+    export SERVICE_NAME="lira-service"
+    export GLOBAL_IP_NAME="lira"
+    export INGRESS_NAME="lira-ingress"
 
     # Cromwell Variables
     export CAAS_ENVIRONMENT="caas-prod"
@@ -144,6 +147,12 @@
     else
         export SUBMIT_WDL="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/submit.wdl"
     fi
+
+    # TLS Cert variables
+    export GENERATE_CERTS=${GENERATE_CERTS:-"true"}
+    export TLS_FULL_CHAIN_DIR="lira-ssl-certificate.crt"
+    export TLS_PRIVATE_KEY_DIR="lira-ssl-certificate.key"
+    export TLS_SECRET_NAME="hca-tls-secret"-$(date '+%Y-%m-%d-%H-%M-%S')
 
     # Smart Seq 2 Variables
     export SS2_PREFIX="https://raw.githubusercontent.com/HumanCellAtlas/skylab/${SS2_VERSION}"
