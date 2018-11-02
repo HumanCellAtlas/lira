@@ -31,7 +31,7 @@ gcloud container clusters get-credentials "${KUBERNETES_CLUSTER}" \
 
 # Generate and apply the the lira service file
 echo "Generating service file"
-sh /usr/local/bin/render-ctmpls.sh -k lira-service.yaml.ctmpl
+sh /usr/local/bin/render-ctmpls.sh -k "${CONFIG_DIR}/lira-service.yaml.ctmpl"
 
 echo "Deploying Lira Service"
 kubectl apply -f ${CONFIG_DIR}/lira-service.yaml \
