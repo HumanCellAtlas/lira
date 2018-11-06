@@ -1,17 +1,18 @@
 FROM ubuntu:16.04
 
-RUN apt-get update && apt-get upgrade -y && \
-  apt-get -y install --no-install-recommends \
-  python3-pip \
-  vim \
-  nmap \
-  git
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get -y install --no-install-recommends \
+        python3-pip \
+        vim \
+        nmap \
+        git && \
+    pip3 install --upgrade \
+        pip \
+        setuptools \
+        wheel && \
+    mkdir /lira
 
-RUN pip3 install --upgrade pip setuptools
-
-RUN pip3 install wheel
-
-RUN mkdir /lira
 WORKDIR /lira
 
 COPY requirements.txt .
