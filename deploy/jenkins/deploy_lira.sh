@@ -4,6 +4,7 @@ export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lo
 
 export VAULT_TOKEN_PATH="/etc/vault-token-dsde"
 export VAULT_TOKEN="$(cat ${VAULT_TOKEN_PATH})"
+export VAULT_TOKEN="$(cat ${VAULT_TOKEN_PATH})"
 
 export WORK_DIR=$(pwd)
 export CONFIG_DIR=${WORK_DIR}/deploy/config_files
@@ -54,7 +55,7 @@ kubectl apply -f ${CONFIG_DIR}/lira-service.yaml \
 
 if [ ${GENERATE_CERTS} == "true" ];
 then
-    generate_certs.sh
+    sh generate_certs.sh
 fi
 
 echo "Rendering TLS cert"
