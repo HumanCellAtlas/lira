@@ -38,10 +38,10 @@ kubectl apply -f ${CONFIG_DIR}/lira-service.yaml \
 
 # TLS CERT GENERATION AND KUBERNETES INGRESS
 
-if [ ${GENERATE_CERTS} == "true" ];
-then
-    sh get_certs.sh
-fi
+#if [ ${GENERATE_CERTS} == "true" ];
+#then
+sh generate_certs.sh
+#fi
 
 echo "Rendering TLS cert"
 sh /usr/local/bin/render-ctmpls.sh -k "${CONFIG_DIR}/${TLS_FULL_CHAIN_DIR}.ctmpl"
