@@ -51,7 +51,8 @@ else
   aws route53 wait resource-record-sets-changed --id "$(
     aws route53 change-resource-record-sets \
     --hosted-zone-id "${HOSTED_ZONE_ID}" \
-    --query ChangeInfo.Id --output text \
+    --query ChangeInfo.Id \
+    --output text \
     --change-batch "{
       \"Changes\": [{
         \"Action\": \"${ACTION}\",

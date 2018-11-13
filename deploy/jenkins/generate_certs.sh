@@ -15,7 +15,7 @@ AWS_SECRET_ACCESS_KEY="$(docker run -i \
                                     vault read -field="aws_secret_key" secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/aws_cert_user)"
 
 echo "Making the temp directory for certs"
-mktemp -d "certs"
+mkdir certs
 
 echo "Building the Certbot docker image"
 docker build -t certbot .
@@ -28,10 +28,10 @@ docker run \
     -v "${PWD}/certbot-route53.sh":/working/certbot-route53.sh \
     certbot:latest \
     bash -c \
-        "${DEPLOY_DIR}/scripts/certbot-route53.sh --agree-tos \
+        "${SCRIPTS_DIR}"/scripts/certbot-route53.sh --agree-tos \
                              --manual-public-ip-logging-ok \
                              --email mintteam@broadinstitute.org \
-                             --domains ${DOMAIN}"
+                             --domains "${DOMAIN}"
 
 echo "Writing fullchain to vault at ${FULLCHAIN_VAULT_DIR}"
 docker run -i \

@@ -9,6 +9,7 @@ export VAULT_TOKEN="$(cat ${VAULT_READ_TOKEN_PATH})"
 export WORK_DIR=$(pwd)
 export CONFIG_DIR=${WORK_DIR}/deploy/config_files
 export DEPLOY_DIR=${WORK_DIR}/deploy/gitlab
+export SCRIPTS_DIR=${WORK_DIR}/deploy/scripts
 
 echo "Rendering deployment configuration file"
 sh /usr/local/bin/render-ctmpls.sh -k ${CONFIG_DIR}/config.sh.ctmpl
@@ -41,7 +42,7 @@ kubectl apply -f ${CONFIG_DIR}/lira-service.yaml \
 
 #if [ ${GENERATE_CERTS} == "true" ];
 #then
-sh generate_certs.sh
+sh ${DEPLOY_DIR}/generate_certs.sh
 #fi
 
 echo "Rendering TLS cert"
