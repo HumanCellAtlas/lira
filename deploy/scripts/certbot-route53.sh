@@ -32,6 +32,8 @@ else
   if [ -z "${HOSTED_ZONE_ID}" ]; then
     # CERTBOT_DOMAIN is a hostname, not a domain (zone)
     # We strip out the hostname part to leave only the domain
+    echo "************************************ CERTBOT_DOMAIN: ${CERTBOT_DOMAIN} *************************************"
+    
     DOMAIN="$(sed -r 's/^[^.]+.(.*)$/\1/' <<< "${CERTBOT_DOMAIN}")"
 
     printf -v QUERY 'HostedZones[?Name == `%s.`]|[?Config.PrivateZone == `false`].Id' "${DOMAIN}"
