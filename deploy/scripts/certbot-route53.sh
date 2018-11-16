@@ -34,7 +34,7 @@ else
     # DOMAIN is a hostname, not a domain (zone)
     # We strip out the hostname part to leave only the domain
 
-    PROCESSED_DOMAIN="$(sed -r 's/^[^.]+.(.*)$/\1/' <<< "${DOMAIN}")"
+#    PROCESSED_DOMAIN="$(sed -r 's/^[^.]+.(.*)$/\1/' <<< "${DOMAIN}")"
 
     printf -v QUERY 'HostedZones[?Name == `%s.`]|[?Config.PrivateZone == `false`].Id' "${PROCESSED_DOMAIN}"
 
@@ -42,11 +42,11 @@ else
   fi
 
   if [ -z "${HOSTED_ZONE_ID}" ]; then
-    if [ -n "${PROCESSED_DOMAIN}" ]; then
-      echo "No hosted zone found that matches domain ${PROCESSED_DOMAIN} or hostname ${DOMAIN}"
-    else
+#    if [ -n "${PROCESSED_DOMAIN}" ]; then
+#      echo "No hosted zone found that matches domain ${PROCESSED_DOMAIN} or hostname ${DOMAIN}"
+#    else
       echo "No hosted zone found that matches ${DOMAIN}"
-    fi
+#    fi
     exit 1
   fi
 
