@@ -7,10 +7,9 @@
 
 
 MYSELF="$(cd "$(dirname "$0")" && pwd)/$(basename "$0")"
-echo "************************************ CERTBOT_DOMAIN 1: ${CERTBOT_DOMAIN} *************************************"
-echo "************************************ DOMAIN 1: ${DOMAIN} *************************************"
+echo "************************************ CERTBOT_DOMAIN 1: ${DOMAIN} *************************************"
 
-if [ -z "${CERTBOT_DOMAIN}" ]; then
+if [ -z "${DOMAIN}" ]; then
   mkdir -p "${PWD}/letsencrypt"
 
   certbot certonly \
@@ -27,27 +26,26 @@ if [ -z "${CERTBOT_DOMAIN}" ]; then
 else
   [[ ${CERTBOT_AUTH_OUTPUT} ]] && ACTION="DELETE" || ACTION="UPSERT"
 
-  printf -v QUERY 'HostedZones[?Name == `%s.`]|[?Config.PrivateZone == `false`].Id' "${CERTBOT_DOMAIN}"
+  printf -v QUERY 'HostedZones[?Name == `%s.`]|[?Config.PrivateZone == `false`].Id' "${DOMAIN}"
 
   HOSTED_ZONE_ID="$(aws route53 list-hosted-zones --query "${QUERY}" --output text)"
 
   if [ -z "${HOSTED_ZONE_ID}" ]; then
-    # CERTBOT_DOMAIN is a hostname, not a domain (zone)
+    # DOMAIN is a hostname, not a domain (zone)
     # We strip out the hostname part to leave only the domain
-    echo "************************************ CERTBOT_DOMAIN 2: ${CERTBOT_DOMAIN} *************************************"
 
-    DOMAIN="$(sed -r 's/^[^.]+.(.*)$/\1/' <<< "${CERTBOT_DOMAIN}")"
+    PROCESSED_DOMAIN="$(sed -r 's/^[^.]+.(.*)$/\1/' <<< "${DOMAIN}")"
 
-    printf -v QUERY 'HostedZones[?Name == `%s.`]|[?Config.PrivateZone == `false`].Id' "${DOMAIN}"
+    printf -v QUERY 'HostedZones[?Name == `%s.`]|[?Config.PrivateZone == `false`].Id' "${PROCESSED_DOMAIN}"
 
     HOSTED_ZONE_ID="$(aws route53 list-hosted-zones --query "${QUERY}" --output text)"
   fi
 
   if [ -z "${HOSTED_ZONE_ID}" ]; then
-    if [ -n "${DOMAIN}" ]; then
-      echo "No hosted zone found that matches domain ${DOMAIN} or hostname ${CERTBOT_DOMAIN}"
+    if [ -n "${PROCESSED_DOMAIN}" ]; then
+      echo "No hosted zone found that matches domain ${PROCESSED_DOMAIN} or hostname ${DOMAIN}"
     else
-      echo "No hosted zone found that matches ${CERTBOT_DOMAIN}"
+      echo "No hosted zone found that matches ${DOMAIN}"
     fi
     exit 1
   fi
@@ -61,7 +59,7 @@ else
       \"Changes\": [{
         \"Action\": \"${ACTION}\",
         \"ResourceRecordSet\": {
-          \"Name\": \"_acme-challenge.${CERTBOT_DOMAIN}.\",
+          \"Name\": \"_acme-challenge.${DOMAIN}.\",
           \"ResourceRecords\": [{\"Value\": \"\\\"${CERTBOT_VALIDATION}\\\"\"}],
           \"Type\": \"TXT\",
           \"TTL\": 30
