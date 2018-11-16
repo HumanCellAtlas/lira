@@ -50,6 +50,28 @@ else
     exit 1
   fi
 
+echo "******************************************************************************************"
+echo "******************************************************************************************"
+echo "aws route53 wait resource-record-sets-changed --id $\("
+echo "  aws route53 change-resource-record-sets \\"
+echo "      --hosted-zone-id ${HOSTED_ZONE_ID} \\"
+echo "      --query ChangeInfo.Id \\"
+echo "      --output text \\"
+echo "      --change-batch {"
+echo "          \"Changes\": [{"
+echo "              \"Action\": \"${ACTION}\","
+echo "              \"ResourceRecordSet\": {"
+echo "              \"Name\": \"_acme-challenge.${DOMAIN}.\","
+echo "              \"ResourceRecords\": [{\"Value\": \"\\\"${CERTBOT_VALIDATION}\\\"\"}],"
+echo "              \"Type\": \"TXT\","
+echo "              \"TTL\": 30"
+echo "              }"
+echo "          }]"
+echo "      }"
+echo ")"
+echo "******************************************************************************************"
+echo "******************************************************************************************"
+
   aws route53 wait resource-record-sets-changed --id "$(
     aws route53 change-resource-record-sets \
     --hosted-zone-id "${HOSTED_ZONE_ID}" \
