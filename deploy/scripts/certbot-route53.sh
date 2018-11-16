@@ -36,7 +36,7 @@ else
 
 #    PROCESSED_DOMAIN="$(sed -r 's/^[^.]+.(.*)$/\1/' <<< "${DOMAIN}")"
 
-    printf -v QUERY 'HostedZones[?Name == `%s.`]|[?Config.PrivateZone == `false`].Id' "${PROCESSED_DOMAIN}"
+    printf -v QUERY 'HostedZones[?Name == `%s.`]|[?Config.PrivateZone == `false`].Id' "${DOMAIN}"
 
     echo "******************************************************************************************"
     echo "******************************************************************************************"
