@@ -8,6 +8,7 @@
 
 MYSELF="$(cd "$(dirname "$0")" && pwd)/$(basename "$0")"
 echo "************************************ CERTBOT_DOMAIN 1: ${CERTBOT_DOMAIN} *************************************"
+echo "************************************ DOMAIN 1: ${DOMAIN} *************************************"
 
 if [ -z "${CERTBOT_DOMAIN}" ]; then
   mkdir -p "${PWD}/letsencrypt"
