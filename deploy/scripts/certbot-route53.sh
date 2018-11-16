@@ -7,6 +7,7 @@
 
 
 MYSELF="$(cd "$(dirname "$0")" && pwd)/$(basename "$0")"
+echo "************************************ CERTBOT_DOMAIN 1: ${CERTBOT_DOMAIN} *************************************"
 
 if [ -z "${CERTBOT_DOMAIN}" ]; then
   mkdir -p "${PWD}/letsencrypt"
@@ -32,8 +33,8 @@ else
   if [ -z "${HOSTED_ZONE_ID}" ]; then
     # CERTBOT_DOMAIN is a hostname, not a domain (zone)
     # We strip out the hostname part to leave only the domain
-    echo "************************************ CERTBOT_DOMAIN: ${CERTBOT_DOMAIN} *************************************"
-    
+    echo "************************************ CERTBOT_DOMAIN 2: ${CERTBOT_DOMAIN} *************************************"
+
     DOMAIN="$(sed -r 's/^[^.]+.(.*)$/\1/' <<< "${CERTBOT_DOMAIN}")"
 
     printf -v QUERY 'HostedZones[?Name == `%s.`]|[?Config.PrivateZone == `false`].Id' "${DOMAIN}"
