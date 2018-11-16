@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -ex
+
 # This script was taken from this repo: https://github.com/jed/certbot-route53.git
 # It was copied locally is built on the fly because no docker image exists with this code
 # I copied the file locally because it is self contained and there is no reason to grab the whole repo
@@ -9,6 +11,7 @@
 MYSELF="$(cd "$(dirname "$0")" && pwd)/$(basename "$0")"
 echo "************************************ CERTBOT_DOMAIN 1: ${DOMAIN} *************************************"
 
+# If the domain variable is null or empty, then create the letsencrypt directory and run certbot.
 if [ -z "${DOMAIN}" ]; then
   mkdir -p "${PWD}/letsencrypt"
 
