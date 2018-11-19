@@ -16,6 +16,7 @@ if [ -z "${CERTBOT_DOMAIN}" ]; then
   certbot certonly \
     --non-interactive \
     --manual \
+    --manual-auth-hook "${MYSELF}" \
     --preferred-challenge dns \
     --config-dir "${PWD}/letsencrypt" \
     --work-dir "${PWD}/letsencrypt" \
