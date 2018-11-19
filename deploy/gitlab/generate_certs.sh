@@ -12,6 +12,9 @@ export CHAIN_VAULT_DIR="${WORK_DIR}/certs/letsencrypt/archive/${DOMAIN}/chain1.p
 echo "Making the temp directory for certs"
 mkdir certs
 
+echo "Writing certbot domain to file"
+echo ${DOMAIN} > certbot_domain.txt
+
 echo "Running certbot-route53 script"
 sh "${SCRIPTS_DIR}"/certbot-route53.sh
 
