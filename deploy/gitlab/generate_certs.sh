@@ -12,7 +12,7 @@ export CHAIN_VAULT_DIR="${WORK_DIR}/certs/letsencrypt/archive/${DOMAIN}/chain1.p
 echo "Making the temp directory for certs"
 mkdir certs
 
-echo "Running script"
+echo "Running certbot-route53 script"
 sh "${SCRIPTS_DIR}"/certbot-route53.sh
 
 #export VAULT_TOKEN="$(cat ${VAULT_WRITE_TOKEN_PATH})"
@@ -32,4 +32,4 @@ sh "${SCRIPTS_DIR}"/certbot-route53.sh
 #export VAULT_TOKEN="$(cat ${VAULT_READ_TOKEN_PATH})"
 
 echo "Removing local copies of certs"
-rm -rf certs
+#rm -rf certs
