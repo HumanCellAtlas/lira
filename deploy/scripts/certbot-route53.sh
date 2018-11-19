@@ -36,6 +36,9 @@ else
 
     printf -v QUERY 'HostedZones[?Name == `%s.`]|[?Config.PrivateZone == `false`].Id' "${CERTBOT_DOMAIN}"
 
+    export AWS_ACCESS_KEY_ID="$(vault read -field="aws_access_key" secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/aws_cert_user)"
+    export AWS_SECRET_ACCESS_KEY="$(vault read -field="aws_secret_key" secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/aws_cert_user)"
+
     HOSTED_ZONE_ID="$(aws route53 list-hosted-zones --query "${QUERY}" --output text)"
 
     if [ -z "${HOSTED_ZONE_ID:?}" ]; then
