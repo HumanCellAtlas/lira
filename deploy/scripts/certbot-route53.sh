@@ -26,10 +26,7 @@ if [ -z "${CERTBOT_DOMAIN}" ]; then
         --email mintteam@broadinstitute.org \
         --domains "${DOMAIN}"
 
-    echo "Writing CERTBOT_DOMAIN to file"
-    echo ${CERTBOT_DOMAIN} > certbot_domain.txt
-
-else:
+else
     echo "Reading CERTBOT_DOMAIN from file"
     ${CERTBOT_DOMAIN}=$(cat certbot_domain.txt)
     echo "CERTBOT_DOMAIN=${CERTBOT_DOMAIN}"
