@@ -11,6 +11,7 @@ MYSELF="$(cd "$(dirname "$0")" && pwd)/$(basename "$0")"
 
 # Check that certbot domain exists. If not, then create letsencrypt directory and make the cert challenge
 if [ -z "${CERTBOT_DOMAIN}" ]; then
+
     mkdir -p "${PWD}/letsencrypt"
 
     certbot certonly \
@@ -28,7 +29,7 @@ if [ -z "${CERTBOT_DOMAIN}" ]; then
 
 else
     echo "Reading CERTBOT_DOMAIN from file"
-    ${CERTBOT_DOMAIN}=$(cat certbot_domain.txt)
+    CERTBOT_DOMAIN=$(cat certbot_domain.txt)
     echo "CERTBOT_DOMAIN=${CERTBOT_DOMAIN}"
 
     [[ ${CERTBOT_AUTH_OUTPUT} ]] && ACTION="DELETE" || ACTION="UPSERT"
@@ -37,10 +38,11 @@ else
 
     HOSTED_ZONE_ID="$(aws route53 list-hosted-zones --query "${QUERY}" --output text)"
 
-    if [ -z "${HOSTED_ZONE_ID}" ]; then
+    if [ -z "${HOSTED_ZONE_ID:?}" ]; then
         # CERTBOT_DOMAIN is a hostname, not a domain (zone)
         # We strip out the hostname part to leave only the domain
-        DOMAIN="$(sed -r 's/^[^.]+.(.*)$/\1/' <<< "${CERTBOT_DOMAIN}")"
+#        DOMAIN="$(sed -r 's/^[^.]+.(.*)$/\1/' <<< "${CERTBOT_DOMAIN:?}")"
+        DOMAIN="$(echo "${CERTBOT_DOMAIN:?}" | sed -r 's/^[^.]+.(.*)$/\1/')"
 
         printf -v QUERY 'HostedZones[?Name == `%s.`]|[?Config.PrivateZone == `false`].Id' "${DOMAIN}"
 
