@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -ex
-
 echo "Getting AWS Users credentials from Vault"
 export AWS_ACCESS_KEY_ID="$(vault read -field="aws_access_key" secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/aws_cert_user)"
 export AWS_SECRET_ACCESS_KEY="$(vault read -field="aws_secret_key" secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/aws_cert_user)"
@@ -15,10 +13,7 @@ echo "Making the temp directory for certs"
 mkdir certs
 
 echo "Running script"
-sh "${SCRIPTS_DIR}"/certbot-route53.sh --agree-tos \
-                                       --manual-public-ip-logging-ok \
-                                       --email mintteam@broadinstitute.org \
-                                       --domains "${DOMAIN}"
+sh "${SCRIPTS_DIR}"/certbot-route53.sh
 
 #export VAULT_TOKEN="$(cat ${VAULT_WRITE_TOKEN_PATH})"
 #

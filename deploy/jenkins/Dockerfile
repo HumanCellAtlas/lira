@@ -20,4 +20,5 @@ RUN apt-get update && \
 
 WORKDIR /certs
 
-RUN pip3 install awscli --upgrade
+RUN pip3 install awscli --upgrade && \
+    chmod u+x certbot-route53.sh
