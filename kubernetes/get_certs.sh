@@ -36,7 +36,7 @@ AWS_SECRET_ACCESS_KEY="$(docker run -i \
 
 echo "Making the temp directory for certs"
 
-mktemp -d "certs"
+mkdir "certs"
 
 echo "Running docker"
 
@@ -45,21 +45,19 @@ docker build -t certbot .
 docker run \
     -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
     -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
-    -v "${PWD}/certs":/working \
-    -v "${PWD}/certbot-route53.sh":/working/certbot-route53.sh \
+    -v "$(pwd)/certbot-route53.sh":/certs/certbot-route53.sh \
     certbot:latest \
     bash -c \
-    "cd /working && \
-     bash certbot-route53.sh --agree-tos \
-                             --manual-public-ip-logging-ok \
-                             --email mintteam@broadinstitute.org \
-                             --domains ${DOMAIN}"
+        "bash /certs/certbot-route53.sh --agree-tos \
+                                 --manual-public-ip-logging-ok \
+                                 --email mintteam@broadinstitute.org \
+                                 --domains ${DOMAIN}"
 
 
-CERT_VAULT_DIR="/working/certs/letsencrypt/archive/${DOMAIN}/cert1.pem"
-FULLCHAIN_VAULT_DIR="/working/certs/letsencrypt/archive/${DOMAIN}/fullchain1.pem"
-PRIVKEY_VAULT_DIR="/working/certs/letsencrypt/archive/${DOMAIN}/privkey1.pem"
-CHAIN_VAULT_DIR="/working/certs/letsencrypt/archive/${DOMAIN}/chain1.pem"
+CERT_VAULT_DIR="/certs/letsencrypt/archive/${DOMAIN}/cert1.pem"
+FULLCHAIN_VAULT_DIR="/certs/letsencrypt/archive/${DOMAIN}/fullchain1.pem"
+PRIVKEY_VAULT_DIR="/certs/letsencrypt/archive/${DOMAIN}/privkey1.pem"
+CHAIN_VAULT_DIR="/certs/letsencrypt/archive/${DOMAIN}/chain1.pem"
 
 echo "Writing fullchain to vault at ${FULLCHAIN_VAULT_DIR}"
 

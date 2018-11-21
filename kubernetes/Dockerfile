@@ -16,7 +16,8 @@ RUN apt-get update && \
     curl \
     certbot && \
     pip3 install --upgrade pip && \
-    mkdir /certs
+    mkdir certs
+
 
 WORKDIR /certs
 
