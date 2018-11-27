@@ -12,6 +12,10 @@ cd certs
 echo "Writing certbot domain to file"
 echo ${DOMAIN} > certbot_domain.txt
 
+cat << EOF > aws_config.json
+{"access_key": "${AWS_ACCESS_KEY_ID}", "secret_key": "${AWS_SECRET_ACCESS_KEY}"}
+EOF
+
 echo "Running certbot-route53 script"
 sh "${SCRIPTS_DIR}"/certbot-route53.sh
 

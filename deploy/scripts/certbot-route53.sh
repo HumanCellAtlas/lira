@@ -29,15 +29,13 @@ if [ -z "${CERTBOT_DOMAIN}" ]; then
 
 else
     echo "Reading CERTBOT_DOMAIN from file"
-    CERTBOT_DOMAIN=$(cat certbot_domain.txt)
-    echo "CERTBOT_DOMAIN=${CERTBOT_DOMAIN}"
+    export CERTBOT_DOMAIN=$(cat certbot_domain.txt)
+    export AWS_ACCESS_KEY_ID=$(cat aws_config.json | jq .access_key)
+    export AWS_SECRET_ACCESS_KEY=$(cat aws_config.json | jq .secret_key)
 
     [[ ${CERTBOT_AUTH_OUTPUT} ]] && ACTION="DELETE" || ACTION="UPSERT"
 
     printf -v QUERY 'HostedZones[?Name == `%s.`]|[?Config.PrivateZone == `false`].Id' "${CERTBOT_DOMAIN}"
-
-    export AWS_ACCESS_KEY_ID="$(vault read -field="aws_access_key" secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/aws_cert_user)"
-    export AWS_SECRET_ACCESS_KEY="$(vault read -field="aws_secret_key" secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/aws_cert_user)"
 
     HOSTED_ZONE_ID="$(aws route53 list-hosted-zones --query "${QUERY}" --output text)"
 
