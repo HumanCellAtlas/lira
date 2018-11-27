@@ -18,21 +18,21 @@ echo ${DOMAIN} > certbot_domain.txt
 echo "Running certbot-route53 script"
 sh "${SCRIPTS_DIR}"/certbot-route53.sh
 
-#export VAULT_TOKEN="$(cat ${VAULT_WRITE_TOKEN_PATH})"
-#
-#echo "Writing fullchain to vault at ${FULLCHAIN_VAULT_DIR}"
-#vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/fullchain.pem value=@"${FULLCHAIN_VAULT_DIR}"
-#
-#echo "Writing privkey to vault at ${PRIVKEY_VAULT_DIR}"
-#vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/privkey.pem value=@"${PRIVKEY_VAULT_DIR}"
-#
-#echo "Writing chain to vault at ${CHAIN_VAULT_DIR}"
-#vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/chain.pem value=@"${CHAIN_VAULT_DIR}"
-#
-#echo "Writing cert to vault at ${CERT_VAULT_DIR}"
-#vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/cert.pem value=@"${CERT_VAULT_DIR}"
-#
-#export VAULT_TOKEN="$(cat ${VAULT_READ_TOKEN_PATH})"
+export VAULT_TOKEN="$(cat ${VAULT_WRITE_TOKEN_PATH})"
+
+echo "Writing fullchain to vault at ${FULLCHAIN_VAULT_DIR}"
+vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/fullchain.pem value=@"${FULLCHAIN_VAULT_DIR}"
+
+echo "Writing privkey to vault at ${PRIVKEY_VAULT_DIR}"
+vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/privkey.pem value=@"${PRIVKEY_VAULT_DIR}"
+
+echo "Writing chain to vault at ${CHAIN_VAULT_DIR}"
+vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/chain.pem value=@"${CHAIN_VAULT_DIR}"
+
+echo "Writing cert to vault at ${CERT_VAULT_DIR}"
+vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/cert.pem value=@"${CERT_VAULT_DIR}"
+
+export VAULT_TOKEN="$(cat ${VAULT_READ_TOKEN_PATH})"
 
 echo "Removing local copies of certs"
-#rm -rf certs
+rm -rf certs

@@ -2,19 +2,20 @@
 
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/google-cloud-sdk/bin
 
-export VAULT_TOKEN_PATH="/etc/vault-token-dsde"
-export VAULT_TOKEN="$(cat ${VAULT_TOKEN_PATH})"
-export VAULT_TOKEN="$(cat ${VAULT_TOKEN_PATH})"
+export VAULT_READ_TOKEN_PATH="/etc/vault-token-mint-read"
+export VAULT_WRITE_TOKEN_PATH="/etc/vault-token-mint-write"
 
 export WORK_DIR=$(pwd)
 export CONFIG_DIR=${WORK_DIR}/deploy/config_files
 export DEPLOY_DIR=${WORK_DIR}/deploy/gitlab
+export SCRIPTS_DIR=${WORK_DIR}/deploy/scripts
 
 echo "Rendering deployment configuration file"
 docker run -i --rm \
-               -v "${VAULT_TOKEN_PATH}":/root/.vault-token \
+               -v "${VAULT_READ_TOKEN_PATH}":/root/.vault-token \
                -v "${PWD}":/working broadinstitute/dsde-toolbox:ra_rendering \
                -e LIRA_ENVIRONMENT="${LIRA_ENVIRONMENT}" \
+               --privileged \
                /usr/local/bin/render-ctmpls.sh \
                -k "${CONFIG_DIR}/config.sh.ctmpl"
 
@@ -23,7 +24,7 @@ source "${CONFIG_DIR}/config.sh"
 
 echo "Retrieving caas service account key"
 docker run -i --rm \
-               -v "${VAULT_TOKEN_PATH}":/root/.vault-token \
+               -v "${VAULT_READ_TOKEN_PATH}":/root/.vault-token \
                -v "${PWD}":/working broadinstitute/dsde-toolbox:ra_rendering \
                vault read -format=json "${CAAS_KEY_PATH}" | jq .data > "${CAAS_KEY_FILE}"
 
@@ -40,7 +41,7 @@ gcloud container clusters get-credentials "${KUBERNETES_CLUSTER}" \
 echo "Generating service file"
 docker run -i --rm -e APPLICATION_NAME="${APPLICATION_NAME}" \
                    -e SERVICE_NAME="${SERVICE_NAME}" \
-                   -v "${VAULT_TOKEN_PATH}":/root/.vault-token \
+                   -v "${VAULT_READ_TOKEN_PATH}":/root/.vault-token \
                    -v "${PWD}":/working \
                    broadinstitute/dsde-toolbox:ra_rendering \
                    /usr/local/bin/render-ctmpls.sh \
@@ -55,21 +56,23 @@ kubectl apply -f ${CONFIG_DIR}/lira-service.yaml \
 
 if [ ${GENERATE_CERTS} == "true" ];
 then
-    sh generate_certs.sh
+    sh ${DEPLOY_DIR}/generate_certs.sh
 fi
 
 echo "Rendering TLS cert"
 docker run -i --rm -e LIRA_ENVIRONMENT="${LIRA_ENVIRONMENT}" \
-                   -v "${VAULT_TOKEN_PATH}":/root/.vault-token:ro \
+                   -v "${VAULT_READ_TOKEN_PATH}":/root/.vault-token:ro \
                    -v "${PWD}":/working \
+                   --privileged \
                    broadinstitute/dsde-toolbox:ra_rendering \
                    /usr/local/bin/render-ctmpls.sh \
                    -k "${CONFIG_DIR}/${TLS_FULL_CHAIN_DIR}".ctmpl
 
 echo "Rendering TLS key file"
 docker run -i --rm -e LIRA_ENVIRONMENT="${LIRA_ENVIRONMENT}" \
-                   -v "${VAULT_TOKEN_PATH}":/root/.vault-token:ro \
+                   -v "${VAULT_READ_TOKEN_PATH}":/root/.vault-token:ro \
                    -v "${PWD}":/working \
+                   --privileged \
                    broadinstitute/dsde-toolbox:ra_rendering \
                    /usr/local/bin/render-ctmpls.sh \
                    -k "${CONFIG_DIR}/${TLS_PRIVATE_KEY_DIR}".ctmpl
@@ -86,8 +89,9 @@ docker run -i --rm -e TLS_SECRET_NAME="${TLS_SECRET_NAME}" \
                    -e GLOBAL_IP_NAME="${GLOBAL_IP_NAME}" \
                    -e INGRESS_NAME="${INGRESS_NAME}" \
                    -e SERVICE_NAME="${SERVICE_NAME}" \
-                   -v "${VAULT_TOKEN_PATH}":/root/.vault-token \
+                   -v "${VAULT_READ_TOKEN_PATH}":/root/.vault-token \
                    -v "${PWD}":/working \
+                   --privileged \
                    broadinstitute/dsde-toolbox:ra_rendering \
                    /usr/local/bin/render-ctmpls.sh \
                    -k "${CONFIG_DIR}/lira-ingress.yaml.ctmpl"
@@ -129,8 +133,9 @@ docker run -i --rm \
               -e SS2_WDL_LINK="${SS2_WDL_LINK}" \
               -e SS2_WORKFLOW_NAME="${SS2_WORKFLOW_NAME}" \
               -e SS2_VERSION="${SS2_VERSION}" \
-              -v "${VAULT_TOKEN_PATH}":/root/.vault-token \
+              -v "${VAULT_READ_TOKEN_PATH}":/root/.vault-token \
               -v "${PWD}":/working \
+              --privileged \
               broadinstitute/dsde-toolbox:ra_rendering \
               /usr/local/bin/render-ctmpls.sh \
               -k "${CONFIG_DIR}/${LIRA_CONFIG_FILE}.ctmpl"
@@ -157,8 +162,9 @@ docker run -i --rm -e LIRA_CONFIG="${LIRA_CONFIG_SECRET_NAME}" \
                    -e LIRA_DOCKER_IMAGE="${LIRA_DOCKER_IMAGE}" \
                    -e USE_CAAS="${USE_CAAS}" \
                    -e SUBMIT_AND_HOLD="${SUBMIT_AND_HOLD}" \
-                   -v "${VAULT_TOKEN_PATH}":/root/.vault-token \
+                   -v "${VAULT_READ_TOKEN_PATH}":/root/.vault-token \
                    -v "${PWD}":/working broadinstitute/dsde-toolbox:ra_rendering \
+                   --privileged \
                    /usr/local/bin/render-ctmpls.sh \
                    -k "${CONFIG_DIR}/${LIRA_DEPLOYMENT_YAML}.ctmpl"
 
