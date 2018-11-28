@@ -23,28 +23,7 @@
     export DOMAIN="pipelines.integration.data.humancellatlas.org"
 {{end}}
 
-{{ if eq $ENVIRONMENT "test"}}
-    export LIRA_VERSION="v0.14.1"
-
-    export PIPELINE_TOOLS_VERSION="v0.42.0"
-
-    export NUMBER_OF_REPLICAS="3"
-
-    export SS2_SUBSCRIPTION_ID="40f8586e-1a6d-4e40-a8f5-028de3f628e1"
-    export SS2_VERSION="smartseq2_v2.1.0"
-
-    export TENX_SUBSCRIPTION_ID="513a39a6-eb65-450b-ba5f-ce50f56c42d4"
-    export TENX_VERSION="cellranger_v1.0.2"
-
-    export GCLOUD_PROJECT="broad-dsde-mint-${LIRA_ENVIRONMENT}"
-
-    export DSS_URL="https://dss.integration.data.humancellatlas.org/v1"
-    export SCHEMA_URL="http://schema.integration.data.humancellatlas.org/"
-    export INGEST_URL="http://api.ingest.integration.data.humancellatlas.org/"
-    export DOMAIN="pipelines.integration.data.humancellatlas.org"
-{{end}}
-
-{{ if eq $ENVIRONMENT "integration"}}
+{{if (or (eq $ENVIRONMENT "test") (eq $ENVIRONMENT "integration")) }}
     export LIRA_VERSION="v0.14.1"
 
     export PIPELINE_TOOLS_VERSION="v0.42.0"

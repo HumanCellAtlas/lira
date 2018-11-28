@@ -25,16 +25,20 @@ docker run \
     -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
     -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
     -v $(pwd)/certs:/certs \
-    -v $(pwd)/certbot-route53.sh:/certs/certbot-route53.sh \
+    -v ${SCRIPTS_DIR}/certbot-route53.sh:/certs/certbot-route53.sh \
     -w="/certs" \
     --privileged \
     certbot:latest \
     bash -c \
-        "sudo bash /certs/certbot-route53.sh \
-                --agree-tos \
-                --manual-public-ip-logging-ok \
-                --email mintteam@broadinstitute.org \
-                --domains ${DOMAIN}"
+        "cat /certs/certbot-route53.sh && \
+        echo \"THIS IS A TEST - A SUCCESSFUL TEST\""
+#        "sudo bash /certs/certbot-route53.sh \
+#                --agree-tos \
+#                --manual-public-ip-logging-ok \
+#                --email mintteam@broadinstitute.org \
+#                --domains ${DOMAIN}"
+
+exit 0
 
 CERT_VAULT_DIR="certs/letsencrypt/archive/${DOMAIN}/cert1.pem"
 FULLCHAIN_VAULT_DIR="certs/letsencrypt/archive/${DOMAIN}/fullchain1.pem"

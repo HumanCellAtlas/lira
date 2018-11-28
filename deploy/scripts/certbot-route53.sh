@@ -2,8 +2,9 @@
 
 # This script was taken from this repo: https://github.com/jed/certbot-route53.git
 # It was copied locally is built on the fly because no docker image exists with this code
-# I copied the file locally because it is self contained and there is no reason to grab the whole repo
-# every time that we want to do a deployment of a new cert
+# I modified the file since within gitlab the variables fall out of scope, so instead must be re-read from a file.
+# I also needed to change the way that the domain was derived from the certbot_domain variable since alpine linux
+# is a subset of bash not full bash. Using the redirect did not work
 
 set -ex
 
@@ -42,7 +43,6 @@ else
     if [ -z "${HOSTED_ZONE_ID}" ]; then
         # CERTBOT_DOMAIN is a hostname, not a domain (zone)
         # We strip out the hostname part to leave only the domain
-#        DOMAIN="$(sed -r 's/^[^.]+.(.*)$/\1/' <<< "${CERTBOT_DOMAIN:?}")"
         DOMAIN="$(echo "${CERTBOT_DOMAIN:?}" | sed -r 's/^[^.]+.(.*)$/\1/')"
 
         printf -v QUERY 'HostedZones[?Name == `%s.`]|[?Config.PrivateZone == `false`].Id' "${DOMAIN}"

@@ -88,6 +88,6 @@ echo "Generating Lira deployment file"
 sh /usr/local/bin/render-ctmpls.sh -k "${CONFIG_DIR}/${LIRA_DEPLOYMENT_YAML}.ctmpl"
 
 echo "Deploying Lira"
-kubectl apply -f ${CONFIG_DIR}/lira-deployment.yaml \
+kubectl apply -f "${CONFIG_DIR}/${LIRA_DEPLOYMENT_YAML}" \
               --record \
               --namespace "${KUBERNETES_NAMESPACE}"
