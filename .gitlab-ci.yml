@@ -8,5 +8,5 @@ deploy_lira:
     - green
   stage: deployment
   script:
-    - export LIRA_ENVIRONMENT=staging
+    - export LIRA_ENVIRONMENT=dev
     - bash deploy/gitlab/deploy_lira.sh
