@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+export VAULT_READ_TOKEN_PATH="/etc/vault-token-mint-read"
+export VAULT_WRITE_TOKEN_PATH="/etc/vault-token-mint-write"
+
 echo "Getting AWS Users credentials from Vault"
 AWS_ACCESS_KEY_ID="$(docker run -i \
                                 --rm \
@@ -30,15 +33,11 @@ docker run \
     --privileged \
     certbot:latest \
     bash -c \
-        "cat /certs/certbot-route53.sh && \
-        echo \"THIS IS A TEST - A SUCCESSFUL TEST\""
-#        "sudo bash /certs/certbot-route53.sh \
-#                --agree-tos \
-#                --manual-public-ip-logging-ok \
-#                --email mintteam@broadinstitute.org \
-#                --domains ${DOMAIN}"
-
-exit 0
+        "sudo bash /certs/certbot-route53.sh \
+                --agree-tos \
+                --manual-public-ip-logging-ok \
+                --email mintteam@broadinstitute.org \
+                --domains ${DOMAIN}"
 
 CERT_VAULT_DIR="certs/letsencrypt/archive/${DOMAIN}/cert1.pem"
 FULLCHAIN_VAULT_DIR="certs/letsencrypt/archive/${DOMAIN}/fullchain1.pem"

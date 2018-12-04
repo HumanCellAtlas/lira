@@ -7,50 +7,51 @@ export VAULT_WRITE_TOKEN_PATH="/etc/vault-token-mint-write"
 
 export WORK_DIR=$(pwd)
 export CONFIG_DIR=${WORK_DIR}/deploy/config_files
-export DEPLOY_DIR=${WORK_DIR}/deploy/gitlab
+export DEPLOY_DIR=${WORK_DIR}/deploy/jenkins
 export SCRIPTS_DIR=${WORK_DIR}/deploy/scripts
 
 echo "Rendering deployment configuration file"
 docker run -i --rm \
                -v "${VAULT_READ_TOKEN_PATH}":/root/.vault-token \
-               -v "${PWD}":/working broadinstitute/dsde-toolbox:ra_rendering \
+               -v "${PWD}":/working \
                -e LIRA_ENVIRONMENT="${LIRA_ENVIRONMENT}" \
                --privileged \
+               broadinstitute/dsde-toolbox:ra_rendering \
                /usr/local/bin/render-ctmpls.sh \
-               -k "${CONFIG_DIR}/config.sh.ctmpl"
+               -k "/working/deploy/config_files/config.sh.ctmpl"
 
 # Import the variables from the config files
 source "${CONFIG_DIR}/config.sh"
 
-#echo "Retrieving caas service account key"
-#docker run -i --rm \
-#               -v "${VAULT_READ_TOKEN_PATH}":/root/.vault-token \
-#               -v "${PWD}":/working broadinstitute/dsde-toolbox:ra_rendering \
-#               vault read -format=json "${CAAS_KEY_PATH}" | jq .data > "${CAAS_KEY_FILE}"
-#
-#echo "Authenticating with the service account"
-#gcloud auth activate-service-account --key-file "${CONFIG_DIR}/${CAAS_KEY_FILE}"
-#
-#echo "Getting kubernetes context"
-#gcloud container clusters get-credentials "${KUBERNETES_CLUSTER}" \
-#                 --zone "${KUBERNETES_ZONE}" \
-#                 --project "${GCLOUD_PROJECT}"
-#
-## KUBERNETES SERVICE DEPLOYMENT
-#
-#echo "Generating service file"
-#docker run -i --rm -e APPLICATION_NAME="${APPLICATION_NAME}" \
-#                   -e SERVICE_NAME="${SERVICE_NAME}" \
-#                   -v "${VAULT_READ_TOKEN_PATH}":/root/.vault-token \
-#                   -v "${PWD}":/working \
-#                   broadinstitute/dsde-toolbox:ra_rendering \
-#                   /usr/local/bin/render-ctmpls.sh \
-#                   -k "${CONFIG_DIR}/lira-service.yaml.ctmpl"
-#
-#echo "Deploying Lira Service"
-#kubectl apply -f ${CONFIG_DIR}/lira-service.yaml \
-#              --record \
-#              --namespace="${KUBERNETES_NAMESPACE}"
+echo "Retrieving caas service account key"
+docker run -i --rm \
+               -v "${VAULT_READ_TOKEN_PATH}":/root/.vault-token \
+               -v "${PWD}":/working broadinstitute/dsde-toolbox:ra_rendering \
+               vault read -format=json "${CAAS_KEY_PATH}" | jq .data > "${CAAS_KEY_FILE}"
+
+echo "Authenticating with the service account"
+gcloud auth activate-service-account --key-file "${CONFIG_DIR}/${CAAS_KEY_FILE}"
+
+echo "Getting kubernetes context"
+gcloud container clusters get-credentials "${KUBERNETES_CLUSTER}" \
+                 --zone "${KUBERNETES_ZONE}" \
+                 --project "${GCLOUD_PROJECT}"
+
+# KUBERNETES SERVICE DEPLOYMENT
+
+echo "Generating service file"
+docker run -i --rm -e APPLICATION_NAME="${APPLICATION_NAME}" \
+                   -e SERVICE_NAME="${SERVICE_NAME}" \
+                   -v "${VAULT_READ_TOKEN_PATH}":/root/.vault-token \
+                   -v "${PWD}":/working \
+                   broadinstitute/dsde-toolbox:ra_rendering \
+                   /usr/local/bin/render-ctmpls.sh \
+                   -k "${CONFIG_DIR}/lira-service.yaml.ctmpl"
+
+echo "Deploying Lira Service"
+kubectl apply -f ${CONFIG_DIR}/lira-service.yaml \
+              --record \
+              --namespace="${KUBERNETES_NAMESPACE}"
 
 # TLS CERT GENERATION AND KUBERNETES INGRESS
 
@@ -58,9 +59,6 @@ if [ ${GENERATE_CERTS} == "true" ];
 then
     sh ${DEPLOY_DIR}/generate_certs.sh
 fi
-
-exit 0
-
 
 echo "Rendering TLS cert"
 docker run -i --rm -e LIRA_ENVIRONMENT="${LIRA_ENVIRONMENT}" \
