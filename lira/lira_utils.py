@@ -198,7 +198,7 @@ def compose_caas_options(cromwell_options_file, lira_config):
         'jes_gcs_root': lira_config.gcs_root,
         'google_project': lira_config.google_project,
         'user_service_account_json': caas_key,
-        'google_compute_service_account': caas_key
+        'google_compute_service_account': "caas-prod-account-for-test@broad-dsde-mint-test.iam.gserviceaccount.com"
     })
     return options_json
 
