@@ -180,6 +180,9 @@ def compose_inputs(workflow_name, uuid, version, lira_config):
 def compose_caas_options(cromwell_options_file, lira_config):
     """ Append options for using Cromwell-as-a-service to the default options.json file in the wdl config.
 
+    Note: These options only work with Cromwell instances that use the Google Cloud Backend and allow
+    user-service-account authentication, such as Cromwell.
+
     Args:
         cromwell_options_file (str): Contents of the options.json file in the wdl config.
         lira_config (LiraConfig): Lira configuration.
@@ -193,12 +196,13 @@ def compose_caas_options(cromwell_options_file, lira_config):
     options_json = json.loads(options_file)
 
     with open(lira_config.caas_key) as f:
-        caas_key = f.read()
+        caas_key_json = json.loads(f.read())
+
     options_json.update({
         'jes_gcs_root': lira_config.gcs_root,
         'google_project': lira_config.google_project,
-        'user_service_account_json': caas_key,
-        'google_compute_service_account': "caas-prod-account-for-test@broad-dsde-mint-test.iam.gserviceaccount.com"
+        'user_service_account_json': caas_key_json,
+        'google_compute_service_account': caas_key_json['client_email']
     })
     return options_json
 

@@ -354,7 +354,9 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(options['google_project'], 'fake_google_project')
         with open('data/fake_caas_key.json') as f:
             fake_caas_key = f.read()
+            fake_caas_key_json = json.loads(fake_caas_key)
         self.assertEqual(options['user_service_account_json'], fake_caas_key)
+        self.assertEqual(options['google_compute_service_account'], fake_caas_key_json['client_email'])
 
     def test_parse_github_resource_url(self):
         """Test if parse_github_resource_url can correctly parse Github resource urls."""
