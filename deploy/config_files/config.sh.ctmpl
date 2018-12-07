@@ -28,7 +28,7 @@
 {{if (or (eq $ENVIRONMENT "test") (eq $ENVIRONMENT "integration")) }}
     export LIRA_VERSION="v0.14.1"
 
-    export PIPELINE_TOOLS_VERSION="v0.42.0"
+    export PIPELINE_TOOLS_VERSION="4k-scaling-test-2018-11-06-with-papiv2"
 
     export NUMBER_OF_REPLICAS="3"
 
