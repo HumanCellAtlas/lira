@@ -32,7 +32,7 @@
 
     export NUMBER_OF_REPLICAS="3"
 
-    export GENERATE_CERTS="true"
+    export GENERATE_CERTS="false"
 
     export SS2_SUBSCRIPTION_ID="40f8586e-1a6d-4e40-a8f5-028de3f628e1"
     export SS2_VERSION="smartseq2_v2.1.0"
@@ -55,7 +55,7 @@
 
     export NUMBER_OF_REPLICAS="3"
 
-    export GENERATE_CERTS="true"
+    export GENERATE_CERTS="false"
 
     export SS2_SUBSCRIPTION_ID="fde592d7-ebb9-4121-ad4a-0e000874cc3b"
     export SS2_VERSION="smartseq2_v2.1.0"
@@ -78,7 +78,7 @@
 
     export NUMBER_OF_REPLICAS="3"
 
-    export GENERATE_CERTS="true"
+    export GENERATE_CERTS="false"
 
     export SS2_SUBSCRIPTION_ID="e4570fb6-b2d6-49fa-bdcf-753df405a520"
     export SS2_VERSION="smartseq2_v2.1.0"

@@ -5,7 +5,7 @@ stages:
   - test
   - staging
 
-deploy_lira:
+deploy_dev:
   tags:
     - green
   stage: dev
@@ -13,7 +13,7 @@ deploy_lira:
     - export LIRA_ENVIRONMENT=dev
     - bash deploy/gitlab/deploy_lira.sh
 
-deploy_lira:
+deploy_test:
   tags:
     - green
   stage: test
@@ -22,7 +22,7 @@ deploy_lira:
     - bash deploy/gitlab/deploy_lira.sh
   when: manual
 
-deploy_lira:
+deploy_staging:
   tags:
     - green
   stage: staging
