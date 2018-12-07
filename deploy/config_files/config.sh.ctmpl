@@ -9,7 +9,7 @@
 
     export MAX_CROMWELL_RETRIES=1
 
-    export GENERATE_CERTS="true"
+    export GENERATE_CERTS="false"
 
     export SS2_SUBSCRIPTION_ID="placeholder_ss2_subscription_id"
     export SS2_VERSION="smartseq2_v2.1.0"
