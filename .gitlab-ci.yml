@@ -1,12 +1,41 @@
 image: rhiananthony/dsde-toolbox:gitlab-runner-11.4.4
 
 stages:
-  - deployment
+  - dev
+  - test
+  - staging
 
 deploy_lira:
   tags:
     - green
-  stage: deployment
+  stage: dev
   script:
     - export LIRA_ENVIRONMENT=dev
     - bash deploy/gitlab/deploy_lira.sh
+
+deploy_lira:
+  tags:
+    - green
+  stage: test
+  script:
+    - export LIRA_ENVIRONMENT=test
+    - bash deploy/gitlab/deploy_lira.sh
+  when: manual
+
+deploy_lira:
+  tags:
+    - green
+  stage: staging
+  script:
+    - export LIRA_ENVIRONMENT=staging
+    - bash deploy/gitlab/deploy_lira.sh
+  when: manual
+
+#deploy_lira:
+#  tags:
+#    - green
+#  stage: prod
+#  script:
+#    - export LIRA_ENVIRONMENT=prod
+#    - bash deploy/gitlab/deploy_lira.sh
+#  when: manual

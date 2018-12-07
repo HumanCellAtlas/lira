@@ -9,6 +9,8 @@
 
     export MAX_CROMWELL_RETRIES=1
 
+    export GENERATE_CERTS="true"
+
     export SS2_SUBSCRIPTION_ID="placeholder_ss2_subscription_id"
     export SS2_VERSION="smartseq2_v2.1.0"
 
@@ -20,7 +22,7 @@
     export DSS_URL="https://dss.integration.data.humancellatlas.org/v1"
     export SCHEMA_URL="http://schema.integration.data.humancellatlas.org/"
     export INGEST_URL="http://api.ingest.integration.data.humancellatlas.org/"
-    export DOMAIN="pipelines.integration.data.humancellatlas.org"
+    export DOMAIN="pipelines.dev.data.humancellatlas.org"
 {{end}}
 
 {{if (or (eq $ENVIRONMENT "test") (eq $ENVIRONMENT "integration")) }}
@@ -29,6 +31,8 @@
     export PIPELINE_TOOLS_VERSION="v0.42.0"
 
     export NUMBER_OF_REPLICAS="3"
+
+    export GENERATE_CERTS="true"
 
     export SS2_SUBSCRIPTION_ID="40f8586e-1a6d-4e40-a8f5-028de3f628e1"
     export SS2_VERSION="smartseq2_v2.1.0"
@@ -51,6 +55,8 @@
 
     export NUMBER_OF_REPLICAS="3"
 
+    export GENERATE_CERTS="true"
+
     export SS2_SUBSCRIPTION_ID="fde592d7-ebb9-4121-ad4a-0e000874cc3b"
     export SS2_VERSION="smartseq2_v2.1.0"
 
@@ -71,6 +77,8 @@
     export PIPELINE_TOOLS_VERSION="v0.42.0"
 
     export NUMBER_OF_REPLICAS="3"
+
+    export GENERATE_CERTS="true"
 
     export SS2_SUBSCRIPTION_ID="e4570fb6-b2d6-49fa-bdcf-753df405a520"
     export SS2_VERSION="smartseq2_v2.1.0"
@@ -131,9 +139,6 @@
     fi
 
     # TLS Cert variables
-    # export GENERATE_CERTS=${GENERATE_CERTS:-"true"}
-    
-    export GENERATE_CERTS="true"
     export TLS_FULL_CHAIN_DIR="lira-ssl-certificate.crt"
     export TLS_PRIVATE_KEY_DIR="lira-ssl-certificate.key"
     export TLS_SECRET_NAME="hca-tls-secret"-$(date '+%Y-%m-%d-%H-%M-%S')

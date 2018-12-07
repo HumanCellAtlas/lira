@@ -12,10 +12,10 @@ export DEPLOY_DIR=${WORK_DIR}/deploy/gitlab
 export SCRIPTS_DIR=${WORK_DIR}/deploy/scripts
 
 echo "Rendering deployment configuration file"
-sh /usr/local/bin/render-ctmpls.sh -k ${CONFIG_DIR}/config.sh.ctmpl
+sh "${DEPLOY_DIR}/render-ctmpls.sh" -k "${CONFIG_DIR}/config.sh.ctmpl"
 
 # Import the variables from the config files
-source ${CONFIG_DIR}/config.sh
+source "${CONFIG_DIR}/config.sh"
 
 echo "Retrieving caas service account key"
 vault read -format=json "${CAAS_KEY_PATH}" | jq .data > "${CONFIG_DIR}/${CAAS_KEY_FILE}"
@@ -40,22 +40,22 @@ kubectl apply -f ${CONFIG_DIR}/lira-service.yaml \
 
 # TLS CERT GENERATION AND KUBERNETES INGRESS
 
-if [ ${GENERATE_CERTS} == "true" ];
+if [ "${GENERATE_CERTS}" == "true" ];
 then
-    sh ${DEPLOY_DIR}/generate_certs.sh
+    sh "${DEPLOY_DIR}/generate_certs.sh"
 fi
 
 echo "Rendering TLS cert"
-sh /usr/local/bin/render-ctmpls.sh -k "${CONFIG_DIR}/${TLS_FULL_CHAIN_DIR}.ctmpl"
+sh "${DEPLOY_DIR}/render-ctmpls.sh" -k "${CONFIG_DIR}/${TLS_FULL_CHAIN_DIR}.ctmpl"
 
 echo "Rendering TLS key file"
-sh /usr/local/bin/render-ctmpls.sh -k "${CONFIG_DIR}/${TLS_PRIVATE_KEY_DIR}.ctmpl"
+sh "${DEPLOY_DIR}/render-ctmpls.sh" -k "${CONFIG_DIR}/${TLS_PRIVATE_KEY_DIR}.ctmpl"
 
 echo "Creating TLS secret in Kubernetes"
 kubectl create secret tls \
                 "${TLS_SECRET_NAME}" \
-                --cert="${TLS_FULL_CHAIN_DIR}" \
-                --key="${TLS_PRIVATE_KEY_DIR}" \
+                --cert="${CONFIG_DIR}/${TLS_FULL_CHAIN_DIR}" \
+                --key="${CONFIG_DIR}/${TLS_PRIVATE_KEY_DIR}" \
                 --namespace="${KUBERNETES_NAMESPACE}"
 
 echo "Generating ingress file"
@@ -69,10 +69,10 @@ kubectl apply -f ${CONFIG_DIR}/lira-ingress.yaml \
 # LIRA APPLICATION DEPLOYMENT
 
 echo "Rendering lira config file"
-sh /usr/local/bin/render-ctmpls.sh -k "${CONFIG_DIR}/${LIRA_CONFIG_FILE}.ctmpl"
+sh "${DEPLOY_DIR}/render-ctmpls.sh" -k "${CONFIG_DIR}/${LIRA_CONFIG_FILE}.ctmpl"
 
 echo "Deploying lira config file"
-if [ ${USE_CAAS} == "true" ];
+if [ "${USE_CAAS}" == "true" ];
 then
     kubectl create secret generic "${LIRA_CONFIG_SECRET_NAME}" \
             --from-file=config="${CONFIG_DIR}/${LIRA_CONFIG_FILE}" \
@@ -85,7 +85,7 @@ else
 fi
 
 echo "Generating Lira deployment file"
-sh /usr/local/bin/render-ctmpls.sh -k "${CONFIG_DIR}/${LIRA_DEPLOYMENT_YAML}.ctmpl"
+sh "${DEPLOY_DIR}/render-ctmpls.sh" -k "${CONFIG_DIR}/${LIRA_DEPLOYMENT_YAML}.ctmpl"
 
 echo "Deploying Lira"
 kubectl apply -f "${CONFIG_DIR}/${LIRA_DEPLOYMENT_YAML}" \
