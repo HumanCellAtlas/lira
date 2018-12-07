@@ -2,8 +2,7 @@
 
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/google-cloud-sdk/bin
 
-export VAULT_READ_TOKEN_PATH="/etc/vault-token-mint-read"
-export VAULT_WRITE_TOKEN_PATH="/etc/vault-token-mint-write"
+export VAULT_TOKEN_PATH="/etc/vault-token"
 
 export WORK_DIR=$(pwd)
 export CONFIG_DIR=${WORK_DIR}/deploy/config_files
@@ -12,7 +11,7 @@ export SCRIPTS_DIR=${WORK_DIR}/deploy/scripts
 
 echo "Rendering deployment configuration file"
 docker run -i --rm \
-               -v "${VAULT_READ_TOKEN_PATH}":/root/.vault-token \
+               -v "${VAULT_TOKEN_PATH}":/root/.vault-token \
                -v "${PWD}":/working \
                -e LIRA_ENVIRONMENT="${LIRA_ENVIRONMENT}" \
                --privileged \
@@ -25,7 +24,7 @@ source "${CONFIG_DIR}/config.sh"
 
 echo "Retrieving caas service account key"
 docker run -i --rm \
-               -v "${VAULT_READ_TOKEN_PATH}":/root/.vault-token \
+               -v "${VAULT_TOKEN_PATH}":/root/.vault-token \
                -v "${PWD}":/working broadinstitute/dsde-toolbox:ra_rendering \
                vault read -format=json "${CAAS_KEY_PATH}" | jq .data > "${CAAS_KEY_FILE}"
 
@@ -42,7 +41,7 @@ gcloud container clusters get-credentials "${KUBERNETES_CLUSTER}" \
 echo "Generating service file"
 docker run -i --rm -e APPLICATION_NAME="${APPLICATION_NAME}" \
                    -e SERVICE_NAME="${SERVICE_NAME}" \
-                   -v "${VAULT_READ_TOKEN_PATH}":/root/.vault-token \
+                   -v "${VAULT_TOKEN_PATH}":/root/.vault-token \
                    -v "${PWD}":/working \
                    broadinstitute/dsde-toolbox:ra_rendering \
                    /usr/local/bin/render-ctmpls.sh \
@@ -62,7 +61,7 @@ fi
 
 echo "Rendering TLS cert"
 docker run -i --rm -e LIRA_ENVIRONMENT="${LIRA_ENVIRONMENT}" \
-                   -v "${VAULT_READ_TOKEN_PATH}":/root/.vault-token:ro \
+                   -v "${VAULT_TOKEN_PATH}":/root/.vault-token:ro \
                    -v "${PWD}":/working \
                    --privileged \
                    broadinstitute/dsde-toolbox:ra_rendering \
@@ -71,7 +70,7 @@ docker run -i --rm -e LIRA_ENVIRONMENT="${LIRA_ENVIRONMENT}" \
 
 echo "Rendering TLS key file"
 docker run -i --rm -e LIRA_ENVIRONMENT="${LIRA_ENVIRONMENT}" \
-                   -v "${VAULT_READ_TOKEN_PATH}":/root/.vault-token:ro \
+                   -v "${VAULT_TOKEN_PATH}":/root/.vault-token:ro \
                    -v "${PWD}":/working \
                    --privileged \
                    broadinstitute/dsde-toolbox:ra_rendering \
@@ -90,7 +89,7 @@ docker run -i --rm -e TLS_SECRET_NAME="${TLS_SECRET_NAME}" \
                    -e GLOBAL_IP_NAME="${GLOBAL_IP_NAME}" \
                    -e INGRESS_NAME="${INGRESS_NAME}" \
                    -e SERVICE_NAME="${SERVICE_NAME}" \
-                   -v "${VAULT_READ_TOKEN_PATH}":/root/.vault-token \
+                   -v "${VAULT_TOKEN_PATH}":/root/.vault-token \
                    -v "${PWD}":/working \
                    --privileged \
                    broadinstitute/dsde-toolbox:ra_rendering \
@@ -134,7 +133,7 @@ docker run -i --rm \
               -e SS2_WDL_LINK="${SS2_WDL_LINK}" \
               -e SS2_WORKFLOW_NAME="${SS2_WORKFLOW_NAME}" \
               -e SS2_VERSION="${SS2_VERSION}" \
-              -v "${VAULT_READ_TOKEN_PATH}":/root/.vault-token \
+              -v "${VAULT_TOKEN_PATH}":/root/.vault-token \
               -v "${PWD}":/working \
               --privileged \
               broadinstitute/dsde-toolbox:ra_rendering \
@@ -163,7 +162,7 @@ docker run -i --rm -e LIRA_CONFIG="${LIRA_CONFIG_SECRET_NAME}" \
                    -e LIRA_DOCKER_IMAGE="${LIRA_DOCKER_IMAGE}" \
                    -e USE_CAAS="${USE_CAAS}" \
                    -e SUBMIT_AND_HOLD="${SUBMIT_AND_HOLD}" \
-                   -v "${VAULT_READ_TOKEN_PATH}":/root/.vault-token \
+                   -v "${VAULT_TOKEN_PATH}":/root/.vault-token \
                    -v "${PWD}":/working broadinstitute/dsde-toolbox:ra_rendering \
                    --privileged \
                    /usr/local/bin/render-ctmpls.sh \
