@@ -31,11 +31,11 @@ deploy_staging:
     - bash deploy/gitlab/deploy_lira.sh
   when: manual
 
-#deploy_lira:
-#  tags:
-#    - green
-#  stage: prod
-#  script:
-#    - export LIRA_ENVIRONMENT=prod
-#    - bash deploy/gitlab/deploy_lira.sh
-#  when: manual
+deploy_lira:
+  tags:
+    - green
+  stage: prod
+  script:
+    - export LIRA_ENVIRONMENT=prod
+    - bash deploy/gitlab/deploy_lira.sh
+  when: manual

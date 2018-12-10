@@ -18,7 +18,7 @@ docker run -i --rm \
                --privileged \
                broadinstitute/dsde-toolbox:ra_rendering \
                /usr/local/bin/render-ctmpls.sh \
-               -k "/working/deploy/config_files/config.sh.ctmpl"
+               -k "${CONFIG_DIR}/config.sh.ctmpl"
 
 # Import the variables from the config files
 source "${CONFIG_DIR}/config.sh"
@@ -27,7 +27,7 @@ echo "Retrieving caas service account key"
 docker run -i --rm \
                -v "${VAULT_READ_TOKEN_PATH}":/root/.vault-token \
                -v "${PWD}":/working broadinstitute/dsde-toolbox:ra_rendering \
-               vault read -format=json "${CAAS_KEY_PATH}" | jq .data > "${CAAS_KEY_FILE}"
+               vault read -format=json "${CAAS_KEY_PATH}" | jq .data > "${CONFIG_DIR}/${CAAS_KEY_FILE}"
 
 echo "Authenticating with the service account"
 gcloud auth activate-service-account --key-file "${CONFIG_DIR}/${CAAS_KEY_FILE}"
@@ -81,8 +81,8 @@ docker run -i --rm -e LIRA_ENVIRONMENT="${LIRA_ENVIRONMENT}" \
 echo "Creating TLS secret in Kubernetes"
 kubectl create secret tls \
                 "${TLS_SECRET_NAME}" \
-                --cert="${TLS_FULL_CHAIN_DIR}" \
-                --key="${TLS_PRIVATE_KEY_DIR}" \
+                --cert="${CONFIG_DIR}/${TLS_FULL_CHAIN_DIR}" \
+                --key="${CONFIG_DIR}/${TLS_PRIVATE_KEY_DIR}" \
                 --namespace="${KUBERNETES_NAMESPACE}"
 
 echo "Generating ingress file"
