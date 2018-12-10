@@ -59,7 +59,7 @@ kubectl create secret tls \
                 --namespace="${KUBERNETES_NAMESPACE}"
 
 echo "Generating ingress file"
-sh /usr/local/bin/render-ctmpls.sh -k "${CONFIG_DIR}/lira-ingress.yaml.ctmpl"
+sh "${DEPLOY_DIR}/render-ctmpls.sh" -k "${CONFIG_DIR}/lira-ingress.yaml.ctmpl"
 
 echo "Deploying Lira Ingress"
 kubectl apply -f ${CONFIG_DIR}/lira-ingress.yaml \
