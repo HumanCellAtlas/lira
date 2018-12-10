@@ -21,24 +21,47 @@ sh "${SCRIPTS_DIR}"/certbot-route53.sh
 
 cd ..
 
-export CERT_VAULT_DIR="${WORK_DIR}/certs/letsencrypt/archive/${DOMAIN}/cert1.pem"
-export FULLCHAIN_VAULT_DIR="${WORK_DIR}/certs/letsencrypt/archive/${DOMAIN}/fullchain1.pem"
-export PRIVKEY_VAULT_DIR="${WORK_DIR}/certs/letsencrypt/archive/${DOMAIN}/privkey1.pem"
-export CHAIN_VAULT_DIR="${WORK_DIR}/certs/letsencrypt/archive/${DOMAIN}/chain1.pem"
-
 export VAULT_TOKEN="$(cat ${VAULT_WRITE_TOKEN_PATH})"
 
-echo "Writing fullchain to vault at ${FULLCHAIN_VAULT_DIR}"
-vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/fullchain.pem value=@"${FULLCHAIN_VAULT_DIR}"
+if [ -f "${WORK_DIR}/certs/letsencrypt/archive/${DOMAIN}/fullchain1.pem" ];
+then
+    export FULLCHAIN_VAULT_DIR="${WORK_DIR}/certs/letsencrypt/archive/${DOMAIN}/fullchain1.pem"
+    echo "Writing fullchain to vault at ${FULLCHAIN_VAULT_DIR}"
+    vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/fullchain.pem value=@"${FULLCHAIN_VAULT_DIR}"
+else
+    echo "Fullchain file doesn't exist. Exiting..."
+    exit 1
+fi
 
-echo "Writing privkey to vault at ${PRIVKEY_VAULT_DIR}"
-vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/privkey.pem value=@"${PRIVKEY_VAULT_DIR}"
+if [ -f "${WORK_DIR}/certs/letsencrypt/archive/${DOMAIN}/privkey1.pem" ];
+then
+    export PRIVKEY_VAULT_DIR="${WORK_DIR}/certs/letsencrypt/archive/${DOMAIN}/privkey1.pem"
+    echo "Writing privkey to vault at ${PRIVKEY_VAULT_DIR}"
+    vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/privkey.pem value=@"${PRIVKEY_VAULT_DIR}"
+else
+    echo "Private key file doesn't exist. Exiting..."
+    exit 1
+fi
 
-echo "Writing chain to vault at ${CHAIN_VAULT_DIR}"
-vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/chain.pem value=@"${CHAIN_VAULT_DIR}"
+if [ -f "${WORK_DIR}/certs/letsencrypt/archive/${DOMAIN}/chain1.pem" ];
+then
+    export CHAIN_VAULT_DIR="${WORK_DIR}/certs/letsencrypt/archive/${DOMAIN}/chain1.pem"
+    echo "Writing chain to vault at ${CHAIN_VAULT_DIR}"
+    vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/chain.pem value=@"${CHAIN_VAULT_DIR}"
+else
+    echo "Chain file doesn't exist. Exiting..."
+    exit 1
+fi
 
-echo "Writing cert to vault at ${CERT_VAULT_DIR}"
-vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/cert.pem value=@"${CERT_VAULT_DIR}"
+if [ -f "${WORK_DIR}/certs/letsencrypt/archive/${DOMAIN}/cert1.pem" ];
+then
+    export CERT_VAULT_DIR="${WORK_DIR}/certs/letsencrypt/archive/${DOMAIN}/cert1.pem"
+    echo "Writing cert to vault at ${CERT_VAULT_DIR}"
+    vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/cert.pem value=@"${CERT_VAULT_DIR}"
+else
+    echo "Cert file doesn't exist. Exiting..."
+    exit 1
+fi
 
 export VAULT_TOKEN="$(cat ${VAULT_READ_TOKEN_PATH})"
 
