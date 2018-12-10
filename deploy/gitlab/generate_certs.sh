@@ -29,8 +29,7 @@ then
     echo "Writing fullchain to vault at ${FULLCHAIN_VAULT_DIR}"
     vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/fullchain.pem value=@"${FULLCHAIN_VAULT_DIR}"
 else
-    echo "Fullchain file doesn't exist. Exiting..."
-    exit 1
+    echo "Fullchain file doesn't exist. Skipping..."
 fi
 
 if [ -f "${WORK_DIR}/certs/letsencrypt/archive/${DOMAIN}/privkey1.pem" ];
@@ -39,8 +38,7 @@ then
     echo "Writing privkey to vault at ${PRIVKEY_VAULT_DIR}"
     vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/privkey.pem value=@"${PRIVKEY_VAULT_DIR}"
 else
-    echo "Private key file doesn't exist. Exiting..."
-    exit 1
+    echo "Private key file doesn't exist. Skipping..."
 fi
 
 if [ -f "${WORK_DIR}/certs/letsencrypt/archive/${DOMAIN}/chain1.pem" ];
@@ -49,8 +47,7 @@ then
     echo "Writing chain to vault at ${CHAIN_VAULT_DIR}"
     vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/chain.pem value=@"${CHAIN_VAULT_DIR}"
 else
-    echo "Chain file doesn't exist. Exiting..."
-    exit 1
+    echo "Chain file doesn't exist. Skipping..."
 fi
 
 if [ -f "${WORK_DIR}/certs/letsencrypt/archive/${DOMAIN}/cert1.pem" ];
@@ -59,8 +56,7 @@ then
     echo "Writing cert to vault at ${CERT_VAULT_DIR}"
     vault write secret/dsde/mint/${LIRA_ENVIRONMENT}/lira/cert.pem value=@"${CERT_VAULT_DIR}"
 else
-    echo "Cert file doesn't exist. Exiting..."
-    exit 1
+    echo "Cert file doesn't exist. Skipping..."
 fi
 
 export VAULT_TOKEN="$(cat ${VAULT_READ_TOKEN_PATH})"
