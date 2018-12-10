@@ -4,6 +4,7 @@ stages:
   - dev
   - test
   - staging
+  - prod
 
 deploy_dev:
   tags:
