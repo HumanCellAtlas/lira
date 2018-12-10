@@ -3,7 +3,7 @@
 {{ if eq $ENVIRONMENT "dev" }}
     export LIRA_VERSION="v0.14.1"
 
-    export PIPELINE_TOOLS_VERSION="v0.42.0"
+    export PIPELINE_TOOLS_VERSION="v0.43.0"
 
     export NUMBER_OF_REPLICAS="3"
 
@@ -51,16 +51,16 @@
 {{ if eq $ENVIRONMENT "staging" }}
     export LIRA_VERSION="v0.14.1"
 
-    export PIPELINE_TOOLS_VERSION="v0.42.0"
+    export PIPELINE_TOOLS_VERSION="v0.43.0"
 
     export NUMBER_OF_REPLICAS="3"
 
     export GENERATE_CERTS="false"
 
-    export SS2_SUBSCRIPTION_ID="fde592d7-ebb9-4121-ad4a-0e000874cc3b"
+    export SS2_SUBSCRIPTION_ID="4fee6f8f-8cfd-470f-8076-e20062001090"
     export SS2_VERSION="smartseq2_v2.1.0"
 
-    export TENX_SUBSCRIPTION_ID="7484e05b-344a-48fa-989e-de4e6ae9bef7"
+    export TENX_SUBSCRIPTION_ID="12c7d881-64a8-4584-86d8-b383686aa2ba"
     export TENX_VERSION="cellranger_v1.0.2"
 
     export GCLOUD_PROJECT="broad-dsde-mint-${LIRA_ENVIRONMENT}"
@@ -74,7 +74,7 @@
 {{ if eq $ENVIRONMENT "prod" }}
     export LIRA_VERSION="v0.14.1"
 
-    export PIPELINE_TOOLS_VERSION="v0.42.0"
+    export PIPELINE_TOOLS_VERSION="v0.43.0"
 
     export NUMBER_OF_REPLICAS="3"
 
