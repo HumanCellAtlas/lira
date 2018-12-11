@@ -1,28 +1,27 @@
 # Kubernetes Deployment
 Upgrading is featured first as this will be the more common action required in this setup
 
-## Upgrading
+## Installing or Upgrading
+Generally the only file which will need to be modified when updating a deployment will be the
+config.sh.ctmpl. The section which is envisioned to change most often will be the environment 
+variables located towards the top of this file. 
+
 ### Lira Deployments (deploy_lira.sh)
 This script does the following:
-1. Retrieving caas service account key from vault
-2. Renders the Lira config file
-3. Deploys the lira config file with the caas key to the Kubernetes cluster
-4. Generates the lira deployment file
-5. Deploys the lira-deployment.yaml file to the Kubernetes cluster
+01. Generates the Kubernetes service yaml
+02. Deploys the Kubernetes service to the cluster
+03. Generates a TLS cert keys (private, chain, cert and fullchain)
+04. Adds the TLS cert keys to Vault
+05. Renders the TLS cert files
+06. Adds the rendered TLS cert to the Kubernetes configuration secret for the cluster
+07. Renders the lira-ingress.yaml file
+08. Deploys the rendered ingress file to the Kubernetes cluster 
+09. Retrieving caas service account key from vault
+10. Renders the Lira config file
+11. Deploys the lira config file with the caas key to the Kubernetes cluster
+12. Generates the lira deployment file
+13. Deploys the lira-deployment.yaml file to the Kubernetes cluster
 
-### Lira Service (deploy_lira_service.sh)
-This script does the following:
-1. Generates the Kubernetes service yaml
-2. Deploys the Kubernetes service to the cluster
-
-### TLS Certs and Ingress (deploy_tls_cert_and_ingress.sh)
-This script does the following:
-1. Generates a TLS cert keys (private, chain, cert and fullchain)
-2. Adds the TLS cert keys to Vault
-3. Renders the TLS cert files
-4. Adds the rendered TLS cert to the Kubernetes configuration secret for the cluster
-5. Renders the lira-ingress.yaml file
-6. Deploys the rendered ingress file to the Kubernetes cluster 
 
 ## New Deployments
 In addition to the above scripts there are several other items which need to be set up to deploy lira for the first time:
