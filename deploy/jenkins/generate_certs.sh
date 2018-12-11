@@ -22,28 +22,22 @@ cd "${DEPLOY_DIR}"
 docker build -t certbot .
 cd ../..
 
-echo "Writing certbot domain to file"
-echo ${DOMAIN} > certbot_domain.txt
-
-cat << EOF > aws_config.json
-{"access_key": "${AWS_ACCESS_KEY_ID}", "secret_key": "${AWS_SECRET_ACCESS_KEY}"}
-EOF
+cd certs
 
 echo "Executing the certbot script to create a cert"
 docker run \
     -e AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
     -e AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
     -e DOMAIN="${DOMAIN}" \
-    -v $(pwd)/certs:/certs \
+    -v $(pwd):/certs \
     -v "${SCRIPTS_DIR}/certbot-route53.sh":/certs/certbot-route53.sh \
+    -w /certs \
     --privileged \
     certbot:latest \
     bash -c \
-        "bash /certs/certbot-route53.sh \
-            --agree-tos \
-            --manual-public-ip-logging-ok \
-            --email mintteam@broadinstitute.org \
-            --domains ${DOMAIN}"
+        "bash /certs/certbot-route53.sh"
+
+cd ..
 
 sudo chown -R jenkins certs
 

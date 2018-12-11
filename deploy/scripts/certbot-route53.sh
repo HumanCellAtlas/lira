@@ -30,9 +30,9 @@ if [ -z "${CERTBOT_DOMAIN}" ]; then
 
 else
     echo "Reading CERTBOT_DOMAIN from file"
-    export CERTBOT_DOMAIN=$(cat certbot_domain.txt)
-    export AWS_ACCESS_KEY_ID=$(cat aws_config.json | jq -r .access_key)
-    export AWS_SECRET_ACCESS_KEY=$(cat aws_config.json | jq -r .secret_key)
+    export CERTBOT_DOMAIN=${CERTBOT_DOMAIN:-$(cat certbot_domain.txt)}
+    export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-$(cat aws_config.json | jq -r .access_key)}
+    export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-$(cat aws_config.json | jq -r .secret_key)}
 
     [[ ${CERTBOT_AUTH_OUTPUT} ]] && ACTION="DELETE" || ACTION="UPSERT"
 
