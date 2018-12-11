@@ -7,6 +7,7 @@ export VAULT_WRITE_TOKEN_PATH="/etc/vault-token-mint-write"
 
 export WORK_DIR=$(pwd)
 export CONFIG_DIR=${WORK_DIR}/deploy/config_files
+export DOCKER_CONFIG_DIR=/working/deploy/config_files
 export DEPLOY_DIR=${WORK_DIR}/deploy/jenkins
 export SCRIPTS_DIR=${WORK_DIR}/deploy/scripts
 
@@ -18,7 +19,7 @@ docker run -i --rm \
                --privileged \
                broadinstitute/dsde-toolbox:ra_rendering \
                /usr/local/bin/render-ctmpls.sh \
-               -k "${CONFIG_DIR}/config.sh.ctmpl"
+               -k "${DOCKER_CONFIG_DIR}/config.sh.ctmpl"
 
 # Import the variables from the config files
 source "${CONFIG_DIR}/config.sh"
@@ -26,7 +27,8 @@ source "${CONFIG_DIR}/config.sh"
 echo "Retrieving caas service account key"
 docker run -i --rm \
                -v "${VAULT_READ_TOKEN_PATH}":/root/.vault-token \
-               -v "${PWD}":/working broadinstitute/dsde-toolbox:ra_rendering \
+               -v "${PWD}":/working \
+               broadinstitute/dsde-toolbox:ra_rendering \
                vault read -format=json "${CAAS_KEY_PATH}" | jq .data > "${CONFIG_DIR}/${CAAS_KEY_FILE}"
 
 echo "Authenticating with the service account"
@@ -46,7 +48,7 @@ docker run -i --rm -e APPLICATION_NAME="${APPLICATION_NAME}" \
                    -v "${PWD}":/working \
                    broadinstitute/dsde-toolbox:ra_rendering \
                    /usr/local/bin/render-ctmpls.sh \
-                   -k "${CONFIG_DIR}/lira-service.yaml.ctmpl"
+                   -k "${DOCKER_CONFIG_DIR}/lira-service.yaml.ctmpl"
 
 echo "Deploying Lira Service"
 kubectl apply -f ${CONFIG_DIR}/lira-service.yaml \
@@ -67,7 +69,7 @@ docker run -i --rm -e LIRA_ENVIRONMENT="${LIRA_ENVIRONMENT}" \
                    --privileged \
                    broadinstitute/dsde-toolbox:ra_rendering \
                    /usr/local/bin/render-ctmpls.sh \
-                   -k "${CONFIG_DIR}/${TLS_FULL_CHAIN_DIR}".ctmpl
+                   -k "${DOCKER_CONFIG_DIR}/${TLS_FULL_CHAIN_DIR}".ctmpl
 
 echo "Rendering TLS key file"
 docker run -i --rm -e LIRA_ENVIRONMENT="${LIRA_ENVIRONMENT}" \
@@ -76,7 +78,7 @@ docker run -i --rm -e LIRA_ENVIRONMENT="${LIRA_ENVIRONMENT}" \
                    --privileged \
                    broadinstitute/dsde-toolbox:ra_rendering \
                    /usr/local/bin/render-ctmpls.sh \
-                   -k "${CONFIG_DIR}/${TLS_PRIVATE_KEY_DIR}".ctmpl
+                   -k "${DOCKER_CONFIG_DIR}/${TLS_PRIVATE_KEY_DIR}".ctmpl
 
 echo "Creating TLS secret in Kubernetes"
 kubectl create secret tls \
@@ -95,7 +97,7 @@ docker run -i --rm -e TLS_SECRET_NAME="${TLS_SECRET_NAME}" \
                    --privileged \
                    broadinstitute/dsde-toolbox:ra_rendering \
                    /usr/local/bin/render-ctmpls.sh \
-                   -k "${CONFIG_DIR}/lira-ingress.yaml.ctmpl"
+                   -k "${DOCKER_CONFIG_DIR}/lira-ingress.yaml.ctmpl"
 
 echo "Deploying Lira Ingress"
 kubectl apply -f ${CONFIG_DIR}/lira-ingress.yaml \
@@ -139,23 +141,23 @@ docker run -i --rm \
               --privileged \
               broadinstitute/dsde-toolbox:ra_rendering \
               /usr/local/bin/render-ctmpls.sh \
-              -k "${CONFIG_DIR}/${LIRA_CONFIG_FILE}.ctmpl"
+              -k "${DOCKER_CONFIG_DIR}/${LIRA_CONFIG_FILE}.ctmpl"
 
 echo "Deploying lira config file"
-if [ ${USE_CAAS} == "true" ];
+if [ "${USE_CAAS}" == "true" ];
 then
     kubectl create secret generic "${LIRA_CONFIG_SECRET_NAME}" \
             --from-file=config="${CONFIG_DIR}/${LIRA_CONFIG_FILE}" \
             --from-file=caas_key="${CONFIG_DIR}/${CAAS_KEY_FILE}" \
             --namespace "${KUBERNETES_NAMESPACE}"
 else
-    kubectl create secret generic ${LIRA_CONFIG_SECRET_NAME} \
+    kubectl create secret generic "${LIRA_CONFIG_SECRET_NAME}" \
             --from-file=config="${CONFIG_DIR}/${LIRA_CONFIG_FILE}" \
             --namespace "${KUBERNETES_NAMESPACE}"
 fi
 
 echo "Generating Lira deployment file"
-docker run -i --rm -e LIRA_CONFIG="${LIRA_CONFIG_SECRET_NAME}" \
+docker run -i --rm -e LIRA_CONFIG_SECRET_NAME="${LIRA_CONFIG_SECRET_NAME}" \
                    -e DEPLOYMENT_NAME="${DEPLOYMENT_NAME}" \
                    -e NUMBER_OF_REPLICAS="${NUMBER_OF_REPLICAS}" \
                    -e APPLICATION_NAME="${APPLICATION_NAME}" \
@@ -164,10 +166,11 @@ docker run -i --rm -e LIRA_CONFIG="${LIRA_CONFIG_SECRET_NAME}" \
                    -e USE_CAAS="${USE_CAAS}" \
                    -e SUBMIT_AND_HOLD="${SUBMIT_AND_HOLD}" \
                    -v "${VAULT_READ_TOKEN_PATH}":/root/.vault-token \
-                   -v "${PWD}":/working broadinstitute/dsde-toolbox:ra_rendering \
+                   -v "${PWD}":/working \
                    --privileged \
+                   broadinstitute/dsde-toolbox:ra_rendering \
                    /usr/local/bin/render-ctmpls.sh \
-                   -k "${CONFIG_DIR}/${LIRA_DEPLOYMENT_YAML}.ctmpl"
+                   -k "${DOCKER_CONFIG_DIR}/${LIRA_DEPLOYMENT_YAML}.ctmpl"
 
 echo "Deploying Lira"
 kubectl apply -f ${CONFIG_DIR}/lira-deployment.yaml \

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-port=${1}
+port=$1
 
 echo -e "\nStarting Lira\n"
 
