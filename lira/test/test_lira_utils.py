@@ -339,7 +339,6 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(inputs['foo.runtime_environment'], 'dev')
         self.assertEqual(inputs['foo.dss_url'], 'https://dss.dev.data.humancellatlas.org/v1')
         self.assertEqual(inputs['foo.submit_url'], 'https://api.ingest.dev.data.humancellatlas.org/')
-        self.assertEqual(inputs['foo.use_caas'], False)
         self.assertEqual(inputs['foo.cromwell_url'], 'https://cromwell.mint-dev.broadinstitute.org/api/workflows/v1')
 
     def test_compose_caas_options(self):
