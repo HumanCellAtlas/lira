@@ -4,7 +4,7 @@ port=$1
 
 echo -e "\nStarting Lira\n"
 
-if [ -z $port ]; then
+if [ -z "${port}" ]; then
     echo "Using default port 8080"
     echo -e "To change port, start this way: bash start_lira.sh PORT\n"
     port=8080
@@ -23,7 +23,7 @@ fi
 #   According to its doc, we should use async workers so that those time-consuming requests won't block the worker.
 #   It's set to gevent now, since the other async choice for us, gthread workers, are suitable for CPU bound tasks,
 #   instead of I/O bound tasks in our case.
-gunicorn lira.lira:app -b 0.0.0.0:$port \
+gunicorn lira.lira:app -b 0.0.0.0:"${port}" \
     --workers $((2 * $(getconf _NPROCESSORS_ONLN 2>/dev/null || getconf NPROCESSORS_ONLN 2>/dev/null || echo 2) + 1)) \
     --timeout 60 \
     --graceful-timeout 60 \

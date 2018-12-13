@@ -14,10 +14,8 @@ RUN apt-get update && \
     vim \
     git \
     curl \
+    jq \
     certbot && \
-    pip3 install --upgrade pip && \
-    mkdir /certs
-
-WORKDIR /certs
+    pip3 install --upgrade pip
 
 RUN pip3 install awscli --upgrade

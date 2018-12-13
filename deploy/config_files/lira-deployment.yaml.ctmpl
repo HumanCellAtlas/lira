@@ -43,7 +43,7 @@ spec:
             volumes:
                 - name: lira-config
                   secret:
-                      secretName: {{env "LIRA_CONFIG"}}
+                      secretName: {{env "LIRA_CONFIG_SECRET_NAME"}}
                       items:
                           - key: config
                             path: config.json

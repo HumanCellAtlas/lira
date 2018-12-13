@@ -66,8 +66,6 @@ LIRA_SECRET=$(docker run -it --rm -v ${VAULT_TOKEN_PATH}:/root/.vault-token broa
 
 BLUEBOX_KEY_PATH=${PWD}/${BLUEBOX_SUBSCRIPTION_KEY}
 
-cd ../scripts || exit
-
 docker run -i --rm \
                -v "${VAULT_TOKEN_PATH}":/root/.vault-token \
                -v "${PWD}":/working broadinstitute/dsde-toolbox:ra_rendering \
