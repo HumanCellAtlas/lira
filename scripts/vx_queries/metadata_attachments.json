@@ -6,6 +6,9 @@
   "sample_id": {
     "type": "jmespath",
     "expression": "files.links_json[].links[?input_type=='biomaterial' && protocols[?protocol_type=='sequencing_protocol']].inputs[][]"
-
+  },
+  "project_uuid": {
+    "type": "jmespath",
+    "expression": "files.project_json[].provenance.document_id | [0]"
   }
 }
