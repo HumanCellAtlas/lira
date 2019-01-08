@@ -21,7 +21,7 @@
 
     export DSS_URL="https://dss.integration.data.humancellatlas.org/v1"
     export SCHEMA_URL="http://schema.integration.data.humancellatlas.org/"
-    export INGEST_URL="http://api.ingest.integration.data.humancellatlas.org/"
+    export INGEST_URL="https://api.ingest.integration.data.humancellatlas.org/"
     export DOMAIN="pipelines.dev.data.humancellatlas.org"
 {{end}}
 
@@ -44,7 +44,7 @@
 
     export DSS_URL="https://dss.integration.data.humancellatlas.org/v1"
     export SCHEMA_URL="http://schema.integration.data.humancellatlas.org/"
-    export INGEST_URL="http://api.ingest.integration.data.humancellatlas.org/"
+    export INGEST_URL="https://api.ingest.integration.data.humancellatlas.org/"
     export DOMAIN="pipelines.integration.data.humancellatlas.org"
 {{end}}
 
