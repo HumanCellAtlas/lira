@@ -197,7 +197,8 @@ def compose_caas_options(cromwell_options_file, lira_config):
     options_json.update({
         'jes_gcs_root': lira_config.gcs_root,
         'google_project': lira_config.google_project,
-        'user_service_account_json': caas_key
+        'user_service_account_json': caas_key,
+        'google_compute_service_account': json.loads(caas_key)['client_email']
     })
     return options_json
 
