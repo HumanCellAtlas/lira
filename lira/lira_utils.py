@@ -342,8 +342,23 @@ def create_prepare_submission_function(cache_wdls):
         """Load into memory all static data needed for submitting a workflow to Cromwell"""
 
         # Read files into memory
+        print("=================")
+        print("->WDL<-")
+        print(wdl_config.wdl_link)
+        print("=================")
         wdl_file = cromwell_tools.download(wdl_config.wdl_link)
+        print("=================")
+        print("->WDL File<-")
+        print(wdl_file)
+        print("=================")
+        print("=================")
+        print("->wdl_static_inputs_file<-")
+        print(wdl_config.wdl_static_inputs_link)
         wdl_static_inputs_file = cromwell_tools.download(wdl_config.wdl_static_inputs_link)
+        print("=================")
+        print("->wdl_static_inputs_file<-")
+        print(wdl_static_inputs_file)
+        print("=================")
         options_file = cromwell_tools.download(wdl_config.options_link)
 
         # Create zip of analysis and submit wdls
