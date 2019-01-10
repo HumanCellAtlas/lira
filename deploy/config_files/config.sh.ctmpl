@@ -67,7 +67,7 @@
 
     export DSS_URL="https://dss.staging.data.humancellatlas.org/v1"
     export SCHEMA_URL="http://schema.staging.data.humancellatlas.org/"
-    export INGEST_URL="http://api.ingest.staging.data.humancellatlas.org/"
+    export INGEST_URL="https://api.ingest.staging.data.humancellatlas.org/"
     export DOMAIN="pipelines.staging.data.humancellatlas.org"
 {{end}}
 
@@ -90,7 +90,7 @@
 
     export DSS_URL="https://dss.data.humancellatlas.org/v1"
     export SCHEMA_URL="https://schema.humancellatlas.org/"
-    export INGEST_URL="http://api.ingest.data.humancellatlas.org/"
+    export INGEST_URL="https://api.ingest.data.humancellatlas.org/"
     export DOMAIN="pipelines.data.humancellatlas.org"
 
 {{end}}
