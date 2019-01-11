@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 {{with $ENVIRONMENT := env "LIRA_ENVIRONMENT"}}
 {{ if eq $ENVIRONMENT "dev" }}
-    export LIRA_VERSION="v0.14.1"
+    export LIRA_VERSION="v0.15.0"
 
-    export PIPELINE_TOOLS_VERSION="v0.43.0"
+    export PIPELINE_TOOLS_VERSION="v0.43.2"
 
     export NUMBER_OF_REPLICAS="3"
 
@@ -21,14 +21,14 @@
 
     export DSS_URL="https://dss.integration.data.humancellatlas.org/v1"
     export SCHEMA_URL="http://schema.integration.data.humancellatlas.org/"
-    export INGEST_URL="http://api.ingest.integration.data.humancellatlas.org/"
+    export INGEST_URL="https://api.ingest.integration.data.humancellatlas.org/"
     export DOMAIN="pipelines.dev.data.humancellatlas.org"
 {{end}}
 
 {{if (or (eq $ENVIRONMENT "test") (eq $ENVIRONMENT "integration")) }}
-    export LIRA_VERSION="v0.14.1"
+    export LIRA_VERSION="v0.15.0"
 
-    export PIPELINE_TOOLS_VERSION="4k-scaling-test-2018-11-06-with-papiv2"
+    export PIPELINE_TOOLS_VERSION="v0.43.2"
 
     export NUMBER_OF_REPLICAS="3"
 
@@ -44,7 +44,7 @@
 
     export DSS_URL="https://dss.integration.data.humancellatlas.org/v1"
     export SCHEMA_URL="http://schema.integration.data.humancellatlas.org/"
-    export INGEST_URL="http://api.ingest.integration.data.humancellatlas.org/"
+    export INGEST_URL="https://api.ingest.integration.data.humancellatlas.org/"
     export DOMAIN="pipelines.integration.data.humancellatlas.org"
 {{end}}
 
