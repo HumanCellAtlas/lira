@@ -32,7 +32,7 @@
 
     export NUMBER_OF_REPLICAS="3"
 
-    export GENERATE_CERTS="true"
+    export GENERATE_CERTS="false"
 
     export SS2_SUBSCRIPTION_ID="40f8586e-1a6d-4e40-a8f5-028de3f628e1"
     export SS2_VERSION="smartseq2_v2.1.0"
@@ -49,13 +49,13 @@
 {{end}}
 
 {{ if eq $ENVIRONMENT "staging" }}
-    export LIRA_VERSION="v0.14.1"
+    export LIRA_VERSION="v0.15.0"
 
-    export PIPELINE_TOOLS_VERSION="v0.43.0"
+    export PIPELINE_TOOLS_VERSION="v0.43.2"
 
     export NUMBER_OF_REPLICAS="3"
 
-    export GENERATE_CERTS="false"
+    export GENERATE_CERTS="true"
 
     export SS2_SUBSCRIPTION_ID="4fee6f8f-8cfd-470f-8076-e20062001090"
     export SS2_VERSION="smartseq2_v2.1.0"
