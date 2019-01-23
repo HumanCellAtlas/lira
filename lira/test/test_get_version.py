@@ -42,7 +42,7 @@ class TestGetVersion(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json_response.get('settings_info').get('launch_time'), '2018-01-01 00:59:59 +00:00')
         self.assertEqual(json_response.get('settings_info').get('run_mode'), 'live_run')
-        self.assertEqual(json_response.get('settings_info').get('ingest_url'), 'http://api.ingest.dev.data.humancellatlas.org/')
+        self.assertEqual(json_response.get('settings_info').get('ingest_url'), 'https://api.ingest.dev.data.humancellatlas.org/')
         self.assertEqual(json_response.get('settings_info').get('data_store_url'), 'https://dss.dev.data.humancellatlas.org/v1')
         self.assertEqual(json_response.get('settings_info').get('cromwell_url'), 'https://cromwell.mint-dev.broadinstitute.org/api/workflows/v1')
         self.assertEqual(json_response.get('settings_info').get('max_cromwell_retries'), 0)
