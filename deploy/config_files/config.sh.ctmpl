@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 {{with $ENVIRONMENT := env "LIRA_ENVIRONMENT"}}
 {{ if eq $ENVIRONMENT "dev" }}
-    export LIRA_VERSION="v0.15.0"
+    export LIRA_VERSION="v0.16.0"
 
-    export PIPELINE_TOOLS_VERSION="v0.43.2"
+    export PIPELINE_TOOLS_VERSION="v0.44.0"
 
     export NUMBER_OF_REPLICAS="3"
 
@@ -12,7 +12,7 @@
     export GENERATE_CERTS="false"
 
     export SS2_SUBSCRIPTION_ID="placeholder_ss2_subscription_id"
-    export SS2_VERSION="smartseq2_v2.1.0"
+    export SS2_VERSION="smartseq2_v2.2.0"
 
     export TENX_SUBSCRIPTION_ID="placeholder_10x_subscription_id"
     export TENX_VERSION="cellranger_v1.0.2"
@@ -20,30 +20,30 @@
     export GCLOUD_PROJECT="broad-dsde-mint-${LIRA_ENVIRONMENT}" # all valid envs - broad-dsde-mint-dev, broad-dsde-mint-test, broad-dsde-mint-integration, broad-dsde-mint-staging, hca-dcp-pipelines-prod
 
     export DSS_URL="https://dss.integration.data.humancellatlas.org/v1"
-    export SCHEMA_URL="http://schema.integration.data.humancellatlas.org/"
+    export SCHEMA_URL="https://schema.integration.data.humancellatlas.org/"
     export INGEST_URL="https://api.ingest.integration.data.humancellatlas.org/"
     export DOMAIN="pipelines.dev.data.humancellatlas.org"
 {{end}}
 
 {{if (or (eq $ENVIRONMENT "test") (eq $ENVIRONMENT "integration")) }}
-    export LIRA_VERSION="v0.15.0"
+    export LIRA_VERSION="v0.16.0"
 
-    export PIPELINE_TOOLS_VERSION="v0.43.2"
+    export PIPELINE_TOOLS_VERSION="v0.44.0"
 
     export NUMBER_OF_REPLICAS="3"
 
     export GENERATE_CERTS="false"
 
-    export SS2_SUBSCRIPTION_ID="40f8586e-1a6d-4e40-a8f5-028de3f628e1"
-    export SS2_VERSION="smartseq2_v2.1.0"
+    export SS2_SUBSCRIPTION_ID="af513bdb-075c-442b-bf01-5634ee9682a2"
+    export SS2_VERSION="smartseq2_v2.2.0"
 
-    export TENX_SUBSCRIPTION_ID="513a39a6-eb65-450b-ba5f-ce50f56c42d4"
+    export TENX_SUBSCRIPTION_ID="3d1b6af2-53ff-41b7-a2ef-d1386ff6b93a"
     export TENX_VERSION="cellranger_v1.0.2"
 
     export GCLOUD_PROJECT="broad-dsde-mint-${LIRA_ENVIRONMENT}"
 
     export DSS_URL="https://dss.integration.data.humancellatlas.org/v1"
-    export SCHEMA_URL="http://schema.integration.data.humancellatlas.org/"
+    export SCHEMA_URL="https://schema.integration.data.humancellatlas.org/"
     export INGEST_URL="https://api.ingest.integration.data.humancellatlas.org/"
     export DOMAIN="pipelines.integration.data.humancellatlas.org"
 {{end}}
