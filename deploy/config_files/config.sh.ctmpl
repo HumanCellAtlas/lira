@@ -49,24 +49,24 @@
 {{end}}
 
 {{ if eq $ENVIRONMENT "staging" }}
-    export LIRA_VERSION="v0.15.0"
+    export LIRA_VERSION="v0.16.0"
 
-    export PIPELINE_TOOLS_VERSION="v0.43.2"
+    export PIPELINE_TOOLS_VERSION="v0.44.0"
 
     export NUMBER_OF_REPLICAS="3"
 
-    export GENERATE_CERTS="true"
+    export GENERATE_CERTS="false"
 
-    export SS2_SUBSCRIPTION_ID="4fee6f8f-8cfd-470f-8076-e20062001090"
-    export SS2_VERSION="smartseq2_v2.1.0"
+    export SS2_SUBSCRIPTION_ID="c8ea7133-01bf-461c-8db8-88582c500c4a"
+    export SS2_VERSION="smartseq2_v2.2.0"
 
-    export TENX_SUBSCRIPTION_ID="12c7d881-64a8-4584-86d8-b383686aa2ba"
+    export TENX_SUBSCRIPTION_ID="ade4286a-3a84-4507-bfaf-fc5b1cac40df"
     export TENX_VERSION="cellranger_v1.0.2"
 
     export GCLOUD_PROJECT="broad-dsde-mint-${LIRA_ENVIRONMENT}"
 
     export DSS_URL="https://dss.staging.data.humancellatlas.org/v1"
-    export SCHEMA_URL="http://schema.staging.data.humancellatlas.org/"
+    export SCHEMA_URL="https://schema.staging.data.humancellatlas.org/"
     export INGEST_URL="https://api.ingest.staging.data.humancellatlas.org/"
     export DOMAIN="pipelines.staging.data.humancellatlas.org"
 {{end}}
