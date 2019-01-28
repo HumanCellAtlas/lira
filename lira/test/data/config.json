@@ -12,6 +12,7 @@
   "ingest_url": "https://api.ingest.dev.data.humancellatlas.org/",
   "schema_url": "https://schema.humancellatlas.org",
   "submit_wdl": "https://raw.githubusercontent.com/HumanCellAtlas/pipeline-tools/v0.1.5/adapter_pipelines/submit.wdl",
+  "service_account_key_path": "gs://bucket-with-credentials/caas_key.json",
   "wdls": [
     {
       "subscription_id": "3e3e176b-629f-46ea-b01d-e36bd650dc54",
