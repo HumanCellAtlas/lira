@@ -18,6 +18,7 @@
     export TENX_VERSION="cellranger_v1.0.2"
 
     export GCLOUD_PROJECT="broad-dsde-mint-${LIRA_ENVIRONMENT}" # all valid envs - broad-dsde-mint-dev, broad-dsde-mint-test, broad-dsde-mint-integration, broad-dsde-mint-staging, hca-dcp-pipelines-prod
+    export SERVICE_ACCOUNT_KEY_PATH="gs://broad-dsde-mint-dev-credentials/caas_key.json"
 
     export DSS_URL="https://dss.integration.data.humancellatlas.org/v1"
     export SCHEMA_URL="https://schema.integration.data.humancellatlas.org/"
@@ -41,6 +42,7 @@
     export TENX_VERSION="cellranger_v1.0.2"
 
     export GCLOUD_PROJECT="broad-dsde-mint-${LIRA_ENVIRONMENT}"
+    export SERVICE_ACCOUNT_KEY_PATH="gs://broad-dsde-mint-test-credentials/caas_key.json"
 
     export DSS_URL="https://dss.integration.data.humancellatlas.org/v1"
     export SCHEMA_URL="https://schema.integration.data.humancellatlas.org/"
@@ -64,6 +66,7 @@
     export TENX_VERSION="cellranger_v1.0.2"
 
     export GCLOUD_PROJECT="broad-dsde-mint-${LIRA_ENVIRONMENT}"
+    export SERVICE_ACCOUNT_KEY_PATH="gs://broad-dsde-mint-staging-credentials/caas_key.json"
 
     export DSS_URL="https://dss.staging.data.humancellatlas.org/v1"
     export SCHEMA_URL="https://schema.staging.data.humancellatlas.org/"
@@ -87,6 +90,7 @@
     export TENX_VERSION="cellranger_v1.0.2"
 
     export GCLOUD_PROJECT="hca-dcp-pipelines-prod"
+    export SERVICE_ACCOUNT_KEY_PATH="gs://broad-dsde-mint-prod-credentials/caas_key.json"
 
     export DSS_URL="https://dss.data.humancellatlas.org/v1"
     export SCHEMA_URL="https://schema.humancellatlas.org/"

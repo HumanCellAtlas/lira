@@ -114,6 +114,7 @@ docker run -i --rm \
               -e SUBMIT_AND_HOLD="${SUBMIT_AND_HOLD}" \
               -e COLLECTION_NAME="${COLLECTION_NAME}" \
               -e GCLOUD_PROJECT="${GCLOUD_PROJECT}" \
+              -e SERVICE_ACCOUNT_KEY_PATH="{SERVICE_ACCOUNT_KEY_PATH}" \
               -e GCS_ROOT="${GCS_ROOT}" \
               -e LIRA_VERSION="${LIRA_VERSION}" \
               -e DSS_URL="${DSS_URL}" \

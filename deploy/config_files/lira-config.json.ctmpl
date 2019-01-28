@@ -21,6 +21,7 @@
     "dss_url": "{{ env "DSS_URL" }}",
     "schema_url": "{{ env "SCHEMA_URL" }}",
     "ingest_url": "{{ env "INGEST_URL" }}",
+    "service_account_key_path": "{{ env "SERVICE_ACCOUNT_KEY_PATH" }}"
 {{ if env "USE_HMAC" | parseBool }}
     "hmac_key": "{{ $hmac_keys.Data.current_key }}",
 {{ else }}

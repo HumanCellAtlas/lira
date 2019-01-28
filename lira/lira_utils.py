@@ -164,6 +164,7 @@ def compose_inputs(workflow_name, uuid, version, lira_config):
     Returns:
         dict: A dictionary of workflow inputs.
     """
+
     return {
         workflow_name + '.bundle_uuid': uuid,
         workflow_name + '.bundle_version': version,
@@ -173,7 +174,8 @@ def compose_inputs(workflow_name, uuid, version, lira_config):
         workflow_name + '.schema_url': lira_config.schema_url,
         workflow_name + '.use_caas': lira_config.use_caas,
         workflow_name + '.max_cromwell_retries': lira_config.max_cromwell_retries,
-        workflow_name + '.cromwell_url': lira_config.cromwell_url
+        workflow_name + '.cromwell_url': lira_config.cromwell_url,
+        workflow_name + '.service_account_key_path': lira_config.service_account_key_path
     }
 
 
