@@ -17,6 +17,9 @@
     export TENX_SUBSCRIPTION_ID="placeholder_10x_subscription_id"
     export TENX_VERSION="cellranger_v1.0.2"
 
+    export OPTIMUS_SUBSCRIPTION_ID="placeholder_optimus_subscription_id"
+    export OPTIMUS_VERSION="optimus_v0.3.0"
+
     export GCLOUD_PROJECT="broad-dsde-mint-${LIRA_ENVIRONMENT}" # all valid envs - broad-dsde-mint-dev, broad-dsde-mint-test, broad-dsde-mint-integration, broad-dsde-mint-staging, hca-dcp-pipelines-prod
 
     export DSS_URL="https://dss.integration.data.humancellatlas.org/v1"
@@ -39,6 +42,9 @@
 
     export TENX_SUBSCRIPTION_ID="3d1b6af2-53ff-41b7-a2ef-d1386ff6b93a"
     export TENX_VERSION="cellranger_v1.0.2"
+
+    export OPTIMUS_SUBSCRIPTION_ID="placeholder_optimus_subscription_id"
+    export OPTIMUS_VERSION="optimus_v0.3.0"
 
     export GCLOUD_PROJECT="broad-dsde-mint-${LIRA_ENVIRONMENT}"
 
@@ -63,6 +69,9 @@
     export TENX_SUBSCRIPTION_ID="ade4286a-3a84-4507-bfaf-fc5b1cac40df"
     export TENX_VERSION="cellranger_v1.0.2"
 
+    export OPTIMUS_SUBSCRIPTION_ID="placeholder_optimus_subscription_id"
+    export OPTIMUS_VERSION="optimus_v0.3.0"
+
     export GCLOUD_PROJECT="broad-dsde-mint-${LIRA_ENVIRONMENT}"
 
     export DSS_URL="https://dss.staging.data.humancellatlas.org/v1"
@@ -85,6 +94,9 @@
 
     export TENX_SUBSCRIPTION_ID="afc5eeba-8a3d-4ce7-8905-4ae314f8e210"
     export TENX_VERSION="cellranger_v1.0.2"
+
+    export OPTIMUS_SUBSCRIPTION_ID="placeholder_optimus_subscription_id"
+    export OPTIMUS_VERSION="optimus_v0.3.0"
 
     export GCLOUD_PROJECT="hca-dcp-pipelines-prod"
 
@@ -167,4 +179,14 @@
     export TENX_WDL_STATIC_INPUTS_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/cellranger/adapter_example_static.json"
     export TENX_WDL_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/cellranger/adapter.wdl"
     export TENX_WORKFLOW_NAME="Adapter10xCount"
+
+    # Optimus Variables
+    export OPTIMUS_PREFIX="https://raw.githubusercontent.com/HumanCellAtlas/skylab/${OPTIMUS_VERSION}"
+    export OPTIMUS_ANALYSIS_WDLS="[
+                    \"${OPTIMUS_PREFIX}/pipelines/optimus/Optimus.wdl\"
+                ]"
+    export OPTIMUS_OPTIONS_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/Optimus/options.json"
+    export OPTIMUS_WDL_STATIC_INPUTS_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/Optimus/adapter_example_static.json"
+    export OPTIMUS_WDL_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/Optimus/adapter.wdl"
+    export OPTIMUS_WORKFLOW_NAME="AdapterOptimus"
 {{end}}

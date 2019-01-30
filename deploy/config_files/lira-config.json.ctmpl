@@ -39,6 +39,15 @@
             "workflow_version": "{{ env "TENX_VERSION" }}"
         },
         {
+            "analysis_wdls": {{ env "OPTIMUS_ANALYSIS_WDLS" }},
+            "options_link": "{{ env "OPTIMUS_OPTIONS_LINK" }}",
+            "subscription_id": "{{ env "OPTIMUS_SUBSCRIPTION_ID" }}",
+            "wdl_static_inputs_link": "{{ env "OPTIMUS_WDL_STATIC_INPUTS_LINK" }}",
+            "wdl_link": "{{ env "OPTIMUS_WDL_LINK" }}",
+            "workflow_name": "{{ env "OPTIMUS_WORKFLOW_NAME" }}",
+            "workflow_version": "{{ env "OPTIMUS_VERSION" }}"
+        },
+        {
             "analysis_wdls": {{ env "SS2_ANALYSIS_WDLS" }},
             "options_link": "{{ env "SS2_OPTIONS_LINK" }}",
             "subscription_id": "{{ env "SS2_SUBSCRIPTION_ID" }}",
