@@ -339,7 +339,6 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(inputs['foo.runtime_environment'], 'dev')
         self.assertEqual(inputs['foo.dss_url'], 'https://dss.dev.data.humancellatlas.org/v1')
         self.assertEqual(inputs['foo.submit_url'], 'https://api.ingest.dev.data.humancellatlas.org/')
-        self.assertEqual(inputs['foo.use_caas'], False)
         self.assertEqual(inputs['foo.cromwell_url'], 'https://cromwell.mint-dev.broadinstitute.org/api/workflows/v1')
 
     def test_compose_caas_options(self):
@@ -354,7 +353,9 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(options['google_project'], 'fake_google_project')
         with open('data/fake_caas_key.json') as f:
             fake_caas_key = f.read()
+            fake_caas_key_json = json.loads(fake_caas_key)
         self.assertEqual(options['user_service_account_json'], fake_caas_key)
+        self.assertEqual(options['google_compute_service_account'], fake_caas_key_json['client_email'])
 
     def test_parse_github_resource_url(self):
         """Test if parse_github_resource_url can correctly parse Github resource urls."""

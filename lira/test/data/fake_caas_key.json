@@ -1,3 +1,4 @@
 {
-  "msg": "This file is deliberately empty"
+  "client_email": "test-account-project_id.iam.gserviceaccount.com",
+  "msg": "The rest of the fields in this test key have been intentionally cleared."
 }

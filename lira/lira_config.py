@@ -175,7 +175,7 @@ class LiraConfig(Config):
         logging.getLogger('connexion.decorators.validation').setLevel(self.log_level_connexion_validation)
 
         # Check cromwell credentials
-        use_caas = config_object.get('use_caas')
+        use_caas = config_object.get('use_caas', None)
         if not use_caas:
             config_object['use_caas'] = False
         if config_object.get('use_caas'):
@@ -224,7 +224,6 @@ class LiraConfig(Config):
             'env',
             'submit_wdl',
             'cromwell_url',
-            'use_caas',
             'MAX_CONTENT_LENGTH',
             'wdls',
             'version',
