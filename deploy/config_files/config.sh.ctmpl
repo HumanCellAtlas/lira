@@ -184,18 +184,18 @@
     export OPTIMUS_PREFIX="https://raw.githubusercontent.com/HumanCellAtlas/skylab/${OPTIMUS_VERSION}"
     export OPTIMUS_ANALYSIS_WDLS="[
                     \"${OPTIMUS_PREFIX}/pipelines/optimus/Optimus.wdl\",
-                    \"${SS2_PREFIX}/library/tasks/FastqToUBam.wdl\",
-                    \"${SS2_PREFIX}/library/tasks/Attach10xBarcodes.wdl\",
-                    \"${SS2_PREFIX}/library/tasks/SplitBamByCellBarcode.wdl\",
-                    \"${SS2_PREFIX}/library/tasks/MergeSortBam.wdl\",
-                    \"${SS2_PREFIX}/library/tasks/CreateCountMatrix.wdl\",
-                    \"${SS2_PREFIX}/library/tasks/StarAlignBamSingleEnd.wdl\",
-                    \"${SS2_PREFIX}/library/tasks/TagGeneExon.wdl\",
-                    \"${SS2_PREFIX}/library/tasks/CorrectUmiMarkDuplicates.wdl\",
-                    \"${SS2_PREFIX}/library/tasks/SequenceDataWithMoleculeTagMetrics.wdl\",
-                    \"${SS2_PREFIX}/library/tasks/TagSortBam.wdl\",
-                    \"${SS2_PREFIX}/library/tasks/RunEmptyDrops.wdl\",
-                    \"${SS2_PREFIX}/library/tasks/ZarrUtils.wdl\"
+                    \"${OPTIMUS_PREFIX}/library/tasks/FastqToUBam.wdl\",
+                    \"${OPTIMUS_PREFIX}/library/tasks/Attach10xBarcodes.wdl\",
+                    \"${OPTIMUS_PREFIX}/library/tasks/SplitBamByCellBarcode.wdl\",
+                    \"${OPTIMUS_PREFIX}/library/tasks/MergeSortBam.wdl\",
+                    \"${OPTIMUS_PREFIX}/library/tasks/CreateCountMatrix.wdl\",
+                    \"${OPTIMUS_PREFIX}/library/tasks/StarAlignBamSingleEnd.wdl\",
+                    \"${OPTIMUS_PREFIX}/library/tasks/TagGeneExon.wdl\",
+                    \"${OPTIMUS_PREFIX}/library/tasks/CorrectUmiMarkDuplicates.wdl\",
+                    \"${OPTIMUS_PREFIX}/library/tasks/SequenceDataWithMoleculeTagMetrics.wdl\",
+                    \"${OPTIMUS_PREFIX}/library/tasks/TagSortBam.wdl\",
+                    \"${OPTIMUS_PREFIX}/library/tasks/RunEmptyDrops.wdl\",
+                    \"${OPTIMUS_PREFIX}/library/tasks/ZarrUtils.wdl\"
                 ]"
     export OPTIMUS_OPTIONS_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/Optimus/options.json"
     export OPTIMUS_WDL_STATIC_INPUTS_LINK="${PIPELINE_TOOLS_PREFIX}/adapter_pipelines/Optimus/adapter_example_static.json"
