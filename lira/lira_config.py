@@ -229,7 +229,8 @@ class LiraConfig(Config):
             'version',
             'dss_url',
             'ingest_url',
-            'schema_url'
+            'schema_url',
+            'lira_domain_name'
         }
 
     @staticmethod
@@ -257,7 +258,8 @@ class LiraConfig(Config):
             self.version,
             self.dss_url,
             self.ingest_url,
-            self.schema_url
+            self.schema_url,
+            self.lira_domain_name
         )
 
     def __repr__(self):
@@ -270,7 +272,8 @@ class LiraConfig(Config):
             ' lira_version: {6}' \
             ' dss_url: {7}' \
             ' ingest_url: {8}' \
-            ' schema_url: {9}'
+            ' schema_url: {9}' \
+            ' lira_domain_name: {10}'
         return s.format(
             self.env,
             self.submit_wdl,
@@ -281,7 +284,8 @@ class LiraConfig(Config):
             self.version,
             self.dss_url,
             self.ingest_url,
-            self.schema_url
+            self.schema_url,
+            self.lira_domain_name
         )
 
 

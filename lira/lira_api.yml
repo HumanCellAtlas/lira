@@ -1,0 +1,234 @@
+swagger: '2.0'
+info:
+  title: "HCA DCP Data Processing Pipeline Service API"
+  description: >
+    Human Cell Atlas Data Coordination Platform Data Processing Pipeline Service ("Secondary-Analysis") API.
+
+
+    In the HCA DCP, data processing refers to the use of a computational pipeline to analyze raw experimental data from a specific assay. Processing of HCA data produces collections of quality metrics and features that can be used for further analysis. The Data Processing Pipeline Service consists of analysis pipelines and execution infrastructure.
+
+
+    **At this moment, this Swagger UI only covers the API definition of Lira, the workflow(pipeline) starter service of the HCA DCP Data Processing Pipeline Service, which starts workflows upon valid notifications.**
+
+  version: '0.1.0'
+host: {{API_DOMAIN_NAME}}
+schemes:
+  - https
+produces:
+  - application/json
+tags:
+- name: "Lira"
+  externalDocs:
+    description: "Learn more about the Lira service"
+    url: "https://github.com/HumanCellAtlas/lira/wiki"
+- name: "Data Processing Pipeline Service Information"
+  description: "Information about the Data Processing Pipeline Service"
+paths:
+  /version:
+    get:
+      tags:
+      - "Data Processing Pipeline Service Information"
+      summary: "Returns the version of Lira and its dependencies"
+      description: "Returns the versions of Lira and its dependencies"
+      operationId: 'lira.api.version.get_version'
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/VersionResponse'
+        # Definition of all error statuses
+        default:
+          description: "Unexpected Error"
+          schema:
+            $ref: '#/definitions/Error'
+  /health:
+    get:
+      tags:
+      - "Data Processing Pipeline Service Information"
+      summary: "Health check"
+      description: "Health check"
+      operationId: 'lira.api.health.get'
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/HealthCheckResponse'
+        # Definition of all error statuses
+        default:
+          description: "Unexpected Error"
+          schema:
+            $ref: '#/definitions/Error'
+  /notifications:
+    post:
+      tags:
+      - "Lira"
+      summary: "Listen for notifications and start workflows"
+      description: |
+        "Listen for notifications and process them in order to start analysis workflows. The notifications should contain HCA DCP Bundle information."
+      consumes:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          required: false
+          schema:
+            $ref: '#/definitions/Notification'
+      responses:
+        201:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/NotificationResponse'
+        # Definition of all error statuses
+        default:
+          description: "Unexpected Error"
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  Notification:
+    type: object
+    properties:
+      match:
+        $ref: '#/definitions/Match'
+      attachments:
+          $ref: '#/definitions/SingleSampleIdAttachments'
+      subscription_id:
+        type: string
+        format: uuid
+      transaction_id:
+        type: string
+        format: uuid
+      es_query:
+        type: object
+        properties:
+          query:
+            type: object
+    required:
+      - subscription_id
+      - transaction_id
+      - es_query
+      - match
+  Match:
+    type: object
+    properties:
+      bundle_uuid:
+        type: string
+        format: uuid
+      bundle_version:
+        type: string
+        format: date-time
+    required:
+      - bundle_uuid
+      - bundle_version
+  SingleSampleIdAttachments:
+    type: object
+    properties:
+      sample_id:
+        type: string
+        format: uuid
+      project_shortname:
+        type: string
+      project_uuid:
+        type: string
+        format: uuid
+  MultipleSampleIdAttachments:
+    type: object
+    properties:
+      sample_id:
+        type: array
+        items:
+          type: string
+          format: uuid
+      project_shortname:
+        type: string
+      project_uuid:
+        type: string
+        format: uuid
+  Error:
+    type: object
+    properties:
+      detail:
+        description: "Exception stacktrace, if any"
+        type: string
+        example: "An error occurred during processing your request!"
+      status:
+        description: "HTTP error code"
+        type: integer
+        format: int32
+        example: 404
+      title:
+        description: "Human-readable error message"
+        type: string
+        example: "Page Not Found!"
+    required:
+      - title
+      - status
+  NotificationResponse:
+    type: object
+    properties:
+      status:
+        type: string
+        example: "Submitted"
+      id:
+        description: "UUID of the started workflow"
+        type: string
+        example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  HealthCheckResponse:
+    type: object
+    properties:
+      status:
+        type: string
+        example: "healthy"
+    required:
+      - status
+  VersionResponse:
+    type: object
+    properties:
+      settings_info:
+        type: object
+        properties:
+          cache_wdls:
+            type: boolean
+          cromwell_url:
+            type: string
+          data_store_url:
+            type: string
+          ingest_url:
+            type: string
+            format: uri
+          launch_time:
+            type: string
+            format: date-time
+          max_cromwell_retries:
+            type: integer
+          run_mode:
+            type: string
+            example: "dry_run"
+          submit_and_hold_workflows:
+            type: boolean
+          use_caas:
+            type: boolean
+      version_info:
+        type: object
+        properties:
+          cromwell_tools_version:
+            type: string
+            pattern: '(v)?([0-9]+)\.([0-9]+)\.([0-9]+)'
+            example: "v1.0.0"
+          lira_version:
+            type: string
+            pattern: '(v)?([0-9]+)\.([0-9]+)\.([0-9]+)'
+            example: "v1.0.0"
+          submit_wdl_version:
+            type: string
+            pattern: '(v)?([0-9]+)\.([0-9]+)\.([0-9]+)'
+            example: "v1.0.0"
+      workflow_info:
+        type: object
+        additionalProperties:
+          type: object
+          properties:
+            subscription_id:
+              type: string
+              format: uuid
+            version:
+              type: string
