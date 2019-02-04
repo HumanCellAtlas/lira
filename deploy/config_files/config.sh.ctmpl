@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 {{with $ENVIRONMENT := env "LIRA_ENVIRONMENT"}}
 {{ if eq $ENVIRONMENT "dev" }}
-    export LIRA_VERSION="v0.16.0"
+    export LIRA_VERSION="v0.17.0"
 
-    export PIPELINE_TOOLS_VERSION="v0.44.0"
+    export PIPELINE_TOOLS_VERSION="v0.46.0"
 
     export NUMBER_OF_REPLICAS="3"
 
@@ -26,9 +26,9 @@
 {{end}}
 
 {{if (or (eq $ENVIRONMENT "test") (eq $ENVIRONMENT "integration")) }}
-    export LIRA_VERSION="v0.16.0"
+    export LIRA_VERSION="v0.17.0"
 
-    export PIPELINE_TOOLS_VERSION="v0.44.0"
+    export PIPELINE_TOOLS_VERSION="v0.46.0"
 
     export NUMBER_OF_REPLICAS="3"
 
