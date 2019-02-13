@@ -55,7 +55,7 @@
 
     export NUMBER_OF_REPLICAS="3"
 
-    export GENERATE_CERTS="true"
+    export GENERATE_CERTS="false"
 
     export SS2_SUBSCRIPTION_ID="c8ea7133-01bf-461c-8db8-88582c500c4a"
     export SS2_VERSION="smartseq2_v2.2.0"
