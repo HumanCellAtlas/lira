@@ -3,7 +3,7 @@
 {{ if eq $ENVIRONMENT "dev" }}
     export LIRA_VERSION="v0.17.0"
 
-    export PIPELINE_TOOLS_VERSION="v0.46.0"
+    export PIPELINE_TOOLS_VERSION="v0.46.1"
 
     export NUMBER_OF_REPLICAS="3"
 
@@ -28,7 +28,7 @@
 {{if (or (eq $ENVIRONMENT "test") (eq $ENVIRONMENT "integration")) }}
     export LIRA_VERSION="v0.17.0"
 
-    export PIPELINE_TOOLS_VERSION="v0.46.0"
+    export PIPELINE_TOOLS_VERSION="v0.46.1"
 
     export NUMBER_OF_REPLICAS="3"
 
