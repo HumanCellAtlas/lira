@@ -5,7 +5,16 @@
         {
           "match": {
             "files.library_preparation_protocol_json.library_construction_approach.ontology": "EFO:0009310"
-
+          }
+        },
+        {
+          "match": {
+            "files.library_preparation_protocol_json.end_bias": "3 prime tag"
+          }
+        },
+        {
+          "match": {
+            "files.library_preparation_protocol_json.nucleic_acid_source": "single cell"
           }
         },
         {
@@ -15,6 +24,11 @@
         }
       ],
       "must_not": [
+        {
+          "match": {
+            "files.sequencing_protocol_json.sequencing_approach.ontology": "EFO:0009294"
+          }
+        },
         {
           "match": {
             "files.analysis_process_json.process_type.text": "analysis"
@@ -38,4 +52,3 @@
     }
   }
 }
-
