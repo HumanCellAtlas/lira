@@ -4,7 +4,7 @@
       "must": [
         {
           "match": {
-            "files.library_preparation_protocol_json.library_construction_approach.ontology": "EFO:0009310"
+            "files.library_preparation_protocol_json.library_construction_approach.ontology_label": "10X v2 sequencing"
           }
         },
         {
@@ -26,7 +26,7 @@
       "must_not": [
         {
           "match": {
-            "files.sequencing_protocol_json.sequencing_approach.ontology": "EFO:0009294"
+            "files.sequencing_protocol_json.sequencing_approach.ontology_label": "CITE-seq"
           }
         },
         {
