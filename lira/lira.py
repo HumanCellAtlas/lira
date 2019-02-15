@@ -57,7 +57,7 @@ app.app.prepare_submission = lira_utils.create_prepare_submission_function(app.a
 
 # Use automatic routing with custom resolver: https://github.com/zalando/connexion#automatic-routing
 resolver = RestyResolver('lira.api', collection_endpoint_name='list')
-arguments = {'API_DOMAIN_NAME': config['lira_domain_name']}
+arguments = {'API_DOMAIN_NAME': config['DOMAIN']}
 app.add_api('lira_api.yml', resolver=resolver, validate_responses=True, arguments=arguments)
 
 
