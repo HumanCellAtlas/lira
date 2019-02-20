@@ -72,9 +72,9 @@
 {{end}}
 
 {{ if eq $ENVIRONMENT "prod" }}
-    export LIRA_VERSION="v0.16.0"
+    export LIRA_VERSION="v0.17.0"
 
-    export PIPELINE_TOOLS_VERSION="v0.44.0"
+    export PIPELINE_TOOLS_VERSION="v0.46.1"
 
     export NUMBER_OF_REPLICAS="3"
 
