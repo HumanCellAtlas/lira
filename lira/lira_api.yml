@@ -1,14 +1,14 @@
 swagger: '2.0'
 info:
-  title: "HCA DCP Data Processing Pipeline Service API"
+  title: "HCA DCP Pipeline Execution Service API"
   description: >
-    Human Cell Atlas Data Coordination Platform Data Processing Pipeline Service ("Secondary-Analysis") API.
+    Human Cell Atlas Data Coordination Platform Pipeline Execution Service ("Secondary-Analysis") API.
 
 
-    In the HCA DCP, data processing refers to the use of a computational pipeline to analyze raw experimental data from a specific assay. Processing of HCA data produces collections of quality metrics and features that can be used for further analysis. The Data Processing Pipeline Service consists of analysis pipelines and execution infrastructure.
+    The Pipeline Execution Service executes data processing pipelines containing analysis tasks performed on scientific data in the Data Coordination Platform (DCP). The outputs of these pipelines are used for scientific analysis and interpretation.
 
 
-    **At this moment, this Swagger UI only covers the API definition of Lira, the workflow(pipeline) starter service of the HCA DCP Data Processing Pipeline Service, which starts workflows upon valid notifications.**
+    **At this moment, this Swagger UI only covers the API definition of Lira, the workflow(pipeline) starter service of the HCA DCP Pipeline Execution Service, which starts workflows upon valid notifications.**
 
   version: '0.1.0'
 host: {{API_DOMAIN_NAME}}
@@ -21,13 +21,13 @@ tags:
   externalDocs:
     description: "Learn more about the Lira service"
     url: "https://github.com/HumanCellAtlas/lira/wiki"
-- name: "Data Processing Pipeline Service Information"
-  description: "Information about the Data Processing Pipeline Service"
+- name: "Pipeline Execution Service Information"
+  description: "Information about the Pipeline Execution Service"
 paths:
   /version:
     get:
       tags:
-      - "Data Processing Pipeline Service Information"
+      - "Pipeline Execution Service Information"
       summary: "Returns the version of Lira and its dependencies"
       description: "Returns the versions of Lira and its dependencies"
       operationId: 'lira.api.version.get_version'
@@ -44,7 +44,7 @@ paths:
   /health:
     get:
       tags:
-      - "Data Processing Pipeline Service Information"
+      - "Pipeline Execution Service Information"
       summary: "Health check"
       description: "Health check"
       operationId: 'lira.api.health.get'
@@ -94,19 +94,21 @@ definitions:
           $ref: '#/definitions/SingleSampleIdAttachments'
       subscription_id:
         type: string
+        description: "Subscription UUID correspdoning to this notification"
         format: uuid
       transaction_id:
         type: string
+        description: "UUID representing this notification transaction"
         format: uuid
       es_query:
         type: object
+        description: "ElasticSearch query content registered with the subscription"
         properties:
           query:
             type: object
     required:
       - subscription_id
       - transaction_id
-      - es_query
       - match
   Match:
     type: object
