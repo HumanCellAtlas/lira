@@ -5,7 +5,11 @@ from lira import lira_utils
 
 
 def get_version():
-    """Collect and return Lira's and all its dependencies' versions."""
+    """Collect and return Lira's and all its dependencies' versions.
+    
+    TODO: make this endpoint more granular and comply with the API definition
+
+    """
     logger = logging.getLogger('{module_path}'.format(module_path=__name__))
     logger.debug('Version request received')
 
