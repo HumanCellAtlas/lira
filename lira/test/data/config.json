@@ -8,6 +8,7 @@
   "collection_name": "lira-test-workflows",
   "notification_token": "test",
   "MAX_CONTENT_LENGTH": 10000,
+  "DOMAIN": "test.domain.lira-instance.org",
   "dss_url": "https://dss.dev.data.humancellatlas.org/v1",
   "ingest_url": "https://api.ingest.dev.data.humancellatlas.org/",
   "schema_url": "https://schema.humancellatlas.org",

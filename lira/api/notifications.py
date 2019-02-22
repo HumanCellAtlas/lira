@@ -89,8 +89,14 @@ def post(body):
         )
         if cromwell_response.status_code > 201:
             logger.error("HTTP error content: {content}".format(content=cromwell_response.text))
-            response_json = dict(result=cromwell_response.text)
+            # TODO: Improve the error handling here to make the error msgs more granular
             status_code = 500
+            response_json = {
+                'detail': cromwell_response.text,
+                'status': status_code,
+                'code': 'unhandled_exception',
+                'title': cromwell_response.text
+            }
         else:
             response_json = cromwell_response.json()
             logger.info("Cromwell response: {0} {1}".format(response_json, cromwell_response.status_code))

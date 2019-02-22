@@ -5,7 +5,11 @@ from lira import lira_utils
 
 
 def get_version():
-    """Collect and return Lira's and all its dependencies' versions."""
+    """Collect and return Lira's and all its dependencies' versions.
+    
+    TODO: make this endpoint more granular and comply with the API definition
+
+    """
     logger = logging.getLogger('{module_path}'.format(module_path=__name__))
     logger.debug('Version request received')
 
@@ -35,7 +39,7 @@ def get_version():
         'data_store_url': lira_config.get('dss_url'),
         'ingest_url': lira_config.get('ingest_url'),
         'launch_time': current_app.launch_time,
-        'max_cromwell_retries': lira_config.get('max_cromwell_retries'),
+        'max_cromwell_retries': int(lira_config.get('max_cromwell_retries')),
         'run_mode': 'dry_run' if lira_config.get('dry_run') else 'live_run',
         'submit_and_hold_workflows': lira_config.submit_and_hold,
         'use_caas': lira_config.get('use_caas')

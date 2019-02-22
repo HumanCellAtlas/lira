@@ -13,6 +13,7 @@
     "cromwell_user": "{{$cromwellSecrets.Data.cromwell_user}}",
 {{ end }}
 {{ end }}
+    "DOMAIN": "{{ env "DOMAIN" }}",
     "version": "{{ env "LIRA_VERSION" }}",
     "MAX_CONTENT_LENGTH": 10000,
     "use_caas": {{ env "USE_CAAS" | parseBool }},

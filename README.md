@@ -1,8 +1,11 @@
 # Lira
 
-| Slack Channel | Container | Linux-Python |
-|:-------:|:---------:|:---------:|
-| [![](https://img.shields.io/badge/slack-%23secondary--analysis-5BBC66.svg)](https://humancellatlas.slack.com/messages/secondary-analysis/) | [![Docker Repository on Quay](https://quay.io/repository/humancellatlas/secondary-analysis-lira/status "Docker Repository on Quay")](https://quay.io/repository/humancellatlas/secondary-analysis-lira) | [![Build Status](https://travis-ci.org/HumanCellAtlas/lira.svg?branch=master)](https://travis-ci.org/HumanCellAtlas/lira) |
+![Travis (.org) branch](https://img.shields.io/travis/HumanCellAtlas/lira/master.svg?label=Unit%20Test&style=flat)
+[![Docker Repository on Quay](https://quay.io/repository/humancellatlas/secondary-analysis-lira/status "Docker Repository on Quay")](https://quay.io/repository/humancellatlas/secondary-analysis-lira)
+![GitHub release](https://img.shields.io/github/release/HumanCellAtlas/lira.svg?label=Latest%20Release&style=flat&colorB=green)
+![Github](https://img.shields.io/badge/python-2.7%20%7C%203.6-green.svg?style=flat&logo=python&colorB=blue)
+![GitHub](https://img.shields.io/github/license/neuralnotworklab/stylegan.svg?style=flat)
+![Github](https://img.shields.io/badge/Slack%20Channel-%23hca--dcp--analysis--community-green.svg?style=flat&?link=https://humancellatlas.slack.com/messages/analysis-community/&link=https://humancellatlas.slack.com/messages/analysis-community/&colorB=blue)
 
 Submits workflows to [Cromwell](https://github.com/broadinstitute/cromwell) in response to notifications.
 
