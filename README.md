@@ -5,7 +5,7 @@
 ![GitHub release](https://img.shields.io/github/release/HumanCellAtlas/lira.svg?label=Latest%20Release&style=flat&colorB=green)
 ![Github](https://img.shields.io/badge/python-2.7%20%7C%203.6-green.svg?style=flat&logo=python&colorB=blue)
 ![GitHub](https://img.shields.io/github/license/neuralnotworklab/stylegan.svg?style=flat)
-![Github](https://img.shields.io/badge/Slack%20Channel-%23hca--dcp--analysis--community-green.svg?style=flat&?link=https://humancellatlas.slack.com/messages/secondary-analysis/&link=https://humancellatlas.slack.com/messages/secondary-analysis/&colorB=blue)
+![Github](https://img.shields.io/badge/Slack%20Channel-%23hca--dcp--analysis--community-green.svg?style=flat&?link=https://humancellatlas.slack.com/messages/analysis-community/&link=https://humancellatlas.slack.com/messages/analysis-community/&colorB=blue)
 
 Submits workflows to [Cromwell](https://github.com/broadinstitute/cromwell) in response to notifications.
 
