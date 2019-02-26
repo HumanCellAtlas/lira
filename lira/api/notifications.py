@@ -3,7 +3,9 @@ import json
 import logging
 import time
 from flask import current_app
-from cromwell_tools import cromwell_tools
+from cromwell_tools.cromwell_api import CromwellAPI
+from cromwell_tools.cromwell_auth import CromwellAuth
+from cromwell_tools import utilities as cromwell_utils
 from lira import lira_utils
 
 
@@ -53,6 +55,8 @@ def post(body):
     logger.info(current_app.prepare_submission.cache_info())
 
     dry_run = getattr(lira_config, 'dry_run', False)
+    kwargs = {}
+
     if dry_run:
         logger.warning('Not launching workflow because Lira is in dry_run mode')
         response_json = {
@@ -64,29 +68,31 @@ def post(body):
         if lira_config.use_caas:
             options = lira_utils.compose_caas_options(cromwell_submission.options_file, lira_config)
             options_file = json.dumps(options)
-            auth = {
-                'caas_key': lira_config.caas_key,
-                'collection_name': lira_config.collection_name
-            }
+            auth = CromwellAuth.harmonize_credentials(
+                url=lira_config.cromwell_url,
+                service_account_key=lira_config.caas_key
+            )
+            kwargs['collection_name'] = lira_config.collection_name
         else:
             options_file = cromwell_submission.options_file
-            auth = {
-                'user': lira_config.cromwell_user,
-                'password': lira_config.cromwell_password
-            }
+            auth = CromwellAuth.harmonize_credentials(
+                url=lira_config.cromwell_url,
+                username=lira_config.cromwell_user,
+                password=lira_config.cromwell_password
+            )
 
-        cromwell_response = cromwell_tools.start_workflow(
+        cromwell_response = CromwellAPI.submit(
+            auth=auth,
             wdl_file=cromwell_submission.wdl_file,
-            zip_file=cromwell_tools.make_zip_in_memory(cromwell_submission.wdl_deps_dict),
-            inputs_file=cromwell_inputs_file,
-            inputs_file2=cromwell_submission.wdl_static_inputs_file,
+            inputs_files=[cromwell_inputs_file, cromwell_submission.wdl_static_inputs_file],
             options_file=options_file,
-            url=lira_config.cromwell_url,
-            label=cromwell_labels_file,
-            validate_labels=False,  # switch off the validators provided by cromwell_tools
+            dependencies=cromwell_utils.make_zip_in_memory(cromwell_submission.wdl_deps_dict),
+            label_file=cromwell_labels_file,
             on_hold=lira_config.submit_and_hold,
-            **auth
+            validate_labels=False,  # switch off the validators provided by cromwell_tools
+            **kwargs
         )
+
         if cromwell_response.status_code > 201:
             logger.error("HTTP error content: {content}".format(content=cromwell_response.text))
             # TODO: Improve the error handling here to make the error msgs more granular
