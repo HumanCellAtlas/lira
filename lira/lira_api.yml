@@ -91,7 +91,7 @@ definitions:
       match:
         $ref: '#/definitions/Match'
       attachments:
-          $ref: '#/definitions/SingleSampleIdAttachments'
+          $ref: '#/definitions/MultipleSampleIdAttachments'
       subscription_id:
         type: string
         description: "Subscription UUID correspdoning to this notification"
@@ -122,17 +122,6 @@ definitions:
     required:
       - bundle_uuid
       - bundle_version
-  SingleSampleIdAttachments:
-    type: object
-    properties:
-      sample_id:
-        type: string
-        format: uuid
-      project_shortname:
-        type: string
-      project_uuid:
-        type: string
-        format: uuid
   MultipleSampleIdAttachments:
     type: object
     properties:
