@@ -52,6 +52,7 @@ def post(body):
 
     logger.debug("Added labels {labels} to workflow".format(labels=cromwell_labels_file))
 
+    logger.info("Preparing workflow submission...")
     cromwell_submission = current_app.prepare_submission(wdl_config, lira_config.submit_wdl)
     logger.info(current_app.prepare_submission.cache_info())
 
@@ -82,6 +83,7 @@ def post(body):
                 password=lira_config.cromwell_password
             )
 
+        logger.info('Launching workflow...')
         cromwell_response = CromwellAPI.submit(
             auth=auth,
             wdl_file=io.BytesIO(cromwell_submission.wdl_file),
