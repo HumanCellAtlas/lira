@@ -2,6 +2,7 @@ import connexion
 import json
 import logging
 import time
+import io
 from flask import current_app
 from cromwell_tools.cromwell_api import CromwellAPI
 from cromwell_tools.cromwell_auth import CromwellAuth
@@ -40,14 +41,14 @@ def post(body):
 
     # Prepare inputs
     inputs = lira_utils.compose_inputs(wdl_config.workflow_name, uuid, version, lira_config)
-    cromwell_inputs_file = json.dumps(inputs)
+    cromwell_inputs = json.dumps(inputs).encode('utf-8')
 
     # Prepare labels
     labels_from_notification = body.get('labels')  # Try to get the extra labels field if it's applicable
     attachments_from_notification = body.get('attachments')  # Try to get the extra attachments field if it's applicable
     cromwell_labels = lira_utils.compose_labels(wdl_config.workflow_name, wdl_config.workflow_version, uuid, version,
                                                 labels_from_notification, attachments_from_notification)
-    cromwell_labels_file = json.dumps(cromwell_labels)
+    cromwell_labels_file = json.dumps(cromwell_labels).encode('utf-8')
 
     logger.debug("Added labels {labels} to workflow".format(labels=cromwell_labels_file))
 
@@ -67,7 +68,7 @@ def post(body):
     else:
         if lira_config.use_caas:
             options = lira_utils.compose_caas_options(cromwell_submission.options_file, lira_config)
-            options_file = json.dumps(options)
+            options_file = json.dumps(options).encode('utf-8')
             auth = CromwellAuth.harmonize_credentials(
                 url=lira_config.cromwell_url,
                 service_account_key=lira_config.caas_key
@@ -83,11 +84,11 @@ def post(body):
 
         cromwell_response = CromwellAPI.submit(
             auth=auth,
-            wdl_file=cromwell_submission.wdl_file,
-            inputs_files=[cromwell_inputs_file, cromwell_submission.wdl_static_inputs_file],
-            options_file=options_file,
+            wdl_file=io.BytesIO(cromwell_submission.wdl_file),
+            inputs_files=[io.BytesIO(cromwell_inputs), io.BytesIO(cromwell_submission.wdl_static_inputs_file)],
+            options_file=io.BytesIO(options_file),
             dependencies=cromwell_utils.make_zip_in_memory(cromwell_submission.wdl_deps_dict),
-            label_file=cromwell_labels_file,
+            label_file=io.BytesIO(cromwell_labels_file),
             on_hold=lira_config.submit_and_hold,
             validate_labels=False,  # switch off the validators provided by cromwell_tools
             **kwargs
