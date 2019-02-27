@@ -3,6 +3,7 @@ import json
 import logging
 import time
 import io
+import os
 from flask import current_app
 from cromwell_tools.cromwell_api import CromwellAPI
 from cromwell_tools.cromwell_auth import CromwellAuth
@@ -52,7 +53,6 @@ def post(body):
 
     logger.debug("Added labels {labels} to workflow".format(labels=cromwell_labels_file))
 
-    logger.info("Preparing workflow submission...")
     cromwell_submission = current_app.prepare_submission(wdl_config, lira_config.submit_wdl)
     logger.info(current_app.prepare_submission.cache_info())
 
@@ -70,9 +70,10 @@ def post(body):
         if lira_config.use_caas:
             options = lira_utils.compose_caas_options(cromwell_submission.options_file, lira_config)
             options_file = json.dumps(options).encode('utf-8')
+
             auth = CromwellAuth.harmonize_credentials(
                 url=lira_config.cromwell_url,
-                service_account_key=lira_config.caas_key
+                service_account_key=os.environ['caas_key']
             )
             kwargs['collection_name'] = lira_config.collection_name
         else:
@@ -83,7 +84,6 @@ def post(body):
                 password=lira_config.cromwell_password
             )
 
-        logger.info('Launching workflow...')
         cromwell_response = CromwellAPI.submit(
             auth=auth,
             wdl_file=io.BytesIO(cromwell_submission.wdl_file),
