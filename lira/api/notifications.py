@@ -3,11 +3,8 @@ import json
 import logging
 import time
 import io
-import os
+import cromwell_tools
 from flask import current_app
-from cromwell_tools.cromwell_api import CromwellAPI
-from cromwell_tools.cromwell_auth import CromwellAuth
-from cromwell_tools import utilities as cromwell_utils
 from lira import lira_utils
 
 
@@ -71,25 +68,25 @@ def post(body):
             options = lira_utils.compose_caas_options(cromwell_submission.options_file, lira_config)
             options_file = json.dumps(options).encode('utf-8')
 
-            auth = CromwellAuth.harmonize_credentials(
+            auth = cromwell_tools.cromwell_auth.CromwellAuth.harmonize_credentials(
                 url=lira_config.cromwell_url,
-                service_account_key=os.environ['caas_key']
+                service_account_key=lira_config.caas_key
             )
             kwargs['collection_name'] = lira_config.collection_name
         else:
             options_file = cromwell_submission.options_file
-            auth = CromwellAuth.harmonize_credentials(
+            auth = cromwell_tools.cromwell_auth.CromwellAuth.harmonize_credentials(
                 url=lira_config.cromwell_url,
                 username=lira_config.cromwell_user,
                 password=lira_config.cromwell_password
             )
 
-        cromwell_response = CromwellAPI.submit(
+        cromwell_response = cromwell_tools.cromwell_api.CromwellAPI.submit(
             auth=auth,
             wdl_file=io.BytesIO(cromwell_submission.wdl_file),
             inputs_files=[io.BytesIO(cromwell_inputs), io.BytesIO(cromwell_submission.wdl_static_inputs_file)],
             options_file=io.BytesIO(options_file),
-            dependencies=cromwell_utils.make_zip_in_memory(cromwell_submission.wdl_deps_dict),
+            dependencies=cromwell_tools.utilities.make_zip_in_memory(cromwell_submission.wdl_deps_dict),
             label_file=io.BytesIO(cromwell_labels_file),
             on_hold=lira_config.submit_and_hold,
             validate_labels=False,  # switch off the validators provided by cromwell_tools

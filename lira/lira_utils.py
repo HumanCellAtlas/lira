@@ -2,7 +2,6 @@
 """
 import json
 import logging
-from cromwell_tools import utilities as cromwell_utils
 from flask import make_response
 from urllib.parse import urlparse
 from collections import namedtuple
@@ -11,6 +10,7 @@ import hashlib
 import base64
 import email.utils
 from datetime import datetime, timedelta, timezone
+import cromwell_tools
 
 
 logger = logging.getLogger('lira.{module_path}'.format(module_path=__name__))
@@ -347,12 +347,12 @@ def create_prepare_submission_function(cache_wdls):
         """Load into memory all static data needed for submitting a workflow to Cromwell"""
 
         # Read files into memory
-        wdl_file = cromwell_utils.download(wdl_config.wdl_link)
-        wdl_static_inputs_file = cromwell_utils.download(wdl_config.wdl_static_inputs_link)
-        options_file = cromwell_utils.download(wdl_config.options_link)
+        wdl_file = cromwell_tools.utilities.download(wdl_config.wdl_link)
+        wdl_static_inputs_file = cromwell_tools.utilities.download(wdl_config.wdl_static_inputs_link)
+        options_file = cromwell_tools.utilities.download(wdl_config.options_link)
 
         # Create zip of analysis and submit wdls
-        url_to_contents = cromwell_utils.download_to_map(wdl_config.analysis_wdls + [submit_wdl])
+        url_to_contents = cromwell_tools.utilities.download_to_map(wdl_config.analysis_wdls + [submit_wdl])
         wdl_deps_dict = url_to_contents
 
         return CromwellSubmission(wdl_file, wdl_static_inputs_file, options_file, wdl_deps_dict)
