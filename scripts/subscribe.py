@@ -133,7 +133,7 @@ def parser(arguments):
         sub_command.add_argument('--replica',
                                  help='Which replica to work on, use "gcp" by default. ["gcp", "aws"]',
                                  default='gcp')
-        sub_command.add_argument('--elasticsearch',
+        sub_command.add_argument('--subscription_type',
                                  help='Which type of subscription query you want to use, "elasticsearch" by default. ["elasticsearch", "jmespath"]',
                                  default='elasticsearch')
         sub_command.add_argument('--google_project',
