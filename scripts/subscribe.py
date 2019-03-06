@@ -47,7 +47,7 @@ def create_subscription(args):
 
     response = requests.put(url=args['dss_url'],
                             json=payload,
-                            params={'replica': args['replica']},
+                            params={'replica': args['replica'], 'subscription_type': args['subscription_type']},
                             headers=headers)
     response.raise_for_status()
 
@@ -88,7 +88,7 @@ def get_subscriptions(args):
             args['dss_url']))
 
     response = requests.get(url=args['dss_url'],
-                            params={'replica': args['replica']},
+                            params={'replica': args['replica'], 'subscription_type': args['subscription_type']},
                             headers=args['headers'])
     response.raise_for_status()
     print(json.dumps(response.json(), indent=4))
@@ -103,7 +103,7 @@ def delete_subscription(args):
             url))
 
     response = requests.delete(url=url,
-                               params={'replica': args['replica']},
+                               params={'replica': args['replica'], 'subscription_type': args['subscription_type']},
                                headers=args['headers'])
     response.raise_for_status()
 
@@ -133,6 +133,9 @@ def parser(arguments):
         sub_command.add_argument('--replica',
                                  help='Which replica to work on, use "gcp" by default. ["gcp", "aws"]',
                                  default='gcp')
+        sub_command.add_argument('--subscription_type',
+                                 help='Which type of subscription query you want to use, "elasticsearch" by default. ["elasticsearch", "jmespath"]',
+                                 default='elasticsearch')
         sub_command.add_argument('--google_project',
                                  help='The google project the Lira is using.',
                                  required=True)
