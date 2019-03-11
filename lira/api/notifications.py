@@ -3,7 +3,9 @@ import json
 import logging
 import time
 import io
-import cromwell_tools
+import cromwell_tools.cromwell_api
+import cromwell_tools.cromwell_auth
+import cromwell_tools.utilities
 from flask import current_app
 from lira import lira_utils
 
