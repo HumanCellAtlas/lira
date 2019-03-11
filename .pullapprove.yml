@@ -1,0 +1,42 @@
+version: 3
+
+groups:
+  pullapprove-admins:
+    conditions:
+    - "'.pullapprove.yml' in files"
+
+    reviews:
+      required: 1
+      author_value: 1 # if author in group reduce number of approvals needed by this number
+
+    reviewers:
+      users:
+      - rhiananthony
+      teams:
+      - secops
+
+  software-review:
+    reviews:
+      required: 2
+      author_value: 1 # if author in group reduce number of approvals needed by this number
+      request_order: random  # reviewers will be chosen in a random order
+
+    reviewers:
+      teams:
+      - pipelines-software-engineers
+      - pipelines-devops
+
+#  computational-review:
+#    reviews:
+#      required: 1
+#      author_value: 0 # if author in group reduce number of approvals needed by this number
+#      request_order: random  # reviewers will be chosen in a random order
+#
+#    reviewers:
+#      teams:
+#      - pipelines-computational-biologists
+
+#notifications:
+#- when: pullapprove.approved
+#  if: "author_association == 'CONTRIBUTOR'"
+#  comment: "The review is completed. Thanks @{{ author }}."
