@@ -1,13 +1,13 @@
 version: 3
 
 pullapprove_conditions:
-- condition: "'*jenkins*' in statuses.successful"
-  unmet_status: failure
-  explanation: "Tests must pass before review starts"
+#- condition: "'*jenkins*' in statuses.successful"
+#  unmet_status: failure
+#  explanation: "Jenkins Tests must pass before review starts"
 
 - condition: "'*travis*' in statuses.successful"
   unmet_status: failure
-  explanation: "Tests must pass before review starts"
+  explanation: "Travis Tests must pass before review starts"
   
 groups:
   pullapprove-admins:
@@ -39,4 +39,3 @@ notifications:
 - when: pullapprove.approved
   if: "author_association == 'CONTRIBUTOR'"
   comment: "The review is completed. Thanks @{{ author }}."
-
