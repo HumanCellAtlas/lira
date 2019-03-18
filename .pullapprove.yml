@@ -39,4 +39,3 @@ notifications:
 - when: pullapprove.approved
   if: "author_association == 'CONTRIBUTOR'"
   comment: "The review is completed. Thanks @{{ author }}."
-
