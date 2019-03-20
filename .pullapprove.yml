@@ -1,13 +1,16 @@
 version: 3
 
 pullapprove_conditions:
-#- condition: "'*jenkins*' in statuses.successful"
-#  unmet_status: failure
-#  explanation: "Jenkins Tests must pass before review starts"
-
 - condition: "'*travis*' in statuses.successful"
   unmet_status: failure
-  explanation: "Travis Tests must pass before review starts"
+  explanation: "Tests must pass before review starts"
+
+# DISABLED: pullapprove v3 has not yet added support for "Githubb Checks" which are how Github Apps return status of tests
+# In the meantime we will enforce these tests within Github itself
+#- condition: "'*jenkins*' in statuses.successful"
+#  unmet_status: failure
+#  explanation: "Tests must pass before review starts"
+
   
 groups:
   pullapprove-admins:
