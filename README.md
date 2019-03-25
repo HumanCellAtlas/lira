@@ -4,8 +4,11 @@
 [![Docker Repository on Quay](https://quay.io/repository/humancellatlas/secondary-analysis-lira/status "Docker Repository on Quay")](https://quay.io/repository/humancellatlas/secondary-analysis-lira)
 ![GitHub release](https://img.shields.io/github/release/HumanCellAtlas/lira.svg?label=Latest%20Release&style=flat&colorB=green)
 ![Github](https://img.shields.io/badge/python-2.7%20%7C%203.6-green.svg?style=flat&logo=python&colorB=blue)
-![GitHub](https://img.shields.io/github/license/neuralnotworklab/stylegan.svg?style=flat)
+![GitHub](https://img.shields.io/github/license/HumanCellAtlas/lira.svg?style=flat)
 ![Github](https://img.shields.io/badge/Slack%20Channel-%23hca--dcp--analysis--community-green.svg?style=flat&?link=https://humancellatlas.slack.com/messages/analysis-community/&link=https://humancellatlas.slack.com/messages/analysis-community/&colorB=blue)
+[![Snyk Vulnerabilities for GitHub Repo (Specific Manifest)](https://img.shields.io/snyk/vulnerabilities/github/HumanCellAtlas/lira/requirements.txt.svg?label=Snyk%20Vulnerabilities&logo=Snyk)](https://snyk.io/test/github/HumanCellAtlas/lira?targetFile=requirements.txt)
+[![Snyk Vulnerabilities for GitHub Repo (Specific Manifest)](https://img.shields.io/snyk/vulnerabilities/github/HumanCellAtlas/lira/scripts/requirements.txt.svg?label=Snyk%20Scripts%20Vulnerabilities&logo=Snyk)](https://snyk.io/test/github/HumanCellAtlas/lira?targetFile=scripts/requirements.txt)
+
 
 Submits workflows to [Cromwell](https://github.com/broadinstitute/cromwell) in response to notifications.
 
