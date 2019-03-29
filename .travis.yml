@@ -9,6 +9,8 @@ jobs:
     # The linting test is fast and cheap so run it first
     - stage: Linting Test
       install: "pip install -r requirements.txt"
+      python:
+        - '3.6'
       script: 
         # Check Black code style compliance
         - black lira/ scripts/ --skip-string-normalization --check
@@ -18,6 +20,9 @@ jobs:
     # The unit test is a bit more expensive so run it only
     # if the linting test passes
     - stage: Unit Test
+      python:
+        - '2.7'
+        - '3.6'
       sudo: required
       services: docker
       script: cd lira/test && bash test.sh
