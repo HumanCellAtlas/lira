@@ -9,12 +9,15 @@ from argparse import ArgumentParser
 from oauth2client.service_account import ServiceAccountCredentials
 from firecloud import api as firecloud_api
 import requests.packages.urllib3
+
 requests.packages.urllib3.disable_warnings()
 
 
 def main():
     # The main argument parser
-    parser = ArgumentParser(description="Register a service account for use in FireCloud.")
+    parser = ArgumentParser(
+        description="Register a service account for use in FireCloud."
+    )
 
     # Core application arguments
     parser.add_argument(
@@ -23,7 +26,7 @@ def main():
         dest='json_credentials',
         action='store',
         required=True,
-        help='Path to the json credentials file for this service account.'
+        help='Path to the json credentials file for this service account.',
     )
     parser.add_argument(
         '-e',
@@ -31,7 +34,7 @@ def main():
         dest='owner_email',
         action='store',
         required=True,
-        help='Email address of the person who owns this service account'
+        help='Email address of the person who owns this service account',
     )
     parser.add_argument(
         '-u',
@@ -40,16 +43,18 @@ def main():
         action='store',
         default="https://api.firecloud.org",
         required=False,
-        help='Base url of FireCloud server to contact (default https://api.firecloud.org)'
+        help='Base url of FireCloud server to contact (default https://api.firecloud.org)',
     )
 
     args = parser.parse_args()
 
     scopes = [
         'https://www.googleapis.com/auth/userinfo.profile',
-        'https://www.googleapis.com/auth/userinfo.email'
+        'https://www.googleapis.com/auth/userinfo.email',
     ]
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(args.json_credentials, scopes=scopes)
+    credentials = ServiceAccountCredentials.from_json_keyfile_name(
+        args.json_credentials, scopes=scopes
+    )
 
     bearer_token = credentials.get_access_token().access_token
     headers = {"Authorization": "bearer " + bearer_token}
@@ -60,17 +65,17 @@ def main():
     uri = args.fc_url + "/register/profile"
 
     profile_json = {
-                        "firstName": "None",
-                        "lastName": "None",
-                        "title": "None",
-                        "contactEmail": args.owner_email,
-                        "institute": "None",
-                        "institutionalProgram": "None",
-                        "programLocationCity": "None",
-                        "programLocationState": "None",
-                        "programLocationCountry": "None",
-                        "pi": "None",
-                        "nonProfitStatus": "false"
+        "firstName": "None",
+        "lastName": "None",
+        "title": "None",
+        "contactEmail": args.owner_email,
+        "institute": "None",
+        "institutionalProgram": "None",
+        "programLocationCity": "None",
+        "programLocationState": "None",
+        "programLocationCountry": "None",
+        "pi": "None",
+        "nonProfitStatus": "false",
     }
     request = requests.post(uri, headers=headers, json=profile_json)
 
@@ -79,7 +84,9 @@ def main():
     if request.status_code == 200:
         print(
             """The service account {} is now registered with FireCloud. 
-               You can share workspaces with this address, or use it to call APIs.""".format(credentials._service_account_email)
+               You can share workspaces with this address, or use it to call APIs.""".format(
+                credentials._service_account_email
+            )
         )
     else:
         print(format("Unable to register service account: {}", request.text))
