@@ -3,7 +3,6 @@
 import logging
 import sys
 import os
-from . import lira_utils
 
 
 class Config(object):

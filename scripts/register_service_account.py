@@ -83,7 +83,7 @@ def main():
 
     if request.status_code == 200:
         print(
-            """The service account {} is now registered with FireCloud. 
+            """The service account {} is now registered with FireCloud.
                You can share workspaces with this address, or use it to call APIs.""".format(
                 credentials._service_account_email
             )

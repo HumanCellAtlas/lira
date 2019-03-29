@@ -6,7 +6,7 @@ from lira import lira_utils
 
 def get_version():
     """Collect and return Lira's and all its dependencies' versions.
-    
+
     TODO: make this endpoint more granular and comply with the API definition
 
     """
