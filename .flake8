@@ -2,7 +2,7 @@
 
 # E203	whitespace before ‘:’
 # E266	too many leading ‘#’ for block comment
-# E501 (^)	line too long (82 > 79 characters)
+# E501  line too long (82 > 79 characters) (^)
 # W503	line break occurred before a binary operator
 # F841  local variable is assigned to but never used
 # F401  module imported but unused
