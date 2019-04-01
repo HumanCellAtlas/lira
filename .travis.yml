@@ -16,9 +16,6 @@ jobs:
     # The unit test is a bit more expensive so run it only
     # if the linting test passes
     - stage: Unit Test
-      python:
-        - '2.7'
-        - '3.6'
       sudo: required
       services: docker
       script: cd lira/test && bash test.sh
