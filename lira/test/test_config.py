@@ -8,7 +8,6 @@ import logging
 
 
 class TestStartupVerification(unittest.TestCase):
-
     @classmethod
     def setUpClass(cls):
         """load the config file"""
@@ -28,14 +27,15 @@ class TestStartupVerification(unittest.TestCase):
             result = lira_config.LiraConfig(test_config)
         except BaseException as exception:
             self.fail(
-                'LiraConfig constructor raised an exception: {exception}'
-                .format(exception=exception))
+                'LiraConfig constructor raised an exception: {exception}'.format(
+                    exception=exception
+                )
+            )
 
         # check correct type
         self.assertIsInstance(result, lira_config.LiraConfig)
 
     def test_config_missing_required_field_throws_value_error(self):
-
         def delete_wdl_field(field_name):
             """return a config object whose first wdl config is missing a field"""
             test_config = deepcopy(self.correct_test_config)
@@ -223,7 +223,6 @@ class TestStartupVerification(unittest.TestCase):
         self.assertEqual(config.max_cromwell_retries, 12)
 
     def test_config_duplicate_wdl_raises_value_error(self):
-
         def add_duplicate_wdl_definition():
             """add the first wdl definition to the end of the 'wdls' json section"""
             test_config = deepcopy(self.correct_test_config)
@@ -239,16 +238,25 @@ class TestStartupVerification(unittest.TestCase):
         test_config = deepcopy(self.correct_test_config)
         config = lira_config.LiraConfig(test_config)
         requested_lira_attributes = [
-            'notification_token', 'wdls', 'cromwell_url', 'cromwell_user',
-            'cromwell_password', 'MAX_CONTENT_LENGTH']
+            'notification_token',
+            'wdls',
+            'cromwell_url',
+            'cromwell_user',
+            'cromwell_password',
+            'MAX_CONTENT_LENGTH',
+        ]
         for attr in requested_lira_attributes:
             self.assertTrue(hasattr(config, attr), 'missing attribute %s' % attr)
 
         # get an example wdl to test
         wdl = config.wdls[0]
         requested_wdl_attributes = [
-            'subscription_id', 'wdl_link', 'workflow_name', 'wdl_static_inputs_link',
-            'options_link']
+            'subscription_id',
+            'wdl_link',
+            'workflow_name',
+            'wdl_static_inputs_link',
+            'options_link',
+        ]
         for attr in requested_wdl_attributes:
             self.assertTrue(hasattr(wdl, attr), 'missing attribute %s' % attr)
 

@@ -46,7 +46,9 @@ def is_authenticated(request, config):
         True if message verifiably came from storage service, else False.
     """
     if hasattr(config, 'hmac_key'):
-        return _is_authenticated_hmac(request, config.hmac_key, config.stale_notification_timeout)
+        return _is_authenticated_hmac(
+            request, config.hmac_key, config.stale_notification_timeout
+        )
     else:
         return _is_authenticated_query_param(request.args, config.notification_token)
 
@@ -104,8 +106,13 @@ def _check_date(date_header, stale_notification_timeout):
         raise AssertionError('No date header')
     datetime_from_header = email.utils.parsedate_to_datetime(date_header)
     diff = datetime.now(timezone.utc) - datetime_from_header
-    if diff > timedelta(seconds=stale_notification_timeout) and stale_notification_timeout > 0:
-        raise AssertionError('Message is more than {0} seconds old'.format(stale_notification_timeout))
+    if (
+        diff > timedelta(seconds=stale_notification_timeout)
+        and stale_notification_timeout > 0
+    ):
+        raise AssertionError(
+            'Message is more than {0} seconds old'.format(stale_notification_timeout)
+        )
 
 
 def _calculate_digest(request):
@@ -172,7 +179,7 @@ def compose_inputs(workflow_name, uuid, version, lira_config):
         workflow_name + '.submit_url': lira_config.ingest_url,
         workflow_name + '.schema_url': lira_config.schema_url,
         workflow_name + '.max_cromwell_retries': lira_config.max_cromwell_retries,
-        workflow_name + '.cromwell_url': lira_config.cromwell_url
+        workflow_name + '.cromwell_url': lira_config.cromwell_url,
     }
 
 
@@ -198,12 +205,14 @@ def compose_caas_options(cromwell_options_file, lira_config):
         caas_key = f.read()
         caas_key_json = json.loads(caas_key)
 
-    options_json.update({
-        'jes_gcs_root': lira_config.gcs_root,
-        'google_project': lira_config.google_project,
-        'user_service_account_json': caas_key,
-        'google_compute_service_account': caas_key_json['client_email']
-    })
+    options_json.update(
+        {
+            'jes_gcs_root': lira_config.gcs_root,
+            'google_project': lira_config.google_project,
+            'user_service_account_json': caas_key,
+            'google_compute_service_account': caas_key_json['client_email'],
+        }
+    )
     return options_json
 
 
@@ -225,23 +234,48 @@ def parse_github_resource_url(url):
         ValueError: Raise a ValueError if the input URL is invalid.
     """
     if url.startswith('git@') or url.endswith('.git'):
-        raise ValueError('{} is not a valid url to a resource file on Github.'.format(url))
+        raise ValueError(
+            '{} is not a valid url to a resource file on Github.'.format(url)
+        )
 
-    ParseResult = namedtuple('ParseResult', 'scheme netloc owner repo version path file')
+    ParseResult = namedtuple(
+        'ParseResult', 'scheme netloc owner repo version path file'
+    )
 
     intermediate_result = urlparse(url)
-    scheme, netloc, path_array = intermediate_result.scheme, intermediate_result.netloc,\
-                                 intermediate_result.path.split('/')
+    scheme, netloc, path_array = (
+        intermediate_result.scheme,
+        intermediate_result.netloc,
+        intermediate_result.path.split('/'),
+    )
 
     if netloc == 'github.com':
-        owner, repo, version, file = path_array[1], path_array[2], path_array[4], path_array[-1]
+        owner, repo, version, file = (
+            path_array[1],
+            path_array[2],
+            path_array[4],
+            path_array[-1],
+        )
         path = '/'.join(path_array[5:])
     elif netloc == 'raw.githubusercontent.com':
-        owner, repo, version, file = path_array[1], path_array[2], path_array[3], path_array[-1]
+        owner, repo, version, file = (
+            path_array[1],
+            path_array[2],
+            path_array[3],
+            path_array[-1],
+        )
         path = '/'.join(path_array[4:])
     else:
         owner = repo = version = path = file = None
-    return ParseResult(scheme=scheme, netloc=netloc, owner=owner, repo=repo, version=version, path=path, file=file)
+    return ParseResult(
+        scheme=scheme,
+        netloc=netloc,
+        owner=owner,
+        repo=repo,
+        version=version,
+        path=path,
+        file=file,
+    )
 
 
 def legalize_cromwell_labels(label):
@@ -269,7 +303,9 @@ def legalize_cromwell_labels(label):
     return str(label)[:cromwell_label_maximum_length]
 
 
-def compose_labels(workflow_name, workflow_version, bundle_uuid, bundle_version, *extra_labels):
+def compose_labels(
+    workflow_name, workflow_version, bundle_uuid, bundle_version, *extra_labels
+):
     """Create Cromwell labels object containing pre-defined labels and potential extra labels.
 
     The pre-defined workflow labels are: workflow_name, workflow_version, bundle_uuid, bundle_version.
@@ -289,11 +325,14 @@ def compose_labels(workflow_name, workflow_version, bundle_uuid, bundle_version,
         "workflow-name": legalize_cromwell_labels(workflow_name),
         "workflow-version": legalize_cromwell_labels(workflow_version),
         "bundle-uuid": legalize_cromwell_labels(bundle_uuid),
-        "bundle-version": legalize_cromwell_labels(bundle_version)
+        "bundle-version": legalize_cromwell_labels(bundle_version),
     }
     for extra_label in extra_labels:
         if isinstance(extra_label, dict):
-            extra_label = {legalize_cromwell_labels(k): legalize_cromwell_labels(v) for k, v in extra_label.items()}
+            extra_label = {
+                legalize_cromwell_labels(k): legalize_cromwell_labels(v)
+                for k, v in extra_label.items()
+            }
             workflow_labels.update(extra_label)
     return workflow_labels
 
@@ -305,6 +344,7 @@ def noop_lru_cache(maxsize=None, typed=False):
     calls through to the decorated function and provides a dummy cache_info()
     function.
     """
+
     def cache_info():
         return 'No cache info available. Cache is disabled.'
 
@@ -314,9 +354,11 @@ def noop_lru_cache(maxsize=None, typed=False):
     def real_noop_lru_cache(fn):
         def wrapper(*args, **kwargs):
             return fn(*args, **kwargs)
+
         wrapper.cache_info = cache_info
         wrapper.cache_clear = cache_clear
         return wrapper
+
     return real_noop_lru_cache
 
 
@@ -334,7 +376,9 @@ def create_prepare_submission_function(cache_wdls):
         try:
             from functools import lru_cache
         except ImportError:
-            logger.info('Not caching wdls because functools.lru_cache is not available in Python 2.')
+            logger.info(
+                'Not caching wdls because functools.lru_cache is not available in Python 2.'
+            )
 
     @lru_cache(maxsize=None)
     # Setting maxsize to None here means each unique call to prepare_submission (defined by parameters used)
@@ -348,14 +392,20 @@ def create_prepare_submission_function(cache_wdls):
 
         # Read files into memory
         wdl_file = cromwell_tools.utilities.download(wdl_config.wdl_link)
-        wdl_static_inputs_file = cromwell_tools.utilities.download(wdl_config.wdl_static_inputs_link)
+        wdl_static_inputs_file = cromwell_tools.utilities.download(
+            wdl_config.wdl_static_inputs_link
+        )
         options_file = cromwell_tools.utilities.download(wdl_config.options_link)
 
         # Create zip of analysis and submit wdls
-        url_to_contents = cromwell_tools.utilities.download_to_map(wdl_config.analysis_wdls + [submit_wdl])
+        url_to_contents = cromwell_tools.utilities.download_to_map(
+            wdl_config.analysis_wdls + [submit_wdl]
+        )
         wdl_deps_dict = url_to_contents
 
-        return CromwellSubmission(wdl_file, wdl_static_inputs_file, options_file, wdl_deps_dict)
+        return CromwellSubmission(
+            wdl_file, wdl_static_inputs_file, options_file, wdl_deps_dict
+        )
 
     return prepare_submission
 
@@ -366,7 +416,13 @@ class CromwellSubmission(object):
     and the dependencies zip file.
     """
 
-    def __init__(self, wdl_file, wdl_static_inputs_file=None, options_file=None, wdl_deps_dict=None):
+    def __init__(
+        self,
+        wdl_file,
+        wdl_static_inputs_file=None,
+        options_file=None,
+        wdl_deps_dict=None,
+    ):
         self.wdl_file = wdl_file
         self.wdl_static_inputs_file = wdl_static_inputs_file
         self.options_file = options_file
