@@ -1,12 +1,14 @@
 language: python
 
+python:
+  - '3.6'
+
+install: "pip install -r requirements.txt"
+
 jobs:
   include:
     # The linting test is fast and cheap so run it first
     - stage: Linting Test
-      install: "pip install -r requirements.txt"
-      python:
-        - '3.6'
       script: 
         # Check Black code style compliance
         - black lira/ scripts/ --skip-string-normalization --check
