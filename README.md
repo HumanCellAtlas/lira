@@ -1,6 +1,6 @@
 # Lira
 
-[![Travis (.org) branch](https://img.shields.io/travis/HumanCellAtlas/lira/master.svg?label=Unit%20Test%20on%20Travis%20CI%20&style=flat-square)](https://travis-ci.org/HumanCellAtlas/lira)
+[![Travis (.org) branch](https://img.shields.io/travis/HumanCellAtlas/lira/master.svg?label=Unit%20Test%20on%20Travis%20CI%20&style=flat-square&logo=Travis)](https://travis-ci.org/HumanCellAtlas/lira)
 [![Docker Repository on Quay](https://quay.io/repository/humancellatlas/secondary-analysis-lira/status "Docker Repository on Quay")](https://quay.io/repository/humancellatlas/secondary-analysis-lira)
 [![GitHub release](https://img.shields.io/github/release/HumanCellAtlas/lira.svg?label=Latest%20Release&style=flat-square&colorB=green)](https://github.com/HumanCellAtlas/lira/releases)
 [![Snyk Vulnerabilities for GitHub Repo (Specific Manifest)](https://img.shields.io/snyk/vulnerabilities/github/HumanCellAtlas/lira/requirements.txt.svg?label=Snyk%20Vulnerabilities&logo=Snyk&style=flat-square)](https://snyk.io/test/github/HumanCellAtlas/lira?targetFile=requirements.txt)
