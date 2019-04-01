@@ -1,13 +1,6 @@
-FROM ubuntu:16.04
+FROM python:3.6
 
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get -y install --no-install-recommends \
-        python3-pip \
-        vim \
-        nmap \
-        git && \
-    pip3 install --upgrade \
+RUN pip install --upgrade \
         pip \
         setuptools \
         wheel && \
@@ -17,7 +10,7 @@ WORKDIR /lira
 
 COPY requirements.txt .
 
-RUN pip3 install -r requirements.txt
+RUN pip install -r requirements.txt
 
 COPY . .
 
