@@ -4,11 +4,11 @@ repos:
     hooks:
     - id: black
       language_version: python3.6
-      # Using args here is not recommended by Black: 
+      # Using args here is not recommended by Black:
       # https://black.readthedocs.io/en/stable/version_control_integration.html
-      # But since we only have one argument here, and 
+      # But since we only have one argument here, and
       # we don't force developers to use editor plugins,
-      # putting the args here seems to be fine 
+      # putting the args here seems to be fine
       args: [lira/, scripts/, --skip-string-normalization]
 
 -   repo: https://gitlab.com/pycqa/flake8
