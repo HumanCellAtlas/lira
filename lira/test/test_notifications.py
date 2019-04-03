@@ -7,7 +7,7 @@ from lira import lira_config
 from lira.lira_utils import create_prepare_submission_function
 
 try:
-    from functools import lru_cache
+    from functools import lru_cache  # noqa
 
     cache_available = True
 except ImportError:
