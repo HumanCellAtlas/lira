@@ -4,7 +4,6 @@ import lira.api.health as health
 
 
 class TestService(unittest.TestCase):
-
     def test_health_check(self):
         self.assertEqual(health.get(), dict(status='healthy'))
 

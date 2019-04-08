@@ -3,11 +3,9 @@
 import logging
 import sys
 import os
-from . import lira_utils
 
 
 class Config(object):
-
     def __init__(self, config_dictionary, flask_config_values=None):
         """Abstract class that defines some useful configuration checks for Lira
 
@@ -45,12 +43,14 @@ class Config(object):
         if missing_keys:
             raise ValueError(
                 'The following configuration is missing key(s): {keys}'
-                ''.format(keys=', '.join(missing_keys)))
+                ''.format(keys=', '.join(missing_keys))
+            )
         if extra_keys:
             logger = logging.getLogger('{module_path}'.format(module_path=__name__))
             logger.info(
                 'Configuration has non-required key(s): {keys}'
-                ''.format(keys=', '.join(extra_keys)))
+                ''.format(keys=', '.join(extra_keys))
+            )
 
     def __eq__(self, other):
         return isinstance(other, WdlConfig) and hash(self) == hash(other)
@@ -96,7 +96,7 @@ class WdlConfig(Config):
             'workflow_name',
             'wdl_static_inputs_link',
             'options_link',
-            'workflow_version'
+            'workflow_version',
         }
 
     def _verify_fields(self):
@@ -113,16 +113,19 @@ class WdlConfig(Config):
             self.workflow_name,
             self.wdl_static_inputs_link,
             self.options_link,
-            self.workflow_version)
+            self.workflow_version,
+        )
 
     def __repr__(self):
-        s = 'WdlConfig(subscription_id: {0},' \
-            ' wdl_link: {1},' \
-            ' analysis_wdls: {2},' \
-            ' workflow_name: {3},' \
-            ' wdl_static_inputs_link: {4},' \
-            ' options_link: {5},' \
+        s = (
+            'WdlConfig(subscription_id: {0},'
+            ' wdl_link: {1},'
+            ' analysis_wdls: {2},'
+            ' workflow_name: {3},'
+            ' wdl_static_inputs_link: {4},'
+            ' options_link: {5},'
             ' workflow_version: {6})'
+        )
         return s.format(
             self.subscription_id,
             self.wdl_link,
@@ -130,7 +133,8 @@ class WdlConfig(Config):
             self.workflow_name,
             self.wdl_static_inputs_link,
             self.options_link,
-            self.workflow_version)
+            self.workflow_version,
+        )
 
 
 class LiraConfig(Config):
@@ -165,14 +169,18 @@ class LiraConfig(Config):
             self.log_level_stderr = self.log_level_lira
         stderr_handler.setLevel(self.log_level_stderr)
 
-        logging.basicConfig(level=self.log_level_lira, handlers=[stdout_handler, stderr_handler])
+        logging.basicConfig(
+            level=self.log_level_lira, handlers=[stdout_handler, stderr_handler]
+        )
 
         # Configure log level for loggers that print query params.
         # Unless specified otherwise in Lira's config file, these will be set
         # at ERROR for werkzeug and INFO for connexion.decorators.validation
         # in order to suppress messages that include query params.
         logging.getLogger('werkzeug').setLevel(self.log_level_werkzeug)
-        logging.getLogger('connexion.decorators.validation').setLevel(self.log_level_connexion_validation)
+        logging.getLogger('connexion.decorators.validation').setLevel(
+            self.log_level_connexion_validation
+        )
 
         # Check cromwell credentials
         use_caas = config_object.get('use_caas', None)
@@ -180,31 +188,51 @@ class LiraConfig(Config):
             config_object['use_caas'] = False
         if config_object.get('use_caas'):
             if not config_object.get('collection_name'):
-                self.collection_name = 'lira-{}-workflows'.format(config_object.get('env'))
+                self.collection_name = 'lira-{}-workflows'.format(
+                    config_object.get('env')
+                )
             caas_key = os.environ.get('caas_key')
             if not caas_key:
-                raise ValueError('No service account json key provided for cromwell-as-a-service.')
+                raise ValueError(
+                    'No service account json key provided for cromwell-as-a-service.'
+                )
             self.caas_key = caas_key
             if not config_object.get('google_project'):
-                raise ValueError('No google_project specified. You must specify a project for workflows to run in when using CaaS.')
+                raise ValueError(
+                    'No google_project specified. You must specify a project for workflows to run in when using CaaS.'
+                )
             if not config_object.get('gcs_root'):
-                raise ValueError('No gcs_root specified. You must specify a GCS path for workflow outputs to be written to when using CaaS.')
-        elif not config_object.get('cromwell_user') or not config_object.get('cromwell_password'):
-            raise ValueError('User and password required for {}'.format(config_object.get('cromwell_url')))
+                raise ValueError(
+                    'No gcs_root specified. You must specify a GCS path for workflow outputs to be written to when using CaaS.'
+                )
+        elif not config_object.get('cromwell_user') or not config_object.get(
+            'cromwell_password'
+        ):
+            raise ValueError(
+                'User and password required for {}'.format(
+                    config_object.get('cromwell_url')
+                )
+            )
 
         # parse the wdls section
         wdl_configs = []
         try:
-            for wdl in config_object['wdls']:  # Parse wdls and instantiate WdlConfig objects
+            for wdl in config_object[
+                'wdls'
+            ]:  # Parse wdls and instantiate WdlConfig objects
                 wdl_configs.append(WdlConfig(wdl))
         except KeyError:
             raise ValueError('supplied config file must contain a "wdls" section.')
         self._verify_wdl_configs(wdl_configs)
-        config_object['wdls'] = wdl_configs  # Store the WdlConfig objects back to wdls section
+        config_object[
+            'wdls'
+        ] = wdl_configs  # Store the WdlConfig objects back to wdls section
 
         if config_object.get('dry_run'):
             logger = logging.getLogger('{module_path}'.format(module_path=__name__))
-            logger.warning('***Lira is running in dry_run mode and will NOT launch any workflows***')
+            logger.warning(
+                '***Lira is running in dry_run mode and will NOT launch any workflows***'
+            )
 
         hmac_key = config_object.get('hmac_key')
         if hmac_key:
@@ -212,9 +240,13 @@ class LiraConfig(Config):
 
         # Legitimate notifications from blue box should be received by us shortly after being created.
         # If a notification's Date header is too old, we will refuse to accept it, configured by stale_notification_timeout.
-        config_object['stale_notification_timeout'] = config_object.get('stale_notification_timeout', 0)
+        config_object['stale_notification_timeout'] = config_object.get(
+            'stale_notification_timeout', 0
+        )
 
-        config_object['max_cromwell_retries'] = config_object.get('max_cromwell_retries', 0)
+        config_object['max_cromwell_retries'] = config_object.get(
+            'max_cromwell_retries', 0
+        )
 
         Config.__init__(self, config_object, *args, **kwargs)
 
@@ -230,7 +262,7 @@ class LiraConfig(Config):
             'dss_url',
             'ingest_url',
             'schema_url',
-            'DOMAIN'
+            'DOMAIN',
         }
 
     @staticmethod
@@ -244,7 +276,8 @@ class LiraConfig(Config):
             raise ValueError(
                 'One or more wdl specifications contains a duplicated subscription ID '
                 'but have non-identical configurations. Please check configuration file '
-                'contents.')
+                'contents.'
+            )
 
     def __str__(self):
         s = 'LiraConfig({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8})'
@@ -259,21 +292,23 @@ class LiraConfig(Config):
             self.dss_url,
             self.ingest_url,
             self.schema_url,
-            self.DOMAIN
+            self.DOMAIN,
         )
 
     def __repr__(self):
-        s = 'LiraConfig(environment: {0},' \
-            ' submit_wdl: {1},' \
-            ' cromwell_url: {2},' \
-            ' use_caas: {3},' \
-            ' MAX_CONTENT_LENGTH: {4},' \
-            ' wdls: {5},' \
-            ' lira_version: {6}' \
-            ' dss_url: {7}' \
-            ' ingest_url: {8}' \
-            ' schema_url: {9}' \
+        s = (
+            'LiraConfig(environment: {0},'
+            ' submit_wdl: {1},'
+            ' cromwell_url: {2},'
+            ' use_caas: {3},'
+            ' MAX_CONTENT_LENGTH: {4},'
+            ' wdls: {5},'
+            ' lira_version: {6}'
+            ' dss_url: {7}'
+            ' ingest_url: {8}'
+            ' schema_url: {9}'
             ' DOMAIN: {10}'
+        )
         return s.format(
             self.env,
             self.submit_wdl,
@@ -285,12 +320,13 @@ class LiraConfig(Config):
             self.dss_url,
             self.ingest_url,
             self.schema_url,
-            self.DOMAIN
+            self.DOMAIN,
         )
 
 
 class MaxLevelFilter(object):
     """Excludes logs above max_level"""
+
     def __init__(self, max_level):
         self.max_level = max_level
 

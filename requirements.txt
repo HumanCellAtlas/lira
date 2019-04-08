@@ -10,4 +10,7 @@ requests-mock==1.5.0
 oauth2client==4.1.2
 mock==2.0.0
 requests-http-signature==v0.0.3
-cromwell-tools==v1.1.1
+cromwell-tools>=1.1.1, <2
+black==19.3b0
+flake8==3.7.7
+pre-commit==1.14.4
