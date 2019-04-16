@@ -13,14 +13,17 @@ from datetime import datetime, timedelta, timezone
 import cromwell_tools
 
 
-logger = logging.getLogger('lira.{module_path}'.format(module_path=__name__))
+logger = logging.getLogger(f'lira.{__name__}')
+
+
+LIRA_SERVER_HEADER = {'Server': 'Lira Service', 'Content-type': 'application/json'}
 
 
 def response_with_server_header(body, status):
     """Add information of server to header.
 
     We are doing this to overwrite the default flask Server header. The default header is a security risk because
-    it provides too much information about server internals.
+    it provides too much information about server internals, such as the versions of Python and Werkzeug.
 
     Args:
         body (obj): HTTP response body content that is JSON-serializable.
@@ -30,8 +33,7 @@ def response_with_server_header(body, status):
         response (flask.wrappers.Response response): HTTP response with information of server in header.
     """
     response = make_response(json.dumps(body, indent=2) + '\n', status)
-    response.headers['Server'] = 'Secondary Analysis Service'
-    response.headers['Content-type'] = 'application/json'
+    response.headers.update(LIRA_SERVER_HEADER)
     return response
 
 
@@ -74,7 +76,7 @@ def _is_authenticated_hmac(request, hmac_key, stale_notification_timeout=0):
         # Make sure there's an auth header with a valid signature
         auth_header = request.headers.get('Authorization')
         if auth_header and 'date' not in auth_header:
-            raise AssertionError('No date in auth header: {0}'.format(auth_header))
+            raise AssertionError(f"No date in auth header: {auth_header}")
         HTTPSignatureAuth.verify(request, key_resolver=key_resolver)
 
         # Make sure notification isn't too old
@@ -84,11 +86,11 @@ def _is_authenticated_hmac(request, hmac_key, stale_notification_timeout=0):
         digest_from_header = request.headers.get('Digest')
         calculated_digest = _calculate_digest(request)
         if calculated_digest != digest_from_header:
-            logger.error('Auth error: digests do not match')
+            logger.error("Auth error: digests do not match")
             return False
         return True
     except AssertionError as e:
-        logger.error('Auth error: {0}'.format(e))
+        logger.error(f"Auth error: {e}")
         return False
 
 
@@ -103,7 +105,7 @@ def _check_date(date_header, stale_notification_timeout):
         AssertionError: If there is no date header or the message is too old.
     """
     if not date_header:
-        raise AssertionError('No date header')
+        raise AssertionError("No date header")
     datetime_from_header = email.utils.parsedate_to_datetime(date_header)
     diff = datetime.now(timezone.utc) - datetime_from_header
     if (
@@ -111,7 +113,7 @@ def _check_date(date_header, stale_notification_timeout):
         and stale_notification_timeout > 0
     ):
         raise AssertionError(
-            'Message is more than {0} seconds old'.format(stale_notification_timeout)
+            f"Message is more than {stale_notification_timeout} seconds old"
         )
 
 
@@ -126,7 +128,7 @@ def _calculate_digest(request):
         digest_string (str): A string of digest.
     """
     raw_digest = hashlib.sha256(request.get_data()).digest()
-    digest_string = "SHA-256=" + base64.b64encode(raw_digest).decode()
+    digest_string = 'SHA-256=' + base64.b64encode(raw_digest).decode()
     return digest_string
 
 
@@ -153,9 +155,9 @@ def extract_uuid_version_subscription_id(msg):
         tuple: A tuple of (uuid, version, subscription_id). uuid is a string of the UUID of the bundle. version is a
             string of the version of the bundle. subscription_id is a string of the subscription id.
     """
-    uuid = msg["match"]["bundle_uuid"]
-    version = msg["match"]["bundle_version"]
-    subscription_id = msg["subscription_id"]
+    uuid = msg['match']['bundle_uuid']
+    version = msg['match']['bundle_version']
+    subscription_id = msg['subscription_id']
     return uuid, version, subscription_id
 
 
@@ -234,9 +236,7 @@ def parse_github_resource_url(url):
         ValueError: Raise a ValueError if the input URL is invalid.
     """
     if url.startswith('git@') or url.endswith('.git'):
-        raise ValueError(
-            '{} is not a valid url to a resource file on Github.'.format(url)
-        )
+        raise ValueError(f"{url} is not a valid url to a resource file on Github.")
 
     ParseResult = namedtuple(
         'ParseResult', 'scheme netloc owner repo version path file'
@@ -298,7 +298,7 @@ def legalize_cromwell_labels(label):
 
     if isinstance(label, list):
         if len(label) != 1:
-            raise ValueError('{} should contain exactly one element!'.format(label))
+            raise ValueError(f"{label} should contain exactly one element!")
         label = label[0]
     return str(label)[:cromwell_label_maximum_length]
 
@@ -322,10 +322,10 @@ def compose_labels(
         workflow_labels (dict): A dictionary of the composed workflow labels.
     """
     workflow_labels = {
-        "workflow-name": legalize_cromwell_labels(workflow_name),
-        "workflow-version": legalize_cromwell_labels(workflow_version),
-        "bundle-uuid": legalize_cromwell_labels(bundle_uuid),
-        "bundle-version": legalize_cromwell_labels(bundle_version),
+        'workflow-name': legalize_cromwell_labels(workflow_name),
+        'workflow-version': legalize_cromwell_labels(workflow_version),
+        'bundle-uuid': legalize_cromwell_labels(bundle_uuid),
+        'bundle-version': legalize_cromwell_labels(bundle_version),
     }
     for extra_label in extra_labels:
         if isinstance(extra_label, dict):
@@ -346,7 +346,7 @@ def noop_lru_cache(maxsize=None, typed=False):
     """
 
     def cache_info():
-        return 'No cache info available. Cache is disabled.'
+        return "No cache info available. Cache is disabled."
 
     def cache_clear():
         pass
@@ -371,13 +371,13 @@ def create_prepare_submission_function(cache_wdls):
     # Use noop_lru_cache unless cache_wdls is true and functools.lru_cache is available
     lru_cache = noop_lru_cache
     if not cache_wdls:
-        logger.info('Not caching wdls because Lira is configured with cache_wdls false')
+        logger.info("Not caching wdls because Lira is configured with cache_wdls false")
     else:
         try:
             from functools import lru_cache
         except ImportError:
             logger.info(
-                'Not caching wdls because functools.lru_cache is not available in Python 2.'
+                "Not caching wdls because functools.lru_cache is not available in Python 2."
             )
 
     @lru_cache(maxsize=None)

@@ -1,7 +1,6 @@
 import connexion
 import json
 import logging
-import time
 import io
 import cromwell_tools.cromwell_api
 import cromwell_tools.cromwell_auth
@@ -15,15 +14,18 @@ logger = logging.getLogger("{module_path}".format(module_path=__name__))
 
 def post(body):
     """Process notification and launch workflow in Cromwell"""
-
     # Check authentication
     lira_config = current_app.config
     if not lira_utils.is_authenticated(connexion.request, lira_config):
-        time.sleep(1)
-        return lira_utils.response_with_server_header(dict(error='Unauthorized'), 401)
+        raise connexion.ProblemException(
+            status=401,
+            title='Unauthorized',
+            detail='Authentication failed',
+            headers=lira_utils.LIRA_SERVER_HEADER,
+        )
 
     logger.info("Notification received")
-    logger.info("Received notification body: {notification}".format(notification=body))
+    logger.info(f"Received notification body: {body}")
 
     # Get bundle uuid, version and subscription_id
     uuid, version, subscription_id = lira_utils.extract_uuid_version_subscription_id(
@@ -35,21 +37,17 @@ def post(body):
         wdl for wdl in lira_config.wdls if wdl.subscription_id == subscription_id
     ]
     if len(id_matches) == 0:
-        logger.info('No wdl config found for subscription {0}'.format(subscription_id))
-        return lira_utils.response_with_server_header(
-            dict(
-                error='Not Found: No wdl config found with subscription id {}'
-                ''.format(subscription_id)
-            ),
-            404,
+        logger.info(f"No wdl config found for subscription {subscription_id}")
+        raise connexion.ProblemException(
+            status=404,
+            title='Not Found',
+            detail=f'Not Found: No wdl config found with subscription id {subscription_id}',
+            headers=lira_utils.LIRA_SERVER_HEADER,
         )
+
     wdl_config = id_matches[0]
-    logger.info("Matched WDL config: {wdl}".format(wdl=wdl_config))
-    logger.info(
-        "Preparing to launch {workflow_name} workflow in Cromwell".format(
-            workflow_name=wdl_config.workflow_name
-        )
-    )
+    logger.info(f"Matched WDL config: {wdl_config}")
+    logger.info(f"Preparing to launch {wdl_config.workflow_name} workflow in Cromwell")
 
     # Prepare inputs
     inputs = lira_utils.compose_inputs(
@@ -74,9 +72,7 @@ def post(body):
     )
     cromwell_labels_file = json.dumps(cromwell_labels).encode('utf-8')
 
-    logger.debug(
-        "Added labels {labels} to workflow".format(labels=cromwell_labels_file)
-    )
+    logger.debug(f"Added labels {cromwell_labels_file} to workflow")
 
     cromwell_submission = current_app.prepare_submission(
         wdl_config, lira_config.submit_wdl
@@ -87,7 +83,7 @@ def post(body):
     kwargs = {}
 
     if dry_run:
-        logger.warning('Not launching workflow because Lira is in dry_run mode')
+        logger.warning("Not launching workflow because Lira is in dry_run mode")
         response_json = {'id': 'fake_id', 'status': 'fake_status'}
         status_code = 201
     else:
@@ -123,28 +119,21 @@ def post(body):
             label_file=io.BytesIO(cromwell_labels_file),
             on_hold=lira_config.submit_and_hold,
             validate_labels=False,  # switch off the validators provided by cromwell_tools
-            **kwargs
+            **kwargs,
         )
 
         if cromwell_response.status_code > 201:
-            logger.error(
-                "HTTP error content: {content}".format(content=cromwell_response.text)
+            logger.error(f"HTTP error content: {cromwell_response.text}")
+            raise connexion.ProblemException(
+                status=500,
+                title='Internal Server Error',
+                detail=f'Cromwell returned: {cromwell_response.text}',
+                headers=lira_utils.LIRA_SERVER_HEADER,
             )
-            # TODO: Improve the error handling here to make the error msgs more granular
-            status_code = 500
-            response_json = {
-                'detail': cromwell_response.text,
-                'status': status_code,
-                'code': 'unhandled_exception',
-                'title': cromwell_response.text,
-            }
         else:
             response_json = cromwell_response.json()
             logger.info(
-                "Cromwell response: {0} {1}".format(
-                    response_json, cromwell_response.status_code
-                )
+                f"Cromwell response: {response_json} {cromwell_response.status_code}"
             )
             status_code = 201
-
     return lira_utils.response_with_server_header(response_json, status_code)

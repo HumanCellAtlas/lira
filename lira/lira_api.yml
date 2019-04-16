@@ -147,12 +147,6 @@ definitions:
         type: integer
         format: int32
         example: 404
-      code:
-        type: string
-        description: >
-          Machine-readable error code.  The types of return values should not be changed lightly.  Individual endpoints
-          should list an enumeration of possible return codes.  All endpoints should expect the possibility of the
-          return code `unhandled_exception` and `illegal_arguments`.
       title:
         description: "Human-readable error message"
         type: string
@@ -160,7 +154,6 @@ definitions:
     required:
       - title
       - status
-      - code
   NotificationResponse:
     type: object
     properties:

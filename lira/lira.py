@@ -32,7 +32,7 @@ args, _ = parser.parse_known_args()
 
 # Define the Connexion App with Swagger UI v3
 options = {'swagger_path': swagger_ui_3_path}
-app = connexion.App(__name__, options=options)
+app = connexion.FlaskApp(__name__, options=options)
 
 
 # Load the config file
@@ -42,8 +42,8 @@ with open(config_path) as f:
 
 
 # Configure the logger
-logger = logging.getLogger('lira.{module_path}'.format(module_path=__name__))
-logger.info('Using config file at {0}'.format(config_path))
+logger = logging.getLogger(f'lira.{__name__}')
+logger.info(f"Using config file at {config_path}")
 
 
 # Note down the launch time
@@ -64,6 +64,7 @@ app.add_api(
     'lira_api.yml', resolver=resolver, validate_responses=True, arguments=arguments
 )
 
+app = app.app
 
 if __name__ == '__main__':
     app.run(host=args.host, port=args.port)
