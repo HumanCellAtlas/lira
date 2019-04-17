@@ -33,7 +33,8 @@ def response_with_server_header(body, status):
         response (flask.wrappers.Response response): HTTP response with information of server in header.
     """
     response = make_response(json.dumps(body, indent=2) + '\n', status)
-    response.headers.update(LIRA_SERVER_HEADER)
+    response.headers['Server'] = LIRA_SERVER_HEADER['Server']
+    response.headers['Content-type'] = LIRA_SERVER_HEADER['Content-type']
     return response
 
 
