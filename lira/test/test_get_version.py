@@ -3,13 +3,7 @@ import cromwell_tools
 import json
 import os
 import unittest
-
-try:
-    # if python3
-    import unittest.mock as mock
-except ImportError:
-    # if python2
-    import mock
+import unittest.mock as mock
 
 
 class TestGetVersion(unittest.TestCase):

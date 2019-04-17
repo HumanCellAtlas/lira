@@ -64,7 +64,6 @@ app.add_api(
     'lira_api.yml', resolver=resolver, validate_responses=True, arguments=arguments
 )
 
-app = app.app
 
 if __name__ == '__main__':
     app.run(host=args.host, port=args.port)
