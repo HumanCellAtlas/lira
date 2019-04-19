@@ -77,8 +77,12 @@ You can run Lira in docker or a Python virtual environment.
    (contains wdl configs and cromwell credentials).
    See an example at lira/test/data/config.json.
 4. Build the docker container: `bash build_docker.sh test`
-5. Run the docker container:
-   `bash run_docker.sh test /path/to/config.json [CAAS_KEY [PORT]]`
+5. Run the docker container as shown below.
+
+``` shell
+bash run_docker.sh test /absolute/path/to/config.json <(vault read --format=json --field=data secret/dsde/mint/test/lira/caas-prod-key.json) [PORT]
+
+```
 
 #### Virtual environment
 

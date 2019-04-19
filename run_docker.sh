@@ -16,11 +16,18 @@ elif [ -z $port ]; then
 fi
 
 if [ $error -eq 1 ]; then
-    echo -e "\nUsage: bash run_docker.sh TAG /absolute/path/to/config.json [PORT]\n"
+    1>&2 echo
+    1>&2 echo "Usage: bash run_docker.sh TAG CONFIG [CAAS_KEY [PORT]]"
+    1>&2 echo
+    1>&2 echo "Where: CONFIG is the absolute path to a Lira config file in JSON."
+    1>&2 echo "       TAG is the docker image tag."
+    1>&2 echo "       CAAS_KEY is a JSON key file for Cromwell As A Service."
+    1>&2 echo "       PORT is a port number to bind (default 8080)."
+    1>&2 echo
     exit 1
 fi
 
-# Location in docker container where config file will be copied 
+# Location in docker container where config file will be copied
 mounted_config=/etc/secondary-analysis/config.json
 
 # Location in docker container where the caas key will be copied
