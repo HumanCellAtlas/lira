@@ -5,8 +5,8 @@ set -e -o pipefail
 # Exit 1 unless arguments in "$@" are a valid command line.
 #
 is_usage_ok () {
-    local -r tag=$1 config=$2 port=$3
-    if [ "$tag" ] && [[ $port =~ ^[0-9]+$ ]] && jq . "$config" >/dev/null
+    local -r tag=$1 config=$2
+    if [ $# -lt 4 ] && [ "$tag" ] && jq . "$config" >/dev/null
     then
         : OK
     else
@@ -42,8 +42,8 @@ run_it () {
 }
 
 main () {
+    is_usage_ok "$@"
     local -r wd=$(pwd) tag=$1 config=$2 port=${3:-8080}
-    is_usage_ok "$tag" "$config" "$port"
     local -r tmpdir=$(mktemp -d "$wd/${0##*/}XXXXXX")
     trap "rm -rf ${tmpdir}" ERR EXIT HUP INT TERM
     local -r lira=/etc/secondary-analysis/lira
