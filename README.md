@@ -79,15 +79,9 @@ You can run Lira in docker or a Python virtual environment.
    (contains wdl configs and cromwell credentials).
    See an example at lira/test/data/config.json.
 
-4. Run this to export the `lira_config` environment variable.
+4. Build the docker container: `bash build_docker.sh test`
 
-   ``` shell
-   export lira_config=/absolute/path/to/config.json
-   ```
-
-5. Build the docker container: `bash build_docker.sh test`
-
-6. Run the docker container as shown below.
+5. Run the docker container as shown below.
 
    ``` shell
    bash run_docker.sh test /absolute/path/to/config.json
@@ -102,6 +96,24 @@ To run without docker, create a virtual environment.
 
 If you don't have pip installed,
 [install it first](https://pip.pypa.io/en/stable/installing/).
+
+Run this to export the `lira_config` environment variable.
+
+``` shell
+export lira_config=/absolute/path/to/config.json
+```
+
+If `config.json` has `"use_caas" : true,`
+then also run this
+to export a `caas_key` into the environment.
+
+``` shell
+export caas_key=/absolute/path/to/caas_key.json
+```
+
+where `caas_key.json` contains the service account key
+for the CAAS Cromwell instance.
+Remember to remove the file when finished with it.
 
 Then install virtualenv with `pip install virtualenv`.
 
