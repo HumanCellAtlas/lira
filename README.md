@@ -118,6 +118,8 @@ Remember to remove the file when finished with it.
 Then install virtualenv with `pip install virtualenv`.
 
 Use `deactivate` to exit from a virtual environment.
+If that doesn't work, try `Ctrl+C` first
+and then `deactivate`.
 
 Create a virtual environment for running Lira:
 
