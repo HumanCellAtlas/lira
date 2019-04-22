@@ -1,59 +1,64 @@
 #!/usr/bin/env bash
-tag=$1
-config=$2
-caas_key=$3
-port=$4
 
+set -e -o pipefail
 
-if [ -z $tag ]; then
-    echo -e "\nYou must specify a tag"
-    error=1
-elif [ -z $config ]; then
-    echo -e "\nYou must specify a config file"
-    error=1
-elif [ -z $port ]; then
-    port=8080
-fi
+# Exit 1 unless arguments in "$@" are a valid command line.
+#
+is_usage_ok () {
+    local -r tag=$1 config=$2 port=$3
+    if [ "$tag" ] && [[ $port =~ ^[0-9]+$ ]] && jq . "$config" >/dev/null
+    then
+        : OK
+    else
+        1>&2 echo
+        1>&2 echo "Usage: bash run_docker.sh TAG CONFIG [PORT]"
+        1>&2 echo
+        1>&2 echo "Where: CONFIG is the absolute path to a Lira config file."
+        1>&2 echo "       TAG is the docker image tag."
+        1>&2 echo "       PORT is a port number to bind (default 8080)."
+        1>&2 echo
+        1>&2 echo "NOTE:  CONFIG is a JSON file."
+        1>&2 echo
+        exit 1
+    fi
+}
 
-if [ $error -eq 1 ]; then
+# Run "$@" as a docker command line.
+#
+run_it () {
     1>&2 echo
-    1>&2 echo "Usage: bash run_docker.sh TAG CONFIG [CAAS_KEY [PORT]]"
+    1>&2 echo Removing any previously started lira containers.
     1>&2 echo
-    1>&2 echo "Where: CONFIG is the absolute path to a Lira config file in JSON."
-    1>&2 echo "       TAG is the docker image tag."
-    1>&2 echo "       CAAS_KEY is a JSON key file for Cromwell As A Service."
-    1>&2 echo "       PORT is a port number to bind (default 8080)."
+    1>&2 echo Running: docker stop lira
+    docker stop lira || true
+    1>&2 echo Running: docker rm lira
+    docker rm lira || true
     1>&2 echo
-    exit 1
-fi
+    1>&2 echo Run '"docker stop lira"' in another shell session
+    1>&2 echo to shut the lira container down.
+    1>&2 echo
+    1>&2 echo Running: docker "$@"
+    docker "$@"
+}
 
-# Location in docker container where config file will be copied
-mounted_config=/etc/secondary-analysis/config.json
+main () {
+    local -r wd=$(pwd) tag=$1 config=$2 port=${3:-8080}
+    is_usage_ok "$tag" "$config" "$port"
+    local -r tmpdir=$(mktemp -d "$wd/${0##*/}XXXXXX")
+    trap "rm -rf ${tmpdir}" ERR EXIT HUP INT TERM
+    local -r lira=/etc/secondary-analysis/lira
+    local cmd=(run --name lira --publish "$port:$port"
+               --volume "$tmpdir:$lira:ro"
+               -e "lira_config=$lira/config.json")
+    cp "$config" "$tmpdir/config.json"
+    if jq --exit-status .use_caas "$config" > /dev/null; then
+        vault read --format=json --field=data \
+              secret/dsde/mint/test/lira/caas-prod-key.json \
+              > "$tmpdir/caas_key.json"
+        cmd+=(-e "caas_key=$lira/caas_key.json")
+    fi
+    cmd+=("lira:$tag" "$port")
+    run_it "${cmd[@]}"
+}
 
-# Location in docker container where the caas key will be copied
-mounted_caas_key=/etc/secondary-analysis/caas_key.json
-
-echo -e "\nRemoving any previously started lira containers\n"
-docker stop lira
-docker rm lira
-echo ""
-
-if [ $caas_key ]; then
-    docker run \
-        --name lira \
-        --publish $port:$port \
-        -v $config:$mounted_config:ro \
-        -v $caas_key:$mounted_caas_key:ro \
-        -e lira_config=$mounted_config \
-        -e caas_key=$mounted_caas_key \
-        lira:$tag \
-        $port
-else
-    docker run \
-        --name lira \
-        --publish $port:$port \
-        -v $config:$mounted_config:ro \
-        -e lira_config=$mounted_config \
-        lira:$tag \
-        $port
-fi
+main "$@"

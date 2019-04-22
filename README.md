@@ -80,9 +80,12 @@ You can run Lira in docker or a Python virtual environment.
 5. Run the docker container as shown below.
 
 ``` shell
-bash run_docker.sh test /absolute/path/to/config.json <(vault read --format=json --field=data secret/dsde/mint/test/lira/caas-prod-key.json) [PORT]
+bash run_docker.sh test /absolute/path/to/config.json
 
 ```
+
+Shut `lira` down by running `docker stop lira`
+from another shell session.
 
 #### Virtual environment
 
