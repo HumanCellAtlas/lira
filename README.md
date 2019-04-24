@@ -72,13 +72,23 @@ You can run Lira in docker or a Python virtual environment.
 #### Using docker
 
 1. [Install Docker](https://docs.docker.com/engine/installation/#supported-platforms)
+
 2. Git clone this repository
+
 3. Create a `config.json` file
    (contains wdl configs and cromwell credentials).
    See an example at lira/test/data/config.json.
+
 4. Build the docker container: `bash build_docker.sh test`
-5. Run the docker container:
-   `bash run_docker.sh test /path/to/config.json [CAAS_KEY [PORT]]`
+
+5. Run the docker container as shown below.
+
+   ``` shell
+   bash run_docker.sh test /absolute/path/to/config.json
+   ```
+
+Shut `lira` down by running `docker stop lira`
+from another shell session.
 
 #### Virtual environment
 
@@ -87,11 +97,33 @@ To run without docker, create a virtual environment.
 If you don't have pip installed,
 [install it first](https://pip.pypa.io/en/stable/installing/).
 
+Run this to export the `lira_config` environment variable.
+
+``` shell
+export lira_config=/absolute/path/to/config.json
+```
+
+If `config.json` has `"use_caas" : true,`
+then also run this
+to export a `caas_key` into the environment.
+
+``` shell
+export caas_key=/absolute/path/to/caas_key.json
+```
+
+where `caas_key.json` contains the service account key
+for the CAAS Cromwell instance.
+Remember to remove the file when finished with it.
+
 Then install virtualenv with `pip install virtualenv`.
+
+Use `deactivate` to exit from a virtual environment.
+If that doesn't work, try `Ctrl+C` first
+and then `deactivate`.
 
 Create a virtual environment for running Lira:
 
-```
+``` shell
 virtualenv test-env
 source test-env/bin/activate
 pip install -r requirements.txt
@@ -103,7 +135,7 @@ There are two ways to run Lira in a virtual environment.
 
 For production use, start Lira with:
 
-```
+``` shell
 bash start_lira.sh [PORT]
 ```
 
@@ -124,7 +156,7 @@ If you would like to run Lira using the Flask development server,
 perhaps to help debug issues,
 you can do so with:
 
-```
+``` shell
 python -m lira.lira
 ```
 
@@ -136,7 +168,7 @@ that make it unsuitable for production use.
 
 You can stop Lira and exit the virtual environment by:
 
-```
+``` shell
 Ctrl+C
 deactivate
 ```
@@ -150,7 +182,7 @@ with Docker or with Virtualenv.
 
 You can run the unit tests using the docker image by running:
 
-```
+``` shell
 cd lira/test
 bash test.sh
 ```
@@ -162,7 +194,7 @@ as described in the "Building and running" section.
 
 Then, from the root of the lira repo, do:
 
-```
+``` shell
 python -m unittest discover -v
 ```
 
