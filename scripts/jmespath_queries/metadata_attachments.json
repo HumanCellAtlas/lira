@@ -1,14 +1,14 @@
 {
   "project_shortname": {
     "type": "jmespath",
-    "expression": "files.project_json.content.project_core.project_shortname"
-  },
-  "submitter_id": {
-    "type": "jmespath",
-    "expression": "files.project_json.hca_ingest.submitter_id"
+    "expression": "files.project_json[].project_core.project_short_name | [0]"
   },
   "sample_id": {
     "type": "jmespath",
-    "expression": "files.biomaterial_json.biomaterials[?ends_with(content.describedBy, 'cell_suspension')].hca_ingest.document_id | [0]"
+    "expression": "files.links_json[].links[?input_type=='biomaterial' && protocols[?protocol_type=='sequencing_protocol']].inputs[][]"
+  },
+  "project_uuid": {
+    "type": "jmespath",
+    "expression": "files.project_json[].provenance.document_id | [0]"
   }
 }
