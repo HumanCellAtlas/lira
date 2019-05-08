@@ -3,4 +3,4 @@
  && (files.library_preparation_protocol_json[].nucleic_acid_source | contains(@, `single cell`))
  && files.donor_organism_json[].biomaterial_core.ncbi_taxon_id[] | (min(@) == `9606` && max(@) == `9606`)
  && files.sequencing_protocol_json[].sequencing_approach.ontology_label | not_null(@, `[]`) | !contains(@, `CITE-seq`)
- && files.donor_organism_json[].biomaterial_core.ncbi_taxon_id | not_null(@, `[]`) | !contains(@, `analysis`)
+ && files.analysis_process_json[].type.text | not_null(@, `[]`) | !contains(@, `analysis`)
