@@ -24,5 +24,6 @@ python3 subscribe.py create --dss_url="$dss_url" \
                             --replica="$replica" \
                             --callback_base_url="$lira_url" \
                             --query_json="$query_json" \
+                            --subscription_type="jmespath" \
                             $(echo "$auth_args" | xargs) \
                             "$additional_metadata_flag""$additional_metadata"
