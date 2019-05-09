@@ -4,17 +4,15 @@ import sys
 import argparse
 import json
 import requests
-import warnings
+import logging
 
 try:
     from DCPAuthClient import DCPAuthClient
 except ModuleNotFoundError:
-    print('Cannot find the DCPAuthClient within this folder!')
-    sys.exit(1)
+    sys.exit('Cannot find the DCPAuthClient within this folder!')
 
 if sys.version_info[0] < 3:
-    print('You need to run this with Python 3')
-    sys.exit(1)
+    sys.exit('You need to run this with Python 3.')
 
 
 def main(arguments=None):
@@ -41,21 +39,28 @@ def create_subscription(args):
     )
 
     if args['subscription_type'] == 'elasticsearch':
-        warnings.warn(
-            'HCA DCP Data Store Service is going to deprecate the support for '
+        logging.warning(
+            'DeprecationWarning: HCA DCP Data Store Service is going to deprecate the support for '
             'subscription queries in ElasticSearch, please consider migrating to JMESPath '
-            'as soon as possible!',
-            DeprecationWarning,
+            'as soon as possible!'
         )
-    else:
-        payload = _prep_json(
+
+        payload = _prep_elasticsearch_payload_json(
             callback_base_url=args['callback_base_url'],
             query_file=args['query_file'],
             query_param_token=args.get('query_param_token'),
             hmac_key_id=args.get('hmac_key_id'),
             hmac_key=args.get('hmac_key'),
             attachments_file=args['additional_metadata'],
-            jmespath_query=True,
+        )
+    else:
+        payload = _prep_jmespath_payload_json(
+            callback_base_url=args['callback_base_url'],
+            query_file=args['query_file'],
+            query_param_token=args.get('query_param_token'),
+            hmac_key_id=args.get('hmac_key_id'),
+            hmac_key=args.get('hmac_key'),
+            attachments_file=args['additional_metadata'],
         )
 
     headers = args['headers']
@@ -72,20 +77,50 @@ def create_subscription(args):
     )
     response.raise_for_status()
 
-    print('Successfully created a subscription!')
-    print(json.dumps(response.json(), indent=4))
+    print(f"Successfully created a {args['subscription_type']} subscription!")
+    print(f"Subscription UUID: {json.dumps(response.json()['uuid'], indent=4)}")
 
 
-def _prep_json(
+def _prep_elasticsearch_payload_json(
     callback_base_url,
     query_file,
     query_param_token,
     hmac_key_id,
     hmac_key,
     attachments_file,
-    jmespath_query=True,
 ):
+    if hmac_key_id is not None:
+        print('Subscribing with HMAC key')
+        payload = {
+            'callback_url': callback_base_url,
+            'hmac_key_id': hmac_key_id,
+            'hmac_secret_key': hmac_key,
+        }
+    else:
+        print('Subscribing with query param token')
+        payload = {
+            'callback_url': '{0}?auth={1}'.format(callback_base_url, query_param_token)
+        }
 
+    if attachments_file:
+        with open(attachments_file, 'r') as f:
+            attachments = json.load(f)
+        payload['attachments'] = attachments
+
+    with open(query_file, 'r') as f:
+        query = json.load(f)
+    payload['es_query'] = query
+    return payload
+
+
+def _prep_jmespath_payload_json(
+    callback_base_url,
+    query_file,
+    query_param_token,
+    hmac_key_id,
+    hmac_key,
+    attachments_file,
+):
     if hmac_key_id is not None:
         print('Subscribing with hmac key')
         payload = {
@@ -100,22 +135,17 @@ def _prep_json(
         }
 
     if attachments_file:
-        with open(attachments_file) as f:
+        with open(attachments_file, 'r') as f:
             attachments = json.load(f)
         payload['attachments'] = attachments
 
-    if not jmespath_query:
-        with open(query_file) as f:
-            query = json.load(f)
-        payload['es_query'] = query
-    else:
-        query = ""
-        with open(query_file, 'r') as f:
-            for line in f:
-                query += line.strip('\n')
+    query = ""
+    with open(query_file, 'r') as f:
+        for line in f:
+            query += line.strip('\n')
 
-        # TODO: find a way to validate the JMESPath query
-        payload['jmespath_query'] = query
+    # TODO: find a way to validate the JMESPath query
+    payload['jmespath_query'] = query
     return payload
 
 
@@ -135,6 +165,10 @@ def get_subscriptions(args):
         headers=args['headers'],
     )
     response.raise_for_status()
+    logging.warning(
+        'Depending on the response from DSS, the output of this function will very likely to contain sensitive credentials!\n'
+    )
+
     print(json.dumps(response.json(), indent=4))
 
 
@@ -213,8 +247,8 @@ def parser(arguments):
         required=True,
     )
     create.add_argument(
-        '--query_json',
-        help='JSON file containing the ElasticSearch Subscription query to register.',
+        '--query_file',
+        help='JSON/text file containing the ElasticSearch/JMESPath Subscription query to register.',
         required=True,
     )
 
