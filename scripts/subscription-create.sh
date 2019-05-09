@@ -3,7 +3,7 @@
 # Usage: bash subscription-create.sh config.sh query_json [additional_metadata]
 
 script_config=$1
-query_json=$2
+query_file=$2
 additional_metadata=$3
 
 source $script_config
@@ -23,7 +23,7 @@ python3 subscribe.py create --dss_url="$dss_url" \
                             --google_project="$google_project" \
                             --replica="$replica" \
                             --callback_base_url="$lira_url" \
-                            --query_json="$query_json" \
+                            --query_file="$query_file" \
                             --subscription_type="jmespath" \
                             $(echo "$auth_args" | xargs) \
                             "$additional_metadata_flag""$additional_metadata"
