@@ -1,7 +1,7 @@
 ## Subscription queries
 
 The communication between the [HCA DCP Data Store Service](https://github.com/HumanCellAtlas/data-store) and Lira is 
-relying on the subsciptions. This foler contains the necessary scripts to create/list/delete subscriptions in Data Store
+relying on the subsciptions. This folder contains the necessary scripts to create/list/delete subscriptions in Data Store
 Service for Lira:
 
 - `DCPAuthClient.py`: handles the authentication with HCA DCP Data Store, requires Python 3.x to run.
