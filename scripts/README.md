@@ -35,7 +35,7 @@ bash subscription-create.sh config-dev.sh jmespath_queries/smartseq2.jmespath jm
 here we assume:
 - `config-dev.sh` is the config file you created following the `config-template.sh` for your `dev` environment to subscribe to `dev` Data Store.
 - `jmespath_queries/smartseq2.jmespath` is the query for Data Store to determine whether it should notify Lira when a new bundle is indexed on their side.
-- `jmespath_queries/metadata_attachments.json` is a call-back based attachment file specifying all of the necessary meta fields for a bundle that Lira requires from Data Store to submit a workflow.
+- `jmespath_queries/metadata_attachments.json` is a call-back based attachment file specifying all of the necessary metadata fields for a bundle that Lira requires from Data Store to submit a workflow.
 
 #### List all subscriptions
 
@@ -50,7 +50,7 @@ bash subscriptions-get.sh config-dev.sh
 To delete a subscription, run:
 
 ```shell
-bash subscription-delete.sh config-dev.sh bfc5eeba-8a3d-4ce7-8905-4ae314f8e210
+bash subscription-delete.sh config-dev.sh 00000000-0000-0000-0000-000000000000
 ```
 where the last variable is a valid subscription UUID that you got with `subscription-get.sh`.
 

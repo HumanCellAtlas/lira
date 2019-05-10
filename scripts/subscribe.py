@@ -90,17 +90,24 @@ def _prep_elasticsearch_payload_json(
     attachments_file,
 ):
     if hmac_key_id is not None:
+        if not hmac_key:
+            raise ValueError('Please give a valid HMAC KEY!')
+
         print('Subscribing with HMAC key')
         payload = {
             'callback_url': callback_base_url,
             'hmac_key_id': hmac_key_id,
             'hmac_secret_key': hmac_key,
         }
-    else:
+    elif query_param_token:
         print('Subscribing with query param token')
         payload = {
             'callback_url': '{0}?auth={1}'.format(callback_base_url, query_param_token)
         }
+    else:
+        raise ValueError(
+            'Please specify either HMAC KEY ID and KEY or a query param token!'
+        )
 
     if attachments_file:
         with open(attachments_file, 'r') as f:
@@ -122,17 +129,24 @@ def _prep_jmespath_payload_json(
     attachments_file,
 ):
     if hmac_key_id is not None:
-        print('Subscribing with hmac key')
+        if not hmac_key:
+            raise ValueError('Please give a valid HMAC KEY!')
+
+        print('Subscribing with HMAC key')
         payload = {
             'callback_url': callback_base_url,
             'hmac_key_id': hmac_key_id,
             'hmac_secret_key': hmac_key,
         }
-    else:
+    elif query_param_token:
         print('Subscribing with query param token')
         payload = {
             'callback_url': '{0}?auth={1}'.format(callback_base_url, query_param_token)
         }
+    else:
+        raise ValueError(
+            'Please specify either HMAC KEY ID and KEY or a query param token!'
+        )
 
     if attachments_file:
         with open(attachments_file, 'r') as f:
