@@ -1,0 +1,54 @@
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "files.library_preparation_protocol_json.library_construction_method.ontology_label": "10X v2 sequencing"
+          }
+        },
+        {
+          "match": {
+            "files.library_preparation_protocol_json.end_bias": "3 prime tag"
+          }
+        },
+        {
+          "match": {
+            "files.library_preparation_protocol_json.nucleic_acid_source": "single cell"
+          }
+        },
+        {
+          "match": {
+            "files.donor_organism_json.biomaterial_core.ncbi_taxon_id": 10090
+          }
+        }
+      ],
+      "must_not": [
+        {
+          "match": {
+            "files.sequencing_protocol_json.sequencing_approach.ontology_label": "CITE-seq"
+          }
+        },
+        {
+          "match": {
+            "files.analysis_process_json.type.text": "analysis"
+          }
+        },
+        {
+          "range": {
+            "files.donor_organism_json.biomaterial_core.ncbi_taxon_id": {
+              "lt": 10090
+            }
+          }
+        },
+        {
+          "range": {
+            "files.donor_organism_json.biomaterial_core.ncbi_taxon_id": {
+              "gt": 10090
+            }
+          }
+        }
+      ]
+    }
+  }
+}
