@@ -14,3 +14,4 @@ scripts/hmac_keys
 .DS_Store
 scripts/bluebox-subscription-manager-key-*
 *dynamic_config.sh
+config.sh
