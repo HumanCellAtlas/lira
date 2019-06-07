@@ -18,8 +18,19 @@
           }
         },
         {
-          "match": {
-            "files.donor_organism_json.biomaterial_core.ncbi_taxon_id": 9606
+          "bool": {
+            "should": [
+              {
+                "match": {
+                  "files.donor_organism_json.biomaterial_core.ncbi_taxon_id": 9606
+                }
+              },
+              {
+                "match": {
+                  "files.donor_organism_json.biomaterial_core.ncbi_taxon_id": 10090
+                }
+              }
+            ]
           }
         }
       ],
@@ -32,20 +43,6 @@
         {
           "match": {
             "files.analysis_process_json.type.text": "analysis"
-          }
-        },
-        {
-          "range": {
-            "files.donor_organism_json.biomaterial_core.ncbi_taxon_id": {
-              "lt": 9606
-            }
-          }
-        },
-        {
-          "range": {
-            "files.donor_organism_json.biomaterial_core.ncbi_taxon_id": {
-              "gt": 9606
-            }
           }
         }
       ]
