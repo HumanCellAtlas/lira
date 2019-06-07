@@ -6,7 +6,7 @@ import cromwell_tools.cromwell_api
 import cromwell_tools.cromwell_auth
 import cromwell_tools.utilities
 from flask import current_app
-from lira import lira_utils
+from lira import lira_utils, bundle_inputs
 
 
 logger = logging.getLogger("{module_path}".format(module_path=__name__))
@@ -62,6 +62,10 @@ def post(body):
     attachments_from_notification = body.get(
         'attachments'
     )  # Try to get the extra attachments field if it's applicable
+
+    workflow_hash_label = bundle_inputs.create_workflow_inputs_hash_label(wdl_config.workflow_name,
+                                                                          wdl_config.workflow_version,
+                                                                          uuid, version, lira_config.dss_url)
     cromwell_labels = lira_utils.compose_labels(
         wdl_config.workflow_name,
         wdl_config.workflow_version,
@@ -69,7 +73,9 @@ def post(body):
         version,
         labels_from_notification,
         attachments_from_notification,
+        workflow_hash_label
     )
+
     cromwell_labels_file = json.dumps(cromwell_labels).encode('utf-8')
 
     logger.debug(f"Added labels {cromwell_labels_file} to workflow")
