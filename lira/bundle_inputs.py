@@ -1,5 +1,8 @@
+import logging
 import hashlib
 from pipeline_tools.shared import metadata_utils, tenx_utils, http_requests
+
+logger = logging.getLogger("{module_path}".format(module_path=__name__))
 
 
 def get_smartseq2_workflow_inputs(bundle):
@@ -13,7 +16,7 @@ def get_smartseq2_workflow_inputs(bundle):
     return bytes('{sample_id}{taxon_id}{read_1}{read_2}'.format(sample_id=sample_id,
                                                                 taxon_id=taxon_id,
                                                                 read_1=read_1_sha[0],
-                                                                read_2=read_2_sha[0]))
+                                                                read_2=read_2_sha[0]), encoding='utf8')
 
 
 def get_optimus_workflow_inputs(bundle):
@@ -40,5 +43,8 @@ def create_workflow_inputs_hash_label(workflow_name, workflow_version, bundle_id
     if get_inputs_fn:
         bundle = metadata_utils.get_bundle_metadata(bundle_id, bundle_version, dss_url, http_requests.HttpRequests())
         workflow_inputs = get_inputs_fn(bundle)
-        sha256_hash = hashlib.sha256(workflow_inputs).update(bytes(workflow_version))
+        logger.error(workflow_inputs)
+        logger.error(hashlib.sha256(workflow_inputs))
+        sha256_hash = hashlib.sha256(workflow_inputs).update(bytes(workflow_version, encoding='utf8'))
+        logger.error(sha256_hash)
         return {'workflow-hash': sha256_hash.hexdigest()}
