@@ -64,7 +64,6 @@ def post(body):
     )  # Try to get the extra attachments field if it's applicable
 
     workflow_hash_label = bundle_inputs.create_workflow_inputs_hash_label(wdl_config.workflow_name,
-                                                                          wdl_config.workflow_version,
                                                                           uuid, version, lira_config.dss_url)
     cromwell_labels = lira_utils.compose_labels(
         wdl_config.workflow_name,

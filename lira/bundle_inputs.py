@@ -35,11 +35,10 @@ WORKFLOW_INPUTS = {'AdapterSmartSeq2SingleCell': get_smartseq2_workflow_inputs,
                    'AdapterOptimus': get_optimus_workflow_inputs}
 
 
-def create_workflow_inputs_hash_label(workflow_name, workflow_version, bundle_id, bundle_version, dss_url):
+def create_workflow_inputs_hash_label(workflow_name, bundle_id, bundle_version, dss_url):
     get_inputs_fn = WORKFLOW_INPUTS.get(workflow_name, None)
     if get_inputs_fn:
         bundle = metadata_utils.get_bundle_metadata(bundle_id, bundle_version, dss_url, http_requests.HttpRequests())
         workflow_inputs = get_inputs_fn(bundle)
         sha256_hash = hashlib.sha256(workflow_inputs)
-        sha256_hash.update(bytes(workflow_version, encoding='utf8'))
         return {'workflow-hash': sha256_hash.hexdigest()}
