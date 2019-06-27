@@ -245,7 +245,7 @@ class LiraConfig(Config):
         )
 
         config_object['max_cromwell_retries'] = config_object.get(
-            'max_cromwell_retries', 0
+            'max_cromwell_retries', 1
         )
 
         Config.__init__(self, config_object, *args, **kwargs)

@@ -449,6 +449,13 @@ class TestUtils(unittest.TestCase):
             fake_caas_key_json['client_email'],
         )
 
+    def test_compose_config_options(self):
+        test_config = deepcopy(self.correct_test_config)
+        config = lira_config.LiraConfig(test_config)
+        self.assertNotIn('maxRetries', json.loads(self.options_json))
+        options = lira_utils.compose_config_options(self.options_json, config)
+        self.assertEqual(json.loads(options)['maxRetries'], 1)
+
     def test_parse_github_resource_url(self):
         """Test if parse_github_resource_url can correctly parse Github resource urls."""
         self.assertEqual(

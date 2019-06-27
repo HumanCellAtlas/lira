@@ -211,10 +211,10 @@ class TestStartupVerification(unittest.TestCase):
         config = lira_config.LiraConfig(test_config)
         self.assertEqual(config.collection_name, 'fake-collection-name')
 
-    def test_max_cromwell_retries_defaults_to_zero(self):
+    def test_max_cromwell_retries_defaults_to_one(self):
         test_config = deepcopy(self.correct_test_config)
         config = lira_config.LiraConfig(test_config)
-        self.assertEqual(config.max_cromwell_retries, 0)
+        self.assertEqual(config.max_cromwell_retries, 1)
 
     def test_max_cromwell_retries_can_be_set(self):
         test_config = deepcopy(self.correct_test_config)

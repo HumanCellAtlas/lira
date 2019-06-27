@@ -71,7 +71,7 @@ class TestGetVersion(unittest.TestCase):
             'https://cromwell.mint-dev.broadinstitute.org/api/workflows/v1',
         )
         self.assertEqual(
-            json_response.get('settings_info').get('max_cromwell_retries'), 0
+            json_response.get('settings_info').get('max_cromwell_retries'), 1
         )
         self.assertEqual(
             json.dumps(json_response.get('settings_info').get('use_caas')), 'false'
