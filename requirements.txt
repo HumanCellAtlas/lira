@@ -14,4 +14,4 @@ cromwell-tools>=1.1.1, <2
 black==19.3b0
 flake8==3.7.7
 pre-commit==1.14.4
-git+git://github.com/HumanCellAtlas/pipeline-tools@970b57c2c8d3a419a381018c2beb41bedbaa27b4
+git+git://github.com/HumanCellAtlas/pipeline-tools@1e647874f693ffba0091b8054fe99b4e725a570e
