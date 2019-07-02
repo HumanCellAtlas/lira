@@ -12,11 +12,8 @@ def create_workflow_inputs_hash_label(workflow_name, bundle_id, bundle_version, 
     """
     Create a hash out of the bundle-specific inputs for a workflow.
     """
-    get_inputs_fn = WORKFLOW_INPUTS.get(workflow_name, None)
-    if get_inputs_fn:
-        workflow_inputs = get_inputs_fn(bundle_id, bundle_version, dss_url)
-        formatted_inputs = ''
-        for i in workflow_inputs:
-            formatted_inputs += i
-        sha256_hash = hashlib.sha256(bytes(formatted_inputs, encoding='utf-8'))
+    get_inputs_to_hash = WORKFLOW_INPUTS.get(workflow_name, None)
+    if get_inputs_to_hash:
+        workflow_inputs = get_inputs_to_hash(bundle_id, bundle_version, dss_url)
+        sha256_hash = hashlib.sha256(bytes(''.join(workflow_inputs), encoding='utf-8'))
         return {'hash-id': sha256_hash.hexdigest()}
