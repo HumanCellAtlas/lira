@@ -6,7 +6,7 @@ Service for Lira:
 
 - `DCPAuthClient.py`: handles the authentication with HCA DCP Data Store, requires Python 3.x to run.
 - `subscribe.py`: is the core client script for working with subscriptions, requires Python 3.x to run.
-- `v*_queries` and `jmespath_queries`: are the directories that host subscription queries.
+- `elasticsearch_queries` and `jmespath_queries`: are the directories that host subscription queries.
 - `subscription-*.sh`: are the helper scripts that help simplify working with subscriptions.
 - `config-template.sh`: needs to be filled out if you want to use the helper scripts.
 
