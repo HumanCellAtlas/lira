@@ -4,11 +4,13 @@ from pipeline_tools.pipelines.optimus import optimus
 
 WORKFLOW_INPUTS = {
     'AdapterSmartSeq2SingleCell': smartseq2.get_ss2_paired_end_inputs_to_hash,
-    'AdapterOptimus': optimus.get_optimus_inputs_to_hash
+    'AdapterOptimus': optimus.get_optimus_inputs_to_hash,
 }
 
 
-def create_workflow_inputs_hash_label(workflow_name, bundle_id, bundle_version, dss_url):
+def create_workflow_inputs_hash_label(
+    workflow_name, bundle_id, bundle_version, dss_url
+):
     """
     Create a hash out of the bundle-specific inputs for a workflow.
     """
