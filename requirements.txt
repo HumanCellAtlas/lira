@@ -1,7 +1,5 @@
 wheel==0.32.3
 connexion[swagger-ui]==2.2.0
-google-auth==1.5.0
-google-cloud-storage==1.9.0
 flask>=1.0.0
 gunicorn==19.9.0
 gevent==1.4.0
@@ -14,4 +12,4 @@ cromwell-tools>=1.1.1, <2
 black==19.3b0
 flake8==3.7.7
 pre-commit==1.14.4
-git+git://github.com/HumanCellAtlas/pipeline-tools@1e647874f693ffba0091b8054fe99b4e725a570e
+git+git://github.com/HumanCellAtlas/pipeline-tools@f32405347234322ff236486e8f93fbfb015a4fca
