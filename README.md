@@ -220,4 +220,4 @@ that was launched by the test notification:
 
 ## Deployment
 
-The[secondary-analysis-deploy](https://github.com/HumanCellAtlas/secondary-analysis-deploy)repository contains scripts to deploy this service via Jenkins and GitLab to a GKE cluster.
+The [secondary-analysis-deploy](https://github.com/HumanCellAtlas/secondary-analysis-deploy) repository contains scripts to deploy this service via Jenkins and GitLab to a GKE cluster.
