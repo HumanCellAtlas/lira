@@ -3,6 +3,10 @@ language: python
 python:
   - '3.6'
 
+before_install:
+  - pip install --upgrade pip
+  - pip install --upgrade setuptools
+
 install: "pip install -r requirements.txt"
 
 jobs:
