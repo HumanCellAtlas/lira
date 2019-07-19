@@ -455,8 +455,12 @@ class TestUtils(unittest.TestCase):
         test_config = deepcopy(self.correct_test_config)
         config = lira_config.LiraConfig(test_config)
         options_from_file = json.loads(self.options_with_runtime_json)
-        expected_max_retries = options_from_file['default_runtime_attributes']['maxRetries']
-        options = lira_utils.compose_config_options(self.options_with_runtime_json, config)
+        expected_max_retries = options_from_file['default_runtime_attributes'][
+            'maxRetries'
+        ]
+        options = lira_utils.compose_config_options(
+            self.options_with_runtime_json, config
+        )
         max_retries = json.loads(options)['default_runtime_attributes']['maxRetries']
         self.assertEqual(max_retries, expected_max_retries)
 

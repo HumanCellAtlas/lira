@@ -227,7 +227,9 @@ def compose_config_options(cromwell_options_file, lira_config):
     # Docs on default runtime attributes: https://cromwell.readthedocs.io/en/latest/wf_options/Overview/
     runtime_parameters = options_json.get('default_runtime_attributes', {})
     if 'maxRetries' not in runtime_parameters.keys():
-        options_json['default_runtime_attributes'] = {'maxRetries': lira_config.max_cromwell_retries}
+        options_json['default_runtime_attributes'] = {
+            'maxRetries': lira_config.max_cromwell_retries
+        }
 
     return json.dumps(options_json).encode('utf-8')
 
