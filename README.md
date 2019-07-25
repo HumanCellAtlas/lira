@@ -4,7 +4,6 @@
 [![Docker Repository on Quay](https://quay.io/repository/humancellatlas/secondary-analysis-lira/status "Docker Repository on Quay")](https://quay.io/repository/humancellatlas/secondary-analysis-lira)
 [![GitHub release](https://img.shields.io/github/release/HumanCellAtlas/lira.svg?label=Latest%20Release&style=flat-square&colorB=green)](https://github.com/HumanCellAtlas/lira/releases)
 [![Snyk Vulnerabilities for GitHub Repo (Specific Manifest)](https://img.shields.io/snyk/vulnerabilities/github/HumanCellAtlas/lira/requirements.txt.svg?label=Snyk%20Vulnerabilities&logo=Snyk&style=flat-square)](https://snyk.io/test/github/HumanCellAtlas/lira?targetFile=requirements.txt)
-[![Snyk Vulnerabilities for GitHub Repo (Specific Manifest)](https://img.shields.io/snyk/vulnerabilities/github/HumanCellAtlas/lira/scripts/requirements.txt.svg?label=Snyk%20Scripts%20Vulnerabilities&logo=Snyk&style=flat-square)](https://snyk.io/test/github/HumanCellAtlas/lira?targetFile=scripts/requirements.txt)
 
 ![Github](https://img.shields.io/badge/python-2.7%20%7C%203.6-green.svg?style=flat-square&logo=python&colorB=blue)
 ![GitHub](https://img.shields.io/github/license/HumanCellAtlas/lira.svg?style=flat-square&colorB=blue)
