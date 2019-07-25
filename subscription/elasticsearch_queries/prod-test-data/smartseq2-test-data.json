@@ -4,7 +4,7 @@
       "should": [
         {
           "prefix": {
-            "files.project_json.project_core.project_short_name": "prod"
+            "files.project_json.project_core.project_short_name": "prod/Smart-seq2/"
           }
         }
       ],
