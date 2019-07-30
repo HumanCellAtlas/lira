@@ -104,6 +104,7 @@ def post(body):
                 username=lira_config.cromwell_user,
                 password=lira_config.cromwell_password,
             )
+        options_file = lira_utils.compose_config_options(options_file, lira_config)
 
         cromwell_response = cromwell_tools.cromwell_api.CromwellAPI.submit(
             auth=auth,

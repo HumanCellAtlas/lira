@@ -181,7 +181,6 @@ def compose_inputs(workflow_name, uuid, version, lira_config):
         workflow_name + '.dss_url': lira_config.dss_url,
         workflow_name + '.submit_url': lira_config.ingest_url,
         workflow_name + '.schema_url': lira_config.schema_url,
-        workflow_name + '.max_cromwell_retries': lira_config.max_cromwell_retries,
         workflow_name + '.cromwell_url': lira_config.cromwell_url,
     }
 
@@ -217,6 +216,22 @@ def compose_caas_options(cromwell_options_file, lira_config):
         }
     )
     return options_json
+
+
+def compose_config_options(cromwell_options_file, lira_config):
+    if isinstance(cromwell_options_file, bytes):
+        cromwell_options_file = cromwell_options_file.decode()
+    options_json = json.loads(cromwell_options_file)
+
+    # Defer to value already in options file if it exists
+    # Docs on default runtime attributes: https://cromwell.readthedocs.io/en/latest/wf_options/Overview/
+    runtime_parameters = options_json.get('default_runtime_attributes', {})
+    if 'maxRetries' not in runtime_parameters.keys():
+        options_json['default_runtime_attributes'] = {
+            'maxRetries': lira_config.max_cromwell_retries
+        }
+
+    return json.dumps(options_json).encode('utf-8')
 
 
 def parse_github_resource_url(url):

@@ -76,6 +76,8 @@ class TestUtils(unittest.TestCase):
             cls.correct_test_config = json.load(f)
         with open('data/options.json') as f:
             cls.options_json = f.read()
+        with open('data/options_with_runtime_params.json') as f:
+            cls.options_with_runtime_json = f.read()
 
     def test_is_authenticated_query_param_no_auth_header(self):
         """Request without 'auth' key in header should not be treated as authenticated.
@@ -448,6 +450,30 @@ class TestUtils(unittest.TestCase):
             options['google_compute_service_account'],
             fake_caas_key_json['client_email'],
         )
+
+    def test_max_retries_uses_value_set_in_options_file(self):
+        test_config = deepcopy(self.correct_test_config)
+        config = lira_config.LiraConfig(test_config)
+        options_from_file = json.loads(self.options_with_runtime_json)
+        expected_max_retries = options_from_file['default_runtime_attributes'][
+            'maxRetries'
+        ]
+        options = lira_utils.compose_config_options(
+            self.options_with_runtime_json, config
+        )
+        max_retries = json.loads(options)['default_runtime_attributes']['maxRetries']
+        self.assertEqual(max_retries, expected_max_retries)
+
+    def test_max_retries_uses_value_from_lira_config_if_not_set_in_options(self):
+        test_config = deepcopy(self.correct_test_config)
+        config = lira_config.LiraConfig(test_config)
+        expected_max_retries = config.get('max_cromwell_retries')
+        options_from_file = json.loads(self.options_json)
+        runtime_parameters = options_from_file.get('default_runtime_attributes', {})
+        self.assertIsNone(runtime_parameters.get('maxRetries'))
+        options = lira_utils.compose_config_options(self.options_json, config)
+        max_retries = json.loads(options)['default_runtime_attributes']['maxRetries']
+        self.assertEqual(max_retries, expected_max_retries)
 
     def test_parse_github_resource_url(self):
         """Test if parse_github_resource_url can correctly parse Github resource urls."""
