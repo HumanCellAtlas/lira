@@ -38,6 +38,15 @@
             "should": [
               {
                 "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.donor_organism_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
+              {
+                "bool": {
                   "must": [
                     {
                       "term": {
@@ -54,6 +63,15 @@
         {
           "bool": {
             "should": [
+              {
+                "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.specimen_from_organism_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
               {
                 "bool": {
                   "must": [
@@ -74,6 +92,15 @@
             "should": [
               {
                 "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.cell_suspension_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
+              {
+                "bool": {
                   "must": [
                     {
                       "term": {
@@ -90,6 +117,15 @@
         {
           "bool": {
             "should": [
+              {
+                "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.cell_line_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
               {
                 "bool": {
                   "must": [
@@ -110,6 +146,15 @@
             "should": [
               {
                 "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.organoid_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
+              {
+                "bool": {
                   "must": [
                     {
                       "term": {
@@ -126,6 +171,15 @@
         {
           "bool": {
             "should": [
+              {
+                "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.imaged_specimen_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
               {
                 "bool": {
                   "must": [
@@ -146,6 +200,15 @@
             "should": [
               {
                 "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.reference_file_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
+              {
+                "bool": {
                   "must": [
                     {
                       "term": {
@@ -162,6 +225,15 @@
         {
           "bool": {
             "should": [
+              {
+                "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.sequence_file_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
               {
                 "bool": {
                   "must": [
@@ -182,6 +254,15 @@
             "should": [
               {
                 "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.supplementary_file_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
+              {
+                "bool": {
                   "must": [
                     {
                       "term": {
@@ -198,6 +279,15 @@
         {
           "bool": {
             "should": [
+              {
+                "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.image_file_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
               {
                 "bool": {
                   "must": [
@@ -218,6 +308,15 @@
             "should": [
               {
                 "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.protocol_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
+              {
+                "bool": {
                   "must": [
                     {
                       "term": {
@@ -234,6 +333,15 @@
         {
           "bool": {
             "should": [
+              {
+                "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.aggregate_generation_protocol_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
               {
                 "bool": {
                   "must": [
@@ -254,6 +362,15 @@
             "should": [
               {
                 "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.collection_protocol_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
+              {
+                "bool": {
                   "must": [
                     {
                       "term": {
@@ -270,6 +387,15 @@
         {
           "bool": {
             "should": [
+              {
+                "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.differentiation_protocol_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
               {
                 "bool": {
                   "must": [
@@ -290,6 +416,15 @@
             "should": [
               {
                 "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.dissociation_protocol_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
+              {
+                "bool": {
                   "must": [
                     {
                       "term": {
@@ -306,6 +441,15 @@
         {
           "bool": {
             "should": [
+              {
+                "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.enrichment_protocol_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
               {
                 "bool": {
                   "must": [
@@ -326,6 +470,15 @@
             "should": [
               {
                 "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.ipsc_induction_protocol_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
+              {
+                "bool": {
                   "must": [
                     {
                       "term": {
@@ -342,6 +495,15 @@
         {
           "bool": {
             "should": [
+              {
+                "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.imaging_protocol_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
               {
                 "bool": {
                   "must": [
@@ -362,6 +524,15 @@
             "should": [
               {
                 "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.library_preparation_protocol_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
+              {
+                "bool": {
                   "must": [
                     {
                       "term": {
@@ -378,6 +549,15 @@
         {
           "bool": {
             "should": [
+              {
+                "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.sequencing_protocol_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
               {
                 "bool": {
                   "must": [
@@ -398,6 +578,15 @@
             "should": [
               {
                 "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.imaging_preparation_protocol_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
+              {
+                "bool": {
                   "must": [
                     {
                       "term": {
@@ -414,6 +603,15 @@
         {
           "bool": {
             "should": [
+              {
+                "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.project_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
               {
                 "bool": {
                   "must": [
@@ -434,6 +632,15 @@
             "should": [
               {
                 "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.process_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
+              {
+                "bool": {
                   "must": [
                     {
                       "term": {
@@ -450,6 +657,15 @@
         {
           "bool": {
             "should": [
+              {
+                "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.dissociation_process_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
               {
                 "bool": {
                   "must": [
@@ -470,6 +686,15 @@
             "should": [
               {
                 "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.enrichment_process_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
+              {
+                "bool": {
                   "must": [
                     {
                       "term": {
@@ -488,6 +713,15 @@
             "should": [
               {
                 "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.library_preparation_process_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
+              {
+                "bool": {
                   "must": [
                     {
                       "term": {
@@ -504,6 +738,15 @@
         {
           "bool": {
             "should": [
+              {
+                "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "files.sequencing_process_json.provenance.schema_major_version"
+                    }
+                  }
+                }
+              },
               {
                 "bool": {
                   "must": [

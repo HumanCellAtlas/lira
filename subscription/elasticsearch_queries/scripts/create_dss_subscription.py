@@ -74,6 +74,15 @@ def generate_elastic_search_query_for_schema_versions():
       "should": [
         {
           "bool": {
+            "must_not": {
+              "exists": {
+                "field": "files.%s_json.provenance.schema_major_version"
+              }
+            }
+          }
+        },
+        {
+          "bool": {
             "must": [
               {
                 "term": {
@@ -89,6 +98,7 @@ def generate_elastic_search_query_for_schema_versions():
   },
             """
             % (
+                schema_name.value,
                 schema_name.value,
                 LATEST_SUPPORTED_MD_SCHEMA_VERSIONS[schema_name]['major'],
             )
