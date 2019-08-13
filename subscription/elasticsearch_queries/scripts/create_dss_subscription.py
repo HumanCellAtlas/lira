@@ -11,13 +11,11 @@ class MetadataSchemaName(Enum):
     CELL_LINE = "cell_line"
     ORGANOID = "organoid"
     IMAGED_SPECIMEN = "imaged_specimen"
-    ANALYSIS_FILE = "analysis_file"
     REFERENCE_FILE = "reference_file"
     SEQUENCE_FILE = "sequence_file"
     SUPPLEMENTARY_FILE = "supplementary_file"
     IMAGE_FILE = "image_file"
     PROTOCOL = "protocol"
-    ANALYSIS_PROTOCOL = "analysis_protocol"
     AGGREGATE_GENERATION_PROTOCOL = "aggregate_generation_protocol"
     COLLECTION_PROTOCOL = "collection_protocol"
     DIFFERENTIATION_PROTOCOL = "differentiation_protocol"
@@ -30,7 +28,6 @@ class MetadataSchemaName(Enum):
     IMAGING_PREPARATION_PROTOCOL = "imaging_preparation_protocol"
     PROJECT = "project"
     PROCESS = "process"
-    ANALYSIS_PROCESS = "analysis_process"
     DISSOCIATION_PROCESS = "dissociation_process"
     ENRICHMENT_PROCESS = "enrichment_process"
     LIBRARY_PREPARATION_PROCESS = "library_preparation_process"
@@ -68,11 +65,6 @@ LATEST_SUPPORTED_MD_SCHEMA_VERSIONS = {
         'minor': 1
     },
 
-    MetadataSchemaName.ANALYSIS_FILE: {
-        'major': 6,
-        'minor': 1
-    },
-
     MetadataSchemaName.REFERENCE_FILE: {
         'major': 3,
         'minor': 1
@@ -95,11 +87,6 @@ LATEST_SUPPORTED_MD_SCHEMA_VERSIONS = {
 
     MetadataSchemaName.PROTOCOL: {
         'major': 7,
-        'minor': 0
-    },
-
-    MetadataSchemaName.ANALYSIS_PROTOCOL: {
-        'major': 9,
         'minor': 0
     },
 
@@ -161,11 +148,6 @@ LATEST_SUPPORTED_MD_SCHEMA_VERSIONS = {
     MetadataSchemaName.PROCESS: {
         'major': 9,
         'minor': 1
-    },
-
-    MetadataSchemaName.ANALYSIS_PROCESS: {
-        'major': 9,
-        'minor': 0
     },
 
     MetadataSchemaName.DISSOCIATION_PROCESS: {
