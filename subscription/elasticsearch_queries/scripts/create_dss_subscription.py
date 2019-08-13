@@ -35,146 +35,40 @@ class MetadataSchemaName(Enum):
 
 
 LATEST_SUPPORTED_MD_SCHEMA_VERSIONS = {
-    MetadataSchemaName.DONOR_ORGANISM: {
-        'major': 15,
-        'minor': 3
-    },
-
-    MetadataSchemaName.SPECIMEN_FROM_ORGANISM: {
-        'major': 10,
-        'minor': 2
-    },
-
-    MetadataSchemaName.CELL_SUSPENSION: {
-        'major': 13,
-        'minor': 1
-    },
-
-    MetadataSchemaName.CELL_LINE: {
-        'major': 14,
-        'minor': 3
-    },
-
-    MetadataSchemaName.ORGANOID: {
-        'major': 11,
-        'minor': 1
-    },
-
-    MetadataSchemaName.IMAGED_SPECIMEN: {
-        'major': 3,
-        'minor': 1
-    },
-
-    MetadataSchemaName.REFERENCE_FILE: {
-        'major': 3,
-        'minor': 1
-    },
-
-    MetadataSchemaName.SEQUENCE_FILE: {
-        'major': 9,
-        'minor': 1
-    },
-
-    MetadataSchemaName.SUPPLEMENTARY_FILE: {
-        'major': 2,
-        'minor': 1
-    },
-
-    MetadataSchemaName.IMAGE_FILE: {
-        'major': 2,
-        'minor': 1
-    },
-
-    MetadataSchemaName.PROTOCOL: {
-        'major': 7,
-        'minor': 0
-    },
-
-    MetadataSchemaName.AGGREGATE_GENERATION_PROTOCOL: {
-        'major': 2,
-        'minor': 0
-    },
-
-    MetadataSchemaName.COLLECTION_PROTOCOL: {
-        'major': 9,
-        'minor': 1
-    },
-
-    MetadataSchemaName.DIFFERENTIATION_PROTOCOL: {
-        'major': 2,
-        'minor': 1
-    },
-
-    MetadataSchemaName.DISSOCIATION_PROTOCOL: {
-        'major': 6,
-        'minor': 1
-    },
-
-    MetadataSchemaName.ENRICHMENT_PROTOCOL: {
-        'major': 3,
-        'minor': 0
-    },
-
-    MetadataSchemaName.IPSC_INDUCTION_PROTOCOL: {
-        'major': 3,
-        'minor': 1
-    },
-
-    MetadataSchemaName.IMAGING_PROTOCOL: {
-        'major': 11,
-        'minor': 1
-    },
-
-    MetadataSchemaName.LIBRARY_PREPARATION_PROTOCOL: {
-        'major': 6,
-        'minor': 1
-    },
-
-    MetadataSchemaName.SEQUENCING_PROTOCOL: {
-        'major': 10,
-        'minor': 0
-    },
-
-    MetadataSchemaName.IMAGING_PREPARATION_PROTOCOL: {
-        'major': 2,
-        'minor': 1
-    },
-
-    MetadataSchemaName.PROJECT: {
-        'major': 9,
-        'minor': 0
-    },
-
-    MetadataSchemaName.PROCESS: {
-        'major': 9,
-        'minor': 1
-    },
-
-    MetadataSchemaName.DISSOCIATION_PROCESS: {
-        'major': 5,
-        'minor': 1
-    },
-
-    MetadataSchemaName.ENRICHMENT_PROCESS: {
-        'major': 5,
-        'minor': 1
-    },
-
-    MetadataSchemaName.LIBRARY_PREPARATION_PROCESS: {
-        'major': 5,
-        'minor': 1
-    },
-
-    MetadataSchemaName.SEQUENCING_PROCESS: {
-        'major': 5,
-        'minor': 1
-    }
+    MetadataSchemaName.DONOR_ORGANISM: {'major': 15, 'minor': 3},
+    MetadataSchemaName.SPECIMEN_FROM_ORGANISM: {'major': 10, 'minor': 2},
+    MetadataSchemaName.CELL_SUSPENSION: {'major': 13, 'minor': 1},
+    MetadataSchemaName.CELL_LINE: {'major': 14, 'minor': 3},
+    MetadataSchemaName.ORGANOID: {'major': 11, 'minor': 1},
+    MetadataSchemaName.IMAGED_SPECIMEN: {'major': 3, 'minor': 1},
+    MetadataSchemaName.REFERENCE_FILE: {'major': 3, 'minor': 1},
+    MetadataSchemaName.SEQUENCE_FILE: {'major': 9, 'minor': 1},
+    MetadataSchemaName.SUPPLEMENTARY_FILE: {'major': 2, 'minor': 1},
+    MetadataSchemaName.IMAGE_FILE: {'major': 2, 'minor': 1},
+    MetadataSchemaName.PROTOCOL: {'major': 7, 'minor': 0},
+    MetadataSchemaName.AGGREGATE_GENERATION_PROTOCOL: {'major': 2, 'minor': 0},
+    MetadataSchemaName.COLLECTION_PROTOCOL: {'major': 9, 'minor': 1},
+    MetadataSchemaName.DIFFERENTIATION_PROTOCOL: {'major': 2, 'minor': 1},
+    MetadataSchemaName.DISSOCIATION_PROTOCOL: {'major': 6, 'minor': 1},
+    MetadataSchemaName.ENRICHMENT_PROTOCOL: {'major': 3, 'minor': 0},
+    MetadataSchemaName.IPSC_INDUCTION_PROTOCOL: {'major': 3, 'minor': 1},
+    MetadataSchemaName.IMAGING_PROTOCOL: {'major': 11, 'minor': 1},
+    MetadataSchemaName.LIBRARY_PREPARATION_PROTOCOL: {'major': 6, 'minor': 1},
+    MetadataSchemaName.SEQUENCING_PROTOCOL: {'major': 10, 'minor': 0},
+    MetadataSchemaName.IMAGING_PREPARATION_PROTOCOL: {'major': 2, 'minor': 1},
+    MetadataSchemaName.PROJECT: {'major': 9, 'minor': 0},
+    MetadataSchemaName.PROCESS: {'major': 9, 'minor': 1},
+    MetadataSchemaName.DISSOCIATION_PROCESS: {'major': 5, 'minor': 1},
+    MetadataSchemaName.ENRICHMENT_PROCESS: {'major': 5, 'minor': 1},
+    MetadataSchemaName.LIBRARY_PREPARATION_PROCESS: {'major': 5, 'minor': 1},
+    MetadataSchemaName.SEQUENCING_PROCESS: {'major': 5, 'minor': 1},
 }
 
 
 def generate_elastic_search_query_for_schema_versions():
     for schema_name in LATEST_SUPPORTED_MD_SCHEMA_VERSIONS:
-        print("""
+        print(
+            """
 {
     "bool": {
       "should": [
@@ -193,7 +87,12 @@ def generate_elastic_search_query_for_schema_versions():
       "minimum_should_match": 1
     }
   },
-            """ % (schema_name.value, LATEST_SUPPORTED_MD_SCHEMA_VERSIONS[schema_name]['major']))
+            """
+            % (
+                schema_name.value,
+                LATEST_SUPPORTED_MD_SCHEMA_VERSIONS[schema_name]['major'],
+            )
+        )
 
 
 generate_elastic_search_query_for_schema_versions()
