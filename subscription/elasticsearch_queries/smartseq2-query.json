@@ -403,7 +403,7 @@
                   "must": [
                     {
                       "term": {
-                        "files.project_json.provenance.schema_major_version": 9
+                        "files.project_json.provenance.schema_major_version": 14
                       }
                     }
                   ]

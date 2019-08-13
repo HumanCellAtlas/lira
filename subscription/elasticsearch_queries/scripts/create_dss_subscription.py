@@ -56,7 +56,7 @@ LATEST_SUPPORTED_MD_SCHEMA_VERSIONS = {
     MetadataSchemaName.LIBRARY_PREPARATION_PROTOCOL: {'major': 6, 'minor': 1},
     MetadataSchemaName.SEQUENCING_PROTOCOL: {'major': 10, 'minor': 0},
     MetadataSchemaName.IMAGING_PREPARATION_PROTOCOL: {'major': 2, 'minor': 1},
-    MetadataSchemaName.PROJECT: {'major': 9, 'minor': 0},
+    MetadataSchemaName.PROJECT: {'major': 14, 'minor': 0},
     MetadataSchemaName.PROCESS: {'major': 9, 'minor': 1},
     MetadataSchemaName.DISSOCIATION_PROCESS: {'major': 5, 'minor': 1},
     MetadataSchemaName.ENRICHMENT_PROCESS: {'major': 5, 'minor': 1},
