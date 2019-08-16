@@ -2,16 +2,20 @@ import connexion
 import json
 import logging
 import io
+import base64
 import cromwell_tools.cromwell_api
 import cromwell_tools.cromwell_auth
 import cromwell_tools.utilities
-from flask import current_app
+from flask import current_app, request
 from lira import lira_utils
+from google.cloud import pubsub_v1
 
 
 logger = logging.getLogger("{module_path}".format(module_path=__name__))
+publisher = pubsub_v1.PublisherClient()
 
 
+# Get notifications from data store
 def post(body):
     """Process notification and launch workflow in Cromwell"""
     # Check authentication
@@ -27,11 +31,34 @@ def post(body):
     logger.info("Notification received")
     logger.info(f"Received notification body: {body}")
 
-    # Get bundle uuid, version and subscription_id
+    project_id = 'broad-dsde-mint-dev'
+    topic_name = 'hca-notifications-dev'
+    topic_path = publisher.topic_path(project_id, topic_name)
+    message = body.encode('utf-8')
+    future = publisher.publish(
+        topic_path, message, origin='lira-dev'
+    )
+    logger.info(future.result())
+    return 'ok'
+
+
+# Get messages from google pub/sub topic:
+def receive_messages():
+    # if (request.args.get('token', '') !=
+    #         current_app.config['PUBSUB_VERIFICATION_TOKEN']):
+    #     return 'Invalid request', 400
+
+    envelope = json.loads(request.data.decode('utf-8'))
+    data = base64.b64decode(envelope['message']['data'])
+    logger.info(data)
+    # submit_workflows(data)
+
+
+def submit_workflows(body):
+    lira_config = current_app.config
     uuid, version, subscription_id = lira_utils.extract_uuid_version_subscription_id(
         body
     )
-
     # Find wdl config where the subscription_id matches the notification's subscription_id
     id_matches = [
         wdl for wdl in lira_config.wdls if wdl.subscription_id == subscription_id
