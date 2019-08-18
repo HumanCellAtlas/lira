@@ -15,9 +15,8 @@ logger = logging.getLogger("{module_path}".format(module_path=__name__))
 publisher = pubsub_v1.PublisherClient()
 
 
-# Get notifications from data store
 def post(body):
-    """Process notification and launch workflow in Cromwell"""
+    """Receive notifications from the HCA Data Storage Service and add to a Google pub/sub topic."""
     # Check authentication
     lira_config = current_app.config
     if not lira_utils.is_authenticated(connexion.request, lira_config):
@@ -38,23 +37,24 @@ def post(body):
     future = publisher.publish(
         topic_path, message, origin='lira-dev'
     )
-    logger.info(future.result())
-    return 'ok'
+    message_id = future.result()
+    logger.info(f"Message {message_id} added to topic {topic_name}")
+    return lira_utils.response_with_server_header({"id": message_id}, 200)
 
 
-# Get messages from google pub/sub topic:
 def receive_messages():
+    """Receive and process messages from Google pub/sub topic."""
     # if (request.args.get('token', '') !=
     #         current_app.config['PUBSUB_VERIFICATION_TOKEN']):
     #     return 'Invalid request', 400
-
     envelope = json.loads(request.data.decode('utf-8'))
     data = base64.b64decode(envelope['message']['data'])
     logger.info(data)
-    # submit_workflows(data)
+    # response = submit_workflow(data)
+    # return response
 
 
-def submit_workflows(body):
+def submit_workflow(body):
     lira_config = current_app.config
     uuid, version, subscription_id = lira_utils.extract_uuid_version_subscription_id(
         body

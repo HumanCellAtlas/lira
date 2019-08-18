@@ -62,10 +62,11 @@ paths:
     post:
       tags:
       - "Lira"
-      summary: "Listen for notifications and start workflows"
+      summary: "Listen for notifications and add to queue"
       description: |
-        Listen for notifications and process them in order to start analysis workflows.
+        Listen for notifications and add them to a Google pub/sub queue.
         The notifications should contain HCA DCP Bundle information and be authenticated.
+      operationId: 'lira.api.notifications.post'
       consumes:
         - application/json
       parameters:
@@ -79,6 +80,28 @@ paths:
           description: "OK"
           schema:
             $ref: '#/definitions/NotificationResponse'
+        # Definition of all error statuses
+        default:
+          description: "Unexpected Error"
+          schema:
+            $ref: '#/definitions/Error'
+  /submissions:
+    post:
+      tags:
+       - "Lira"
+      summary: "Receives messages from queue and submits a workflow to Cromwell."
+      description: |
+              Receives messages from Google pub/sub topic, processes the HCA DCP
+              Bundle information in the message, and submits an on-hold workflow
+              to Cromwell.
+      operationId: 'lira.api.notifications.receive_messages'
+      consumes:
+        - application/json
+      responses:
+        201:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/CromwellSubmissionResponse'
         # Definition of all error statuses
         default:
           description: "Unexpected Error"
@@ -157,11 +180,18 @@ definitions:
   NotificationResponse:
     type: object
     properties:
+      id:
+        description: "ID of the Google pub/sub message"
+        type: string
+        example: "3fa85f64"
+  CromwellSubmissionResponse:
+    type: object
+    properties:
       status:
         type: string
         example: "Submitted"
       id:
-        description: "UUID of the started workflow"
+        description: "UUID of the submitted Cromwell workflow"
         type: string
         example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
   HealthCheckResponse:
