@@ -48,8 +48,8 @@ def receive_messages():
     #         current_app.config['PUBSUB_VERIFICATION_TOKEN']):
     #     return 'Invalid request', 400
     envelope = json.loads(request.data.decode('utf-8'))
-    data = base64.b64decode(envelope['message']['data'])
-    logger.info(data)
+    message = base64.b64decode(envelope['message'])
+    logger.info(message)
     # response = submit_workflow(data)
     # return response
 
