@@ -47,10 +47,10 @@ def receive_messages(body):
     # if (request.args.get('token', '') !=
     #         current_app.config['PUBSUB_VERIFICATION_TOKEN']):
     #     return 'Invalid request', 400
-    logger.info(request.data)
+    # logger.info(request.data)
     logger.info(body)
-    envelope = json.loads(request.data.decode('utf-8'))
-    message = envelope['message']
+    # envelope = json.loads(request.data.decode('utf-8'))
+    message = body['message']
     logger.info(f"Received message from Google pub/sub: {message}")
     response = submit_workflow(message)
     return response
@@ -58,7 +58,8 @@ def receive_messages(body):
 
 def submit_workflow(message):
     lira_config = current_app.config
-    body = base64.b64decode(message['data'])
+    data = base64.b64decode(message['data'])
+    body = json.loads(data)
     uuid, version, subscription_id = lira_utils.extract_uuid_version_subscription_id(
         body
     )
