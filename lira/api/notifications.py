@@ -42,11 +42,13 @@ def post(body):
     return lira_utils.response_with_server_header({"id": message_id}, 200)
 
 
-def receive_messages():
+def receive_messages(body):
     """Receive and process messages from Google pub/sub topic."""
     # if (request.args.get('token', '') !=
     #         current_app.config['PUBSUB_VERIFICATION_TOKEN']):
     #     return 'Invalid request', 400
+    logger.info(request.data)
+    logger.info(body)
     envelope = json.loads(request.data.decode('utf-8'))
     message = envelope['message']
     logger.info(f"Received message from Google pub/sub: {message}")

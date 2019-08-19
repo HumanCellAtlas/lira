@@ -97,6 +97,12 @@ paths:
       operationId: 'lira.api.notifications.receive_messages'
       consumes:
         - application/json
+      parameters:
+        - name: body
+          in: body
+          required: false
+          schema:
+            $ref: '#/definitions/PubSubMessage'
       responses:
         201:
           description: "OK"
@@ -133,6 +139,16 @@ definitions:
       - subscription_id
       - transaction_id
       - match
+  PubSubMessage:
+    type: object
+    properties:
+      message:
+        $ref: '#/definitions/Message'
+  Message:
+    type: object
+    properties:
+      data:
+        type: string
   Match:
     type: object
     properties:
