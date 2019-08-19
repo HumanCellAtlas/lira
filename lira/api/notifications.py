@@ -12,7 +12,6 @@ from google.cloud import pubsub_v1
 
 
 logger = logging.getLogger("{module_path}".format(module_path=__name__))
-publisher = pubsub_v1.PublisherClient()
 
 
 def post(body):
@@ -32,6 +31,7 @@ def post(body):
 
     project_id = 'broad-dsde-mint-dev'
     topic_name = 'hca-notifications-dev'
+    publisher = pubsub_v1.PublisherClient.from_service_account_file(lira_config.caas_key)
     topic_path = publisher.topic_path(project_id, topic_name)
     message = body.encode('utf-8')
     future = publisher.publish(
@@ -48,14 +48,15 @@ def receive_messages():
     #         current_app.config['PUBSUB_VERIFICATION_TOKEN']):
     #     return 'Invalid request', 400
     envelope = json.loads(request.data.decode('utf-8'))
-    message = base64.b64decode(envelope['message'])
-    logger.info(message)
-    # response = submit_workflow(data)
-    # return response
+    message = envelope['message']
+    logger.info(f"Received message from Google pub/sub: {message}")
+    response = submit_workflow(message)
+    return response
 
 
-def submit_workflow(body):
+def submit_workflow(message):
     lira_config = current_app.config
+    body = base64.b64decode(message['data'])
     uuid, version, subscription_id = lira_utils.extract_uuid_version_subscription_id(
         body
     )
