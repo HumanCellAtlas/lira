@@ -33,7 +33,7 @@ def post(body):
     topic_name = 'hca-notifications-dev'
     publisher = pubsub_v1.PublisherClient.from_service_account_file(lira_config.caas_key)
     topic_path = publisher.topic_path(project_id, topic_name)
-    message = body.encode('utf-8')
+    message = json.dumps(body).encode('utf-8')
     future = publisher.publish(
         topic_path, message, origin='lira-dev'
     )
