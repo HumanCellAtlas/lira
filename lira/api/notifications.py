@@ -172,4 +172,3 @@ def submit_workflow(message):
             )
             status_code = 201
     return lira_utils.response_with_server_header(response_json, status_code)
-
