@@ -182,25 +182,23 @@ class LiraConfig(Config):
             self.log_level_connexion_validation
         )
 
+        env = config_object.get('env')
+        if not config_object.get('google_pubsub_topic'):
+            self.google_pubsub_topic = f'hca-notifications-{env}'
+
         # Check cromwell credentials
         use_caas = config_object.get('use_caas', None)
         if not use_caas:
             config_object['use_caas'] = False
         if config_object.get('use_caas'):
             if not config_object.get('collection_name'):
-                self.collection_name = 'lira-{}-workflows'.format(
-                    config_object.get('env')
-                )
+                self.collection_name = f'lira-{env}-workflows'
             caas_key = os.environ.get('caas_key')
             if not caas_key:
                 raise ValueError(
                     'No service account json key provided for cromwell-as-a-service.'
                 )
             self.caas_key = caas_key
-            if not config_object.get('google_project'):
-                raise ValueError(
-                    'No google_project specified. You must specify a project for workflows to run in when using CaaS.'
-                )
             if not config_object.get('gcs_root'):
                 raise ValueError(
                     'No gcs_root specified. You must specify a GCS path for workflow outputs to be written to when using CaaS.'
@@ -263,6 +261,7 @@ class LiraConfig(Config):
             'ingest_url',
             'schema_url',
             'DOMAIN',
+            'google_project'
         }
 
     @staticmethod
@@ -280,7 +279,20 @@ class LiraConfig(Config):
             )
 
     def __str__(self):
-        s = 'LiraConfig({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8})'
+        s = (
+            'LiraConfig(environment: {0},'
+            ' submit_wdl: {1},'
+            ' cromwell_url: {2},'
+            ' use_caas: {3},'
+            ' MAX_CONTENT_LENGTH: {4},'
+            ' wdls: {5},'
+            ' lira_version: {6},'
+            ' dss_url: {7},'
+            ' ingest_url: {8},'
+            ' schema_url: {9},'
+            ' DOMAIN: {10},'
+            ' google_project: {11}'
+        )
         return s.format(
             self.env,
             self.submit_wdl,
@@ -293,6 +305,7 @@ class LiraConfig(Config):
             self.ingest_url,
             self.schema_url,
             self.DOMAIN,
+            self.google_project
         )
 
     def __repr__(self):
@@ -303,11 +316,12 @@ class LiraConfig(Config):
             ' use_caas: {3},'
             ' MAX_CONTENT_LENGTH: {4},'
             ' wdls: {5},'
-            ' lira_version: {6}'
-            ' dss_url: {7}'
-            ' ingest_url: {8}'
-            ' schema_url: {9}'
-            ' DOMAIN: {10}'
+            ' lira_version: {6},'
+            ' dss_url: {7},'
+            ' ingest_url: {8},'
+            ' schema_url: {9},'
+            ' DOMAIN: {10},'
+            ' google_project: {11}'
         )
         return s.format(
             self.env,
@@ -321,6 +335,7 @@ class LiraConfig(Config):
             self.ingest_url,
             self.schema_url,
             self.DOMAIN,
+            self.google_project
         )
 
 

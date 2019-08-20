@@ -30,13 +30,13 @@ def post(body):
     logger.info(f"Received notification body: {body}")
 
     project_id = lira_config.google_project
-    topic_name = "hca-notifications-dev"
+    topic_name = lira_config.google_pubsub_topic
     publisher = pubsub_v1.PublisherClient.from_service_account_file(
         lira_config.caas_key
     )
     topic_path = publisher.topic_path(project_id, topic_name)
     message = json.dumps(body).encode("utf-8")
-    future = publisher.publish(topic_path, message, origin="lira-dev")
+    future = publisher.publish(topic_path, message, origin=f"lira-{lira_config.env}")
     message_id = future.result()
     logger.info(f"Message {message_id} added to topic {topic_name}")
     return lira_utils.response_with_server_header({"id": message_id}, 200)

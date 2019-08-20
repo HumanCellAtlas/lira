@@ -38,7 +38,7 @@ def _is_authenticated_pubsub(request):
             return False
         return True
     except Exception as e:
-        logger.error('Invalid token: {}\n'.format(e))
+        logger.error(f'Invalid token: {e}\n')
         return False
 
 def response_with_server_header(body, status):
