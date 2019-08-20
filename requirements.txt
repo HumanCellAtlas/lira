@@ -15,3 +15,4 @@ black==19.3b0
 flake8==3.7.7
 pre-commit==1.14.4
 google-cloud-pubsub==0.39.1
+git+git://github.com/HumanCellAtlas/pipeline-tools@v0.56.3
