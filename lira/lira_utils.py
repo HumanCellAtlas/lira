@@ -41,6 +41,7 @@ def _is_authenticated_pubsub(request):
         logger.error(f'Invalid token: {e}\n')
         return False
 
+
 def response_with_server_header(body, status):
     """Add information of server to header.
 

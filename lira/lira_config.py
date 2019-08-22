@@ -261,7 +261,7 @@ class LiraConfig(Config):
             'ingest_url',
             'schema_url',
             'DOMAIN',
-            'google_project'
+            'google_project',
         }
 
     @staticmethod
@@ -305,7 +305,7 @@ class LiraConfig(Config):
             self.ingest_url,
             self.schema_url,
             self.DOMAIN,
-            self.google_project
+            self.google_project,
         )
 
     def __repr__(self):
@@ -335,7 +335,7 @@ class LiraConfig(Config):
             self.ingest_url,
             self.schema_url,
             self.DOMAIN,
-            self.google_project
+            self.google_project,
         )
 
 

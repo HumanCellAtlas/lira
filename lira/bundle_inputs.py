@@ -9,7 +9,7 @@ WORKFLOW_INPUTS = {
 
 
 def create_workflow_inputs_hash_label(
-        workflow_name, bundle_id, bundle_version, dss_url
+    workflow_name, bundle_id, bundle_version, dss_url
 ):
     """
     Create a hash out of the bundle-specific inputs for a workflow.

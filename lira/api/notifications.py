@@ -37,7 +37,9 @@ def post(body):
     topic_path = publisher.topic_path(project_id, topic_name)
     message = json.dumps(body).encode("utf-8")
     future = publisher.publish(topic_path, message, origin=f"lira-{lira_config.env}")
-    message_id = future.result(timeout=60)  # Wait 60s for a value to be returned, otherwise raise a timeout error
+    message_id = future.result(
+        timeout=60
+    )  # Wait 60s for a value to be returned, otherwise raise a timeout error
     logger.info(f"Message {message_id} added to topic {topic_name}")
     return lira_utils.response_with_server_header({"id": message_id}, 200)
 
