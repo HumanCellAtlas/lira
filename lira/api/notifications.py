@@ -98,7 +98,7 @@ def submit_workflow(message):
     attachments_from_notification = body.get(
         "attachments"
     )  # Try to get the extra attachments field if it's applicable
-    workflow_hash_label = bundle_inputs.create_workflow_inputs_hash_label(
+    workflow_hash_label = bundle_inputs.get_workflow_inputs_to_hash(
         wdl_config.workflow_name, uuid, version, lira_config.dss_url
     )
     cromwell_labels = lira_utils.compose_labels(
