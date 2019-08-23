@@ -1,6 +1,7 @@
 {
   "version": "v0.1.0",
   "env": "dev",
+  "google_project": "broad-dsde-mint-dev",
   "cromwell_url": "https://cromwell.mint-dev.broadinstitute.org/api/workflows/v1",
   "cromwell_user": "test",
   "cromwell_password": "test",

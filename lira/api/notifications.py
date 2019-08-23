@@ -7,7 +7,7 @@ import cromwell_tools.cromwell_api
 import cromwell_tools.cromwell_auth
 import cromwell_tools.utilities
 from flask import current_app
-from lira import lira_utils
+from lira import lira_utils, bundle_inputs
 from google.cloud import pubsub_v1
 
 
@@ -37,7 +37,9 @@ def post(body):
     topic_path = publisher.topic_path(project_id, topic_name)
     message = json.dumps(body).encode("utf-8")
     future = publisher.publish(topic_path, message, origin=f"lira-{lira_config.env}")
-    message_id = future.result(timeout=60)  # Wait 60s for a value to be returned, otherwise raise a timeout error
+    message_id = future.result(
+        timeout=60
+    )  # Wait 60s for a value to be returned, otherwise raise a timeout error
     logger.info(f"Message {message_id} added to topic {topic_name}")
     return lira_utils.response_with_server_header({"id": message_id}, 200)
 
@@ -96,6 +98,9 @@ def submit_workflow(message):
     attachments_from_notification = body.get(
         "attachments"
     )  # Try to get the extra attachments field if it's applicable
+    workflow_hash_label = bundle_inputs.get_workflow_inputs_to_hash(
+        wdl_config.workflow_name, uuid, version, lira_config.dss_url
+    )
     cromwell_labels = lira_utils.compose_labels(
         wdl_config.workflow_name,
         wdl_config.workflow_version,
@@ -103,6 +108,7 @@ def submit_workflow(message):
         version,
         labels_from_notification,
         attachments_from_notification,
+        workflow_hash_label,
     )
     cromwell_labels_file = json.dumps(cromwell_labels).encode("utf-8")
 

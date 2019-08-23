@@ -5,6 +5,10 @@ python:
 
 install: "pip install -r requirements.txt"
 
+before_install:
+  - pip install --upgrade pip
+  - pip install --upgrade setuptools
+
 jobs:
   include:
     # The linting test is fast and cheap so run it first
