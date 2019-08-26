@@ -21,8 +21,8 @@ def post(body):
     if not lira_utils.is_authenticated(connexion.request, lira_config):
         raise connexion.ProblemException(
             status=401,
-            title="Unauthorized",
-            detail="Authentication failed",
+            title='Unauthorized',
+            detail='Authentication failed',
             headers=lira_utils.LIRA_SERVER_HEADER,
         )
 
@@ -49,8 +49,8 @@ def receive_messages(body):
     if not lira_utils._is_authenticated_pubsub(connexion.request):
         raise connexion.ProblemException(
             status=401,
-            title="Unauthorized",
-            detail="Authentication failed",
+            title='Unauthorized',
+            detail='Authentication failed',
             headers=lira_utils.LIRA_SERVER_HEADER,
         )
     message = body["message"]
@@ -62,7 +62,7 @@ def receive_messages(body):
 def submit_workflow(message):
     """ Process messages and submit on-hold workflow in Cromwell."""
     lira_config = current_app.config
-    data = base64.b64decode(message["data"])
+    data = base64.b64decode(message['data'])
     body = json.loads(data)
     uuid, version, subscription_id = lira_utils.extract_uuid_version_subscription_id(
         body
@@ -89,18 +89,20 @@ def submit_workflow(message):
     inputs = lira_utils.compose_inputs(
         wdl_config.workflow_name, uuid, version, lira_config
     )
-    cromwell_inputs = json.dumps(inputs).encode("utf-8")
+    cromwell_inputs = json.dumps(inputs).encode('utf-8')
 
     # Prepare labels
     labels_from_notification = body.get(
-        "labels"
+        'labels'
     )  # Try to get the extra labels field if it's applicable
     attachments_from_notification = body.get(
-        "attachments"
+        'attachments'
     )  # Try to get the extra attachments field if it's applicable
+
     workflow_hash_label = bundle_inputs.get_workflow_inputs_to_hash(
         wdl_config.workflow_name, uuid, version, lira_config.dss_url
     )
+    message_id_label = {'pubsub-message-id': message['message_id']}
     cromwell_labels = lira_utils.compose_labels(
         wdl_config.workflow_name,
         wdl_config.workflow_version,
@@ -109,8 +111,9 @@ def submit_workflow(message):
         labels_from_notification,
         attachments_from_notification,
         workflow_hash_label,
+        message_id_label
     )
-    cromwell_labels_file = json.dumps(cromwell_labels).encode("utf-8")
+    cromwell_labels_file = json.dumps(cromwell_labels).encode('utf-8')
 
     logger.debug(f"Added labels {cromwell_labels_file} to workflow")
 
@@ -119,24 +122,24 @@ def submit_workflow(message):
     )
     logger.info(current_app.prepare_submission.cache_info())
 
-    dry_run = getattr(lira_config, "dry_run", False)
+    dry_run = getattr(lira_config, 'dry_run', False)
     kwargs = {}
 
     if dry_run:
         logger.warning("Not launching workflow because Lira is in dry_run mode")
-        response_json = {"id": "fake_id", "status": "fake_status"}
+        response_json = {'id': 'fake_id', 'status': 'fake_status'}
         status_code = 201
     else:
         if lira_config.use_caas:
             options = lira_utils.compose_caas_options(
                 cromwell_submission.options_file, lira_config
             )
-            options_file = json.dumps(options).encode("utf-8")
+            options_file = json.dumps(options).encode('utf-8')
 
             auth = cromwell_tools.cromwell_auth.CromwellAuth.harmonize_credentials(
                 url=lira_config.cromwell_url, service_account_key=lira_config.caas_key
             )
-            kwargs["collection_name"] = lira_config.collection_name
+            kwargs['collection_name'] = lira_config.collection_name
         else:
             options_file = cromwell_submission.options_file
             auth = cromwell_tools.cromwell_auth.CromwellAuth.harmonize_credentials(
