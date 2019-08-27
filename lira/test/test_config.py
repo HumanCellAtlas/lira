@@ -143,13 +143,6 @@ class TestStartupVerification(unittest.TestCase):
         config = lira_config.LiraConfig(test_config)
         self.assertTrue(config.use_caas)
 
-    def test_using_caas_requires_google_project(self):
-        test_config = deepcopy(self.correct_test_config)
-        test_config['use_caas'] = 'true'
-        test_config['gcs_root'] = 'fake gcs root'
-        with self.assertRaises(ValueError):
-            config = lira_config.LiraConfig(test_config)
-
     def test_using_caas_requires_gcs_root(self):
         test_config = deepcopy(self.correct_test_config)
         test_config['use_caas'] = 'true'
