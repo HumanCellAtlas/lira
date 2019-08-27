@@ -116,7 +116,7 @@ def submit_workflow(message):
         labels_from_notification,
         attachments_from_notification,
         workflow_hash_label,
-        message_id_label
+        message_id_label,
     )
     cromwell_labels_file = json.dumps(cromwell_labels).encode('utf-8')
 
