@@ -77,7 +77,7 @@ paths:
             $ref: '#/definitions/Notification'
       responses:
         200:
-          description: "Notification received"
+          description: "Notification received."
           schema:
             $ref: '#/definitions/NotificationResponse'
         # Definition of all error statuses
