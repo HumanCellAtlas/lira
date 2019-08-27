@@ -73,13 +73,10 @@ def submit_workflow(message):
         wdl for wdl in lira_config.wdls if wdl.subscription_id == subscription_id
     ]
     if len(id_matches) == 0:
-        logger.info(f"No wdl config found for subscription {subscription_id}")
-        raise connexion.ProblemException(
-            status=404,
-            title="Not Found",
-            detail=f"Not Found: No wdl config found with subscription id {subscription_id}",
-            headers=lira_utils.LIRA_SERVER_HEADER,
-        )
+        # Not raising an exception here because it will trigger another notification
+        # and resending the message will not resolve this issue
+        logger.error(f"No wdl config found for subscription {subscription_id}")
+        return lira_utils.response_with_server_header({}, 200)
 
     wdl_config = id_matches[0]
     logger.info(f"Matched WDL config: {wdl_config}")
@@ -99,9 +96,17 @@ def submit_workflow(message):
         'attachments'
     )  # Try to get the extra attachments field if it's applicable
 
-    workflow_hash_label = bundle_inputs.get_workflow_inputs_to_hash(
-        wdl_config.workflow_name, uuid, version, lira_config.dss_url
-    )
+    try:
+        workflow_hash_label = bundle_inputs.get_workflow_inputs_to_hash(
+            wdl_config.workflow_name, uuid, version, lira_config.dss_url
+        )
+    except Exception as ex:
+        if ex.code == 404:
+            # Not raising an exception here because it will trigger another notification
+            # and resending the message will not resolve this issue
+            logger.error(f"Could not find bundle {uuid}.{version}")
+            return lira_utils.response_with_server_header({}, 200)
+
     message_id_label = {'pubsub-message-id': message['message_id']}
     cromwell_labels = lira_utils.compose_labels(
         wdl_config.workflow_name,
