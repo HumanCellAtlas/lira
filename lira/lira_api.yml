@@ -254,6 +254,7 @@ definitions:
             example: "v1.0.0"
           lira_version:
             type: string
+            pattern: '(v)?([0-9]+)\.([0-9]+)\.([0-9]+)'
             example: "v1.0.0"
           submit_wdl_version:
             type: string
