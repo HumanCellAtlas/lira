@@ -77,7 +77,7 @@ paths:
             $ref: '#/definitions/Notification'
       responses:
         200:
-          description: "OK"
+          description: "Notification received."
           schema:
             $ref: '#/definitions/NotificationResponse'
         # Definition of all error statuses
@@ -104,8 +104,14 @@ paths:
           schema:
             $ref: '#/definitions/PubSubMessage'
       responses:
+        # Return code for notifications that cannot be processed (e.g bundle cannot be found)
+        # Because they will not succeed on retry, return a 200 to google pub/sub
+        200:
+          description: "Notification received."
+          schema:
+            $ref: '#/definitions/CromwellSubmissionResponse'
         201:
-          description: "OK"
+          description: "Workflow submitted."
           schema:
             $ref: '#/definitions/CromwellSubmissionResponse'
         # Definition of all error statuses
