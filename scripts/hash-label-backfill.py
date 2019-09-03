@@ -1,9 +1,19 @@
 import argparse
 import json
-from lira import bundle_inputs
+import bundle_inputs
 from cromwell_tools.cromwell_api import CromwellAPI
 from cromwell_tools.cromwell_auth import CromwellAuth
 
+# We're keeping this script in lira/scripts as it is intended to
+# be a one-time backfill. To run the script, however, first copy
+# it into lira/lira and run it from there so that it has access
+# to lira's package structure
+
+dss_url = {
+    'prod': 'https://dss.data.humancellatlas.org/v1',
+    'staging': 'https://dss.staging.data.humancellatlas.org/v1',
+    'int': 'https://dss.integration.humancellatlas.org/v1',
+}
 
 def get_project_workflows(project_uuid, auth, required_labels=None):
     label_dict = required_labels or {}
@@ -17,19 +27,19 @@ def get_project_workflows(project_uuid, auth, required_labels=None):
     ]
 
 
-def label_workflow_with_hash(workflow, auth):
+def label_workflow_with_hash(workflow, env, auth):
     hash_label = bundle_inputs.get_workflow_inputs_to_hash(
         workflow['labels']['workflow-name'],
         workflow['labels']['bundle-uuid'],
         workflow['labels']['bundle-version'],
-        'https://dss.data.humancellatlas.org/v1',
+        dss_url[env],
     )
     return CromwellAPI.patch_labels(workflow['id'], labels=hash_label, auth=auth)
 
 
-def patch_workflows(workflows, auth):
+def patch_workflows(workflows, env, auth):
     results = [
-        (workflow['id'], label_workflow_with_hash(workflow, auth))
+        (workflow['id'], label_workflow_with_hash(workflow, env, auth))
         for workflow in workflows
     ]
     print('Successfully patched workflows:')
@@ -51,6 +61,13 @@ if __name__ == "__main__":
         '--caas_key',
         dest='caas_key',
         help='service account key json for caas',
+        required=True,
+    )
+    parser.add_argument(
+        '-e',
+        '--environment',
+        dest='env',
+        help='dss environment that the project bundles exist in (one of prod, staging, int)',
         required=True,
     )
     either = parser.add_mutually_exclusive_group(required=True)
@@ -84,11 +101,9 @@ if __name__ == "__main__":
     else:
         with open(args.file, 'r') as f:
             workflows = [
-                workflow
-                for workflow in [
-                    get_project_workflows(line.strip(), cromwell_auth, required_labels)
-                    for line in f
-                ]
+                workflow for line in f
+                for workflow in 
+                get_project_workflows(line.strip(), cromwell_auth, required_labels)
             ]
 
-    patch_workflows(workflows, cromwell_auth)
+    patch_workflows(workflows, args.env, cromwell_auth)
