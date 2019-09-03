@@ -15,6 +15,7 @@ dss_url = {
     'int': 'https://dss.integration.humancellatlas.org/v1',
 }
 
+
 def get_project_workflows(project_uuid, auth, required_labels=None):
     label_dict = required_labels or {}
     label_dict['project_uuid'] = project_uuid
@@ -101,9 +102,11 @@ if __name__ == "__main__":
     else:
         with open(args.file, 'r') as f:
             workflows = [
-                workflow for line in f
-                for workflow in 
-                get_project_workflows(line.strip(), cromwell_auth, required_labels)
+                workflow
+                for line in f
+                for workflow in get_project_workflows(
+                    line.strip(), cromwell_auth, required_labels
+                )
             ]
 
     patch_workflows(workflows, args.env, cromwell_auth)
