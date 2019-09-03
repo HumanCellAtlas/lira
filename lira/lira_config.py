@@ -186,6 +186,10 @@ class LiraConfig(Config):
         if not config_object.get('google_pubsub_topic'):
             self.google_pubsub_topic = f'hca-notifications-{env}'
 
+        # Only enable for integration testing
+        if not config_object.get('test_mode'):
+            config_object['test_mode'] = False
+
         # Check cromwell credentials
         use_caas = config_object.get('use_caas', None)
         if not use_caas:

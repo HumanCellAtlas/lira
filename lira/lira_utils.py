@@ -21,25 +21,30 @@ logger = logging.getLogger(f'lira.{__name__}')
 LIRA_SERVER_HEADER = {'Server': 'Lira Service', 'Content-type': 'application/json'}
 
 
-def _is_authenticated_pubsub(request):
+def _is_authenticated_pubsub(request, test_mode=False):
     """ Check if the message is sent by Google:
-    https://google-auth.readthedocs.io/en/latest/reference/google.oauth2.id_token.html """
-    try:
-        # Get the Cloud Pub/Sub-generated JWT in the "Authorization" header.
-        bearer_token = request.headers.get('Authorization')
-        token = bearer_token.split(' ')[1]
-
-        # Verify and decode the JWT. `verify_oauth2_token` verifies
-        # the JWT signature, the `aud` claim, and the `exp` claim.
-        claim = id_token.verify_oauth2_token(token, google_transport_requests.Request())
-        # Must also verify the `iss` claim.
-        if claim['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
-            logger.error('Wrong issuer.')
-            return False
+    https://google-auth.readthedocs.io/en/latest/reference/google.oauth2.id_token.html
+    If the test_mode flag is set to True, skip authentication (only enable for tests).
+    """
+    if test_mode:
         return True
-    except Exception as e:
-        logger.error(f'Invalid token: {e}\n')
-        return False
+    else:
+        try:
+            # Get the Cloud Pub/Sub-generated JWT in the "Authorization" header.
+            bearer_token = request.headers.get('Authorization')
+            token = bearer_token.split(' ')[1]
+
+            # Verify and decode the JWT. `verify_oauth2_token` verifies
+            # the JWT signature, the `aud` claim, and the `exp` claim.
+            claim = id_token.verify_oauth2_token(token, google_transport_requests.Request())
+            # Must also verify the `iss` claim.
+            if claim['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+                logger.error('Wrong issuer.')
+                return False
+            return True
+        except Exception as e:
+            logger.error(f'Invalid token: {e}\n')
+            return False
 
 
 def response_with_server_header(body, status):
