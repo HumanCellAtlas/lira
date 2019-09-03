@@ -36,9 +36,14 @@ def _is_authenticated_pubsub(request, test_mode=False):
 
             # Verify and decode the JWT. `verify_oauth2_token` verifies
             # the JWT signature, the `aud` claim, and the `exp` claim.
-            claim = id_token.verify_oauth2_token(token, google_transport_requests.Request())
+            claim = id_token.verify_oauth2_token(
+                token, google_transport_requests.Request()
+            )
             # Must also verify the `iss` claim.
-            if claim['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+            if claim['iss'] not in [
+                'accounts.google.com',
+                'https://accounts.google.com',
+            ]:
                 logger.error('Wrong issuer.')
                 return False
             return True

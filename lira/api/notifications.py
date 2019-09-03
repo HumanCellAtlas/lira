@@ -47,7 +47,9 @@ def post(body):
 def receive_messages(body):
     """Receive messages from Google pub/sub topic."""
     lira_config = current_app.config
-    if not lira_utils._is_authenticated_pubsub(connexion.request, test_mode=lira_config.test_mode):
+    if not lira_utils._is_authenticated_pubsub(
+        connexion.request, test_mode=lira_config.test_mode
+    ):
         raise connexion.ProblemException(
             status=401,
             title='Unauthorized',
