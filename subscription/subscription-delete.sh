@@ -10,5 +10,5 @@ python3 subscribe.py delete --dss_url="$dss_url" \
                             --key_file="$key_file" \
                             --google_project="$google_project" \
                             --replica="$replica" \
-                            --subscription_type="jmespath" \
+                            --subscription_type="elasticsearch" \
                             --subscription_id="$subscription_id"
