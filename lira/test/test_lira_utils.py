@@ -481,7 +481,7 @@ class TestUtils(unittest.TestCase):
         """Test if parse_github_resource_url can correctly parse Github resource urls."""
         self.assertEqual(
             lira_utils.parse_github_resource_url(self.valid_github_url).repo,
-            'pipeline-tools',
+            'adapter-pipelines',
         )
         self.assertEqual(
             lira_utils.parse_github_resource_url(self.valid_github_url).owner,
@@ -493,7 +493,7 @@ class TestUtils(unittest.TestCase):
         )
         self.assertEqual(
             lira_utils.parse_github_resource_url(self.valid_github_url).file,
-            'adapter_example_static.json',
+            'static_inputs.json',
         )
         self.assertEqual(
             lira_utils.parse_github_resource_url(self.valid_github_url).path,
