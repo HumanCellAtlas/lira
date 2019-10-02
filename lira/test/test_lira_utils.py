@@ -497,7 +497,7 @@ class TestUtils(unittest.TestCase):
         )
         self.assertEqual(
             lira_utils.parse_github_resource_url(self.valid_github_url).path,
-            'adapter_pipelines/ss2_single_sample/adapter_example_static.json',
+            'pipelines/ss2_single_sample/static_inputs.json',
         )
         self.assertEqual(
             lira_utils.parse_github_resource_url(self.valid_github_raw_url).repo,
