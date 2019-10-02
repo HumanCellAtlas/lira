@@ -47,11 +47,13 @@ class TestUtils(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.valid_github_url = (
-            'https://github.com/HumanCellAtlas/pipeline-tools/blob/master/adapter_pipelines/'
-            'ss2_single_sample/adapter_example_static.json'
+            'https://github.com/HumanCellAtlas/adapter-pipelines/blob/master/pipelines/'
+            'ss2_single_sample/static_inputs.json'
         )
         cls.valid_github_raw_url = 'https://github.com/HumanCellAtlas/skylab/blob/v0.3.0/pipelines/smartseq2_single_sample/ss2_single_sample.wdl'
-        cls.invalid_github_url = 'https://github.com/HumanCellAtlas/pipeline-tools.git'
+        cls.invalid_github_url = (
+            'https://github.com/HumanCellAtlas/adapter-pipelines.git'
+        )
         cls.workflow_name = 'SmartSeq2Workflow'
         cls.workflow_version = 'v0.0.1'
         cls.bundle_uuid = 'foo-bar-id'
