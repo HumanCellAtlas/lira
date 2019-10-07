@@ -747,18 +747,6 @@
           }
         }
       ],
-      "should": [
-        {
-          "match": {
-            "files.dissociation_protocol_json.method.ontology": "EFO:0009108"
-          }
-        },
-        {
-          "match": {
-            "files.dissociation_protocol_json.method.text": "mouth pipette"
-          }
-        }
-      ],
       "must_not": [
         {
           "match": {
