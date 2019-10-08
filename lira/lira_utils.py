@@ -215,7 +215,15 @@ def compose_inputs(workflow_name, uuid, version, lira_config):
         workflow_name + '.submit_url': lira_config.ingest_url,
         workflow_name + '.schema_url': lira_config.schema_url,
         workflow_name + '.cromwell_url': lira_config.cromwell_url,
+        workflow_name + '.timestamp': get_utcnow_timestamp(),
     }
+
+
+def get_utcnow_timestamp() -> str:
+    """Get the current UTC timestamp."""
+    return (
+        datetime.utcnow().replace(tzinfo=timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+    )
 
 
 def compose_caas_options(cromwell_options_file, lira_config):
