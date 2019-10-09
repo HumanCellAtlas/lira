@@ -419,9 +419,18 @@ class TestUtils(unittest.TestCase):
         """Test if compose_inputs can correctly create Cromwell inputs file containing bundle uuid and version"""
         test_config = deepcopy(self.correct_test_config)
         config = lira_config.LiraConfig(test_config)
-        inputs = lira_utils.compose_inputs('foo', 'bar', 'baz', config)
-        self.assertEqual(inputs['foo.bundle_uuid'], 'bar')
-        self.assertEqual(inputs['foo.bundle_version'], 'baz')
+        workflow_version = 'v1.0.0'
+        bundle_uuid = 'fake_bundle_uuid'
+        bundle_version = 'fake_bundle_version'
+        inputs = lira_utils.compose_inputs(
+            workflow_name='foo',
+            workflow_version=workflow_version,
+            uuid=bundle_uuid,
+            version=bundle_version,
+            lira_config=config,
+        )
+        self.assertEqual(inputs['foo.bundle_uuid'], bundle_uuid)
+        self.assertEqual(inputs['foo.bundle_version'], bundle_version)
         self.assertEqual(inputs['foo.runtime_environment'], 'dev')
         self.assertEqual(
             inputs['foo.dss_url'], 'https://dss.dev.data.humancellatlas.org/v1'
@@ -433,6 +442,7 @@ class TestUtils(unittest.TestCase):
             inputs['foo.cromwell_url'],
             'https://cromwell.mint-dev.broadinstitute.org/api/workflows/v1',
         )
+        self.assertEqual(inputs['foo.pipeline_version'], workflow_version)
 
     def test_compose_caas_options(self):
         test_config = deepcopy(self.correct_test_config)
