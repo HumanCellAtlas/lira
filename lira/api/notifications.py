@@ -87,7 +87,7 @@ def submit_workflow(message):
 
     # Prepare inputs
     inputs = lira_utils.compose_inputs(
-        wdl_config.workflow_name, uuid, version, lira_config
+        wdl_config.workflow_name, wdl_config.workflow_version, uuid, version, lira_config
     )
     cromwell_inputs = json.dumps(inputs).encode('utf-8')
 
