@@ -217,7 +217,7 @@ def compose_inputs(workflow_name, workflow_version, uuid, version, lira_config):
         workflow_name + '.schema_url': lira_config.schema_url,
         workflow_name + '.cromwell_url': lira_config.cromwell_url,
         workflow_name + '.timestamp': get_utcnow_timestamp(),
-        workflow_name + '.workflow_version': workflow_version,
+        workflow_name + '.pipeline_version': workflow_version,
     }
 
 
