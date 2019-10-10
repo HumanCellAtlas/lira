@@ -195,11 +195,12 @@ def extract_uuid_version_subscription_id(msg):
     return uuid, version, subscription_id
 
 
-def compose_inputs(workflow_name, uuid, version, lira_config):
+def compose_inputs(workflow_name, workflow_version, uuid, version, lira_config):
     """Create Cromwell inputs file containing bundle uuid and version.
 
     Args:
         workflow_name (str): The name of the workflow.
+        workflow_version (str): The version of the workflow.
         uuid (str): uuid of the bundle.
         version (str): version of the bundle.
         lira_config (LiraConfig): Lira configuration
@@ -216,6 +217,7 @@ def compose_inputs(workflow_name, uuid, version, lira_config):
         workflow_name + '.schema_url': lira_config.schema_url,
         workflow_name + '.cromwell_url': lira_config.cromwell_url,
         workflow_name + '.timestamp': get_utcnow_timestamp(),
+        workflow_name + '.pipeline_version': workflow_version,
     }
 
 
