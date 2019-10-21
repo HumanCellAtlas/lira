@@ -487,6 +487,15 @@ class TestUtils(unittest.TestCase):
         max_retries = json.loads(options)['default_runtime_attributes']['maxRetries']
         self.assertEqual(max_retries, expected_max_retries)
 
+    def test_monitoring_image_passed_from_config_to_workflow_options(self):
+        test_config = deepcopy(self.correct_test_config)
+        test_image_name = "gcr.io/test_project/test_image"
+        test_config['monitoring_image'] = test_image_name
+        config = lira_config.LiraConfig(test_config)
+        options = lira_utils.compose_config_options(self.options_json, config)
+        image_name = json.loads(options)['monitoring_image']
+        self.assertEqual(image_name, test_image_name)
+
     def test_parse_github_resource_url(self):
         """Test if parse_github_resource_url can correctly parse Github resource urls."""
         self.assertEqual(
