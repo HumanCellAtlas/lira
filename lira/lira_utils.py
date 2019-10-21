@@ -267,7 +267,8 @@ def compose_config_options(cromwell_options_file, lira_config):
     options_json = json.loads(cromwell_options_file)
 
     # If a monitoring image is defined in the config, add it to the options JSON
-    if 'monitoring_image' in lira_config.__dict__.keys():
+    monitoring_image = getattr(lira_config, 'monitoring_image', None)
+    if monitoring_image:
         options_json['monitoring_image'] = lira_config.monitoring_image
 
     # Defer to value already in options file if it exists
