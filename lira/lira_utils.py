@@ -265,7 +265,7 @@ def compose_config_options(cromwell_options_file, lira_config):
     if isinstance(cromwell_options_file, bytes):
         cromwell_options_file = cromwell_options_file.decode()
     options_json = json.loads(cromwell_options_file)
-    
+
     # If a monitoring image is defined in the config, add it to the options JSON
     monitoring_image = getattr(lira_config, 'monitoring_image', None)
     if monitoring_image:
