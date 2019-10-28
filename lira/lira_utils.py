@@ -274,7 +274,7 @@ def compose_config_options(cromwell_options_file, lira_config):
     # Required to trigger the cloud function that records Cromwell metadata in BigQuery
     options_json[
         'final_workflow_log_dir'
-    ] = f'{lira_config.google_project}-cromwell-logs'
+    ] = f'gs://{lira_config.google_project}-cromwell-logs'
 
     # Defer to value already in options file if it exists
     # Docs on default runtime attributes: https://cromwell.readthedocs.io/en/latest/wf_options/Overview/
