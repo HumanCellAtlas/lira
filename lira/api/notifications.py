@@ -40,7 +40,9 @@ def post(body):
     message_id = future.result(
         timeout=60
     )  # Wait 60s for a value to be returned, otherwise raise a timeout error
-    logger.info(f"Message {message_id} added to topic {topic_name}")
+    logger.info(
+        f"Message {message_id} added to topic {topic_name} for bundle {body.get('match')}"
+    )
     return lira_utils.response_with_server_header({"id": message_id}, 200)
 
 
@@ -63,7 +65,7 @@ def receive_messages(body):
 
 
 def submit_workflow(message):
-    """ Process messages and submit on-hold workflow in Cromwell."""
+    """Process messages and submit on-hold workflow in Cromwell."""
     lira_config = current_app.config
     data = base64.b64decode(message['data'])
     body = json.loads(data)
