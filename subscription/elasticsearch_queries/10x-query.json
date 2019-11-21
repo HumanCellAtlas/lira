@@ -3,13 +3,30 @@
     "bool": {
       "must": [
         {
-          "match": {
-            "files.library_preparation_protocol_json.library_construction_method.ontology_label": "10X v2 sequencing"
-          }
-        },
-        {
-          "match": {
-            "files.library_preparation_protocol_json.end_bias": "3 prime tag"
+          "bool": {
+            "should": [
+              {
+                "match": {
+                  "files.library_preparation_protocol_json.library_construction_method.ontology_label": "10X 3' v2 sequencing"
+                }
+              },
+              {
+                "bool": {
+                  "must": [
+                    {
+                      "match": {
+                        "files.library_preparation_protocol_json.library_construction_method.ontology_label": "10X v2 sequencing"
+                      }
+                    },
+                    {
+                      "match": {
+                        "files.library_preparation_protocol_json.end_bias": "3 prime tag"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
