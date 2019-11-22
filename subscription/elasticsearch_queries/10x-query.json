@@ -7,7 +7,7 @@
             "should": [
               {
                 "match": {
-                  "files.library_preparation_protocol_json.library_construction_method.ontology_label": "10X 3' v2 sequencing"
+                  "files.library_preparation_protocol_json.library_construction_method.ontology": "EFO:0009899"
                 }
               },
               {
@@ -15,7 +15,7 @@
                   "must": [
                     {
                       "match": {
-                        "files.library_preparation_protocol_json.library_construction_method.ontology_label": "10X v2 sequencing"
+                        "files.library_preparation_protocol_json.library_construction_method.ontology": "EFO:0009310"
                       }
                     },
                     {
