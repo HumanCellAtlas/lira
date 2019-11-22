@@ -3,13 +3,51 @@
     "bool": {
       "must": [
         {
-          "match": {
-            "files.library_preparation_protocol_json.library_construction_method.ontology_label": "10X v2 sequencing"
-          }
-        },
-        {
-          "match": {
-            "files.library_preparation_protocol_json.end_bias": "3 prime tag"
+          "bool": {
+            "should": [
+              {
+                "match": {
+                  "files.library_preparation_protocol_json.library_construction_method.ontology": "EFO:0009899"
+                }
+              },
+              {
+                "bool": {
+                  "must": [
+                    {
+                      "match": {
+                        "files.library_preparation_protocol_json.library_construction_method.ontology": "EFO:0009310"
+                      }
+                    },
+                    {
+                      "match": {
+                        "files.library_preparation_protocol_json.end_bias": "3 prime tag"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "match": {
+                  "files.library_preparation_protocol_json.library_construction_method.ontology": "EFO:0009922"
+                }
+              },
+              {
+                "bool": {
+                  "must": [
+                    {
+                      "match": {
+                        "files.library_preparation_protocol_json.library_construction_method.ontology": "EFO:0009898"
+                      }
+                    },
+                    {
+                      "match": {
+                        "files.library_preparation_protocol_json.end_bias": "3 prime tag"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
