@@ -25,6 +25,27 @@
                     }
                   ]
                 }
+              },
+              {
+                "match": {
+                  "files.library_preparation_protocol_json.library_construction_method.ontology": "EFO:0009922"
+                }
+              },
+              {
+                "bool": {
+                  "must": [
+                    {
+                      "match": {
+                        "files.library_preparation_protocol_json.library_construction_method.ontology": "EFO:0009898"
+                      }
+                    },
+                    {
+                      "match": {
+                        "files.library_preparation_protocol_json.end_bias": "3 prime tag"
+                      }
+                    }
+                  ]
+                }
               }
             ]
           }
