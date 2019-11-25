@@ -3,6 +3,7 @@ import json
 import logging
 import io
 import base64
+import time
 import cromwell_tools.cromwell_api
 import cromwell_tools.cromwell_auth
 import cromwell_tools.utilities
@@ -31,16 +32,20 @@ def post(body):
 
     project_id = lira_config.google_project
     topic_name = lira_config.google_pubsub_topic
-    batch_settings = pubsub_v1.types.BatchSettings(max_messages=1, max_latency=1)
+
+    batch_settings = pubsub_v1.types.BatchSettings(max_messages=1)
     publisher = pubsub_v1.PublisherClient.from_service_account_file(
         lira_config.caas_key, batch_settings=batch_settings
     )
     topic_path = publisher.topic_path(project_id, topic_name)
     message = json.dumps(body).encode("utf-8")
+    start = time.time()
     future = publisher.publish(topic_path, message, origin=f"lira-{lira_config.env}")
     message_id = future.result(
         timeout=60
     )  # Wait 60s for a value to be returned, otherwise raise a timeout error
+    end = time.time()
+    logger.info(f"Time to publish: {(end - start)}")
     logger.info(
         f"Message {message_id} added to topic {topic_name} for bundle {body.get('match')}"
     )
