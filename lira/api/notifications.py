@@ -31,8 +31,10 @@ def post(body):
 
     project_id = lira_config.google_project
     topic_name = lira_config.google_pubsub_topic
+    batch_settings = pubsub_v1.types.BatchSettings(max_messages=1)
     publisher = pubsub_v1.PublisherClient.from_service_account_file(
-        lira_config.caas_key
+        lira_config.caas_key,
+        batch_settings=batch_settings
     )
     topic_path = publisher.topic_path(project_id, topic_name)
     message = json.dumps(body).encode("utf-8")
