@@ -53,4 +53,4 @@ class TestGetBundleInputs(unittest.TestCase):
                 encoding='utf-8',
             )
         )
-        self.assertEquals(workflow_inputs_hash, expected_hash.hexdigest())
+        self.assertEqual(workflow_inputs_hash, expected_hash.hexdigest())

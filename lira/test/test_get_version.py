@@ -89,5 +89,5 @@ class TestGetVersion(unittest.TestCase):
             cromwell_tools.__version__,
         )
         self.assertEqual(
-            json_response.get('version_info').get('submit_wdl_version'), 'v0.1.5'
+            json_response.get('version_info').get('adapter_pipelines_version'), 'v0.1.5'
         )

@@ -4,29 +4,26 @@ import cromwell_tools
 from lira import lira_utils
 
 
-def get_version():
-    """Collect and return Lira's and all its dependencies' versions.
-
-    TODO: make this endpoint more granular and comply with the API definition
-
-    """
+def get_version() -> dict:
+    """Collect and return Lira's and all its dependencies' versions."""
     logger = logging.getLogger('{module_path}'.format(module_path=__name__))
     logger.debug('Version request received')
 
     lira_config = current_app.config
 
     try:
-        submit_wdl_version = (
+        adapter_pipelines_version = (
             lira_utils.parse_github_resource_url(lira_config.get('submit_wdl')).version
             or 'Unknown'
         )
     except ValueError:
-        submit_wdl_version = 'Unknown'
+        adapter_pipelines_version = 'Unknown'
 
     workflow_info = {
         wdl.workflow_name: {
             'version': wdl.workflow_version,
             'subscription_id': wdl.subscription_id,
+            'query': f'https://github.com/HumanCellAtlas/lira/tree/{lira_config.version}/subscription/elasticsearch_queries',
         }
         for wdl in lira_config.wdls
     }
@@ -34,7 +31,7 @@ def get_version():
     version_info = {
         'cromwell_tools_version': cromwell_tools.__version__ or 'Unknown',
         'lira_version': lira_config.version,
-        'submit_wdl_version': submit_wdl_version,
+        'adapter_pipelines_version': adapter_pipelines_version,
     }
 
     settings_info = {
