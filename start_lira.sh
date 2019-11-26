@@ -25,6 +25,6 @@ fi
 #   instead of I/O bound tasks in our case.
 gunicorn lira.lira:app -b 0.0.0.0:"${port}" \
     --workers $((2 * $(getconf _NPROCESSORS_ONLN 2>/dev/null || getconf NPROCESSORS_ONLN 2>/dev/null || echo 2) + 1)) \
-    --timeout 60 \
-    --graceful-timeout 60 \
+    --timeout 180 \
+    --graceful-timeout 180 \
     --worker-class gevent

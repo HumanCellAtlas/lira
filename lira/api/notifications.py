@@ -41,11 +41,14 @@ def post(body):
     message = json.dumps(body).encode("utf-8")
     start = time.time()
     future = publisher.publish(topic_path, message, origin=f"lira-{lira_config.env}")
+    end = time.time()
+    print(f"Time to publish:{(end - start)}")
+    start2 = time.time()
     message_id = future.result(
         timeout=60
     )  # Wait 60s for a value to be returned, otherwise raise a timeout error
-    end = time.time()
-    logger.info(f"Time to publish: {(end - start)}")
+    end2 = time.time()
+    logger.info(f"Time to return future: {(end2 - start2)}")
     logger.info(
         f"Message {message_id} added to topic {topic_name} for bundle {body.get('match')}"
     )
