@@ -1,4 +1,5 @@
 import connexion
+import gevent
 import json
 import logging
 import io
@@ -44,9 +45,9 @@ def post(body):
     end = time.time()
     print(f"Time to publish:{(end - start)}")
     start2 = time.time()
-    message_id = future.result(
-        timeout=60
-    )  # Wait 60s for a value to be returned, otherwise raise a timeout error
+    while not future.done():
+        gevent.sleep(0)
+    message_id = future.result()
     end2 = time.time()
     logger.info(f"Time to return future: {(end2 - start2)}")
     logger.info(
