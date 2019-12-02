@@ -34,7 +34,7 @@ def post(body):
     project_id = lira_config.google_project
     topic_name = lira_config.google_pubsub_topic
 
-    batch_settings = pubsub_v1.types.BatchSettings(max_messages=1)
+    batch_settings = pubsub_v1.types.BatchSettings(max_messages=1, max_latency=0)
     publisher = pubsub_v1.PublisherClient.from_service_account_file(
         lira_config.caas_key, batch_settings=batch_settings
     )
@@ -45,9 +45,7 @@ def post(body):
     end = time.time()
     print(f"Time to publish:{(end - start)}")
     start2 = time.time()
-    while not future.done():
-        gevent.sleep(0)
-    message_id = future.result()
+    message_id = future.result(timeout=30)
     end2 = time.time()
     logger.info(f"Time to return future: {(end2 - start2)}")
     logger.info(
