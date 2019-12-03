@@ -12,6 +12,8 @@ infrastructure.
 This listener API Lira listens for notifications and start workflows.
 """
 import os
+import gevent
+import socket
 import json
 import logging
 import connexion
@@ -56,12 +58,19 @@ app.app.prepare_submission = lira_utils.create_prepare_submission_function(
     app.app.config.cache_wdls
 )
 
+
 # Use automatic routing with custom resolver: https://github.com/zalando/connexion#automatic-routing
 resolver = RestyResolver('lira.api', collection_endpoint_name='list')
 arguments = {'API_DOMAIN_NAME': config.DOMAIN}
 app.add_api(
     'lira_api.yml', resolver=resolver, validate_responses=True, arguments=arguments
 )
+
+# Patch GRPC (used by Google PubSub) to be gevent-compatible
+if socket.socket is gevent.socket.socket:
+    logger.info("Patching GRPC for use with gevent...")
+    import grpc.experimental.gevent
+    grpc.experimental.gevent.init_gevent()
 
 
 if __name__ == '__main__':

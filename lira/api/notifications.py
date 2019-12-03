@@ -34,7 +34,7 @@ def post(body):
     project_id = lira_config.google_project
     topic_name = lira_config.google_pubsub_topic
 
-    batch_settings = pubsub_v1.types.BatchSettings(max_messages=1, max_latency=0)
+    batch_settings = pubsub_v1.types.BatchSettings(max_messages=1)
     publisher = pubsub_v1.PublisherClient.from_service_account_file(
         lira_config.caas_key, batch_settings=batch_settings
     )
