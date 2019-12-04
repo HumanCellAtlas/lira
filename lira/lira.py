@@ -12,6 +12,9 @@ infrastructure.
 This listener API Lira listens for notifications and start workflows.
 """
 import os
+import gevent
+import gevent.socket
+import socket
 import json
 import logging
 import connexion
@@ -63,6 +66,13 @@ arguments = {'API_DOMAIN_NAME': config.DOMAIN}
 app.add_api(
     'lira_api.yml', resolver=resolver, validate_responses=True, arguments=arguments
 )
+
+# Patch GRPC (used by Google PubSub) to be gevent-compatible: https://github.com/grpc/grpc/issues/4629
+if socket.socket is gevent.socket.socket:
+    logger.info("Patching GRPC for use with gevent...")
+    import grpc.experimental.gevent
+
+    grpc.experimental.gevent.init_gevent()
 
 
 if __name__ == '__main__':
