@@ -13,6 +13,7 @@ This listener API Lira listens for notifications and start workflows.
 """
 import os
 import gevent
+import gevent.socket
 import socket
 import json
 import logging
