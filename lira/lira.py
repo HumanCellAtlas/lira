@@ -66,10 +66,11 @@ app.add_api(
     'lira_api.yml', resolver=resolver, validate_responses=True, arguments=arguments
 )
 
-# Patch GRPC (used by Google PubSub) to be gevent-compatible
+# Patch GRPC (used by Google PubSub) to be gevent-compatible: https://github.com/grpc/grpc/issues/4629
 if socket.socket is gevent.socket.socket:
     logger.info("Patching GRPC for use with gevent...")
     import grpc.experimental.gevent
+
     grpc.experimental.gevent.init_gevent()
 
 
