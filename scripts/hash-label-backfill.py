@@ -12,6 +12,15 @@ to lira's package structure.
 Note the run time of this script can be up to a few days, depending
 on the number of the workflows it has to look at and compute.
 
+An example invocation is:
+
+```
+python hash-label-backfill.py -v 2 \
+                             -k caas_key.json \
+                             -e staging -p 00000000-0000-0000-0000-000000000000 \
+                             -l '{"workflow-name":"AdapterOptimus"}' \
+                             --save-log
+```
 -------- Operation Records --------
 2019/12/05  backfill_version: "2"
 
