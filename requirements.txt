@@ -16,3 +16,5 @@ flake8==3.7.7
 pre-commit==1.14.4
 google-cloud-pubsub==1.0.2
 git+git://github.com/HumanCellAtlas/pipeline-tools@v0.58.1
+rsa>=4.7 # not directly required, pinned by Snyk to avoid a vulnerability
+urllib3>=1.26.5 # not directly required, pinned by Snyk to avoid a vulnerability
